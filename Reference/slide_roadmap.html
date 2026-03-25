@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>MDLC Agentic AI – Implementation Roadmap 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f5f4f0;
+  --panel:#ffffff;
+  --border:#d8d4cc;
+  --text:#1a1d27;
+  --muted:#8a8fa8;
+  --c1:#0077aa;   /* infra – deep cyan    */
+  --c2:#6d28d9;   /* agent – violet       */
+  --c3:#c2410c;   /* domain – burnt orange*/
+  --c4:#15803d;   /* governance – green   */
+  --c5:#1d4ed8;   /* repro – blue         */
+  --c6:#b45309;   /* milestones – amber   */
+  --demo:#dc2626; /* demo – red           */
+}
+body{
+  background:var(--bg);
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:24px 32px 32px;
+}
+
+/* ─── Header ─────────────────────────── */
+.header{
+  width:100%;
+  max-width:1380px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+.title-block .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  letter-spacing:.2em;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+.title-block h1{
+  font-family:'Syne',sans-serif;
+  font-size:26px;
+  font-weight:800;
+  letter-spacing:-.025em;
+  color:var(--text);
+  line-height:1.1;
+}
+.title-block h1 em{color:var(--c6);font-style:normal}
+.title-block .subtitle{
+  font-size:12.5px;
+  color:var(--muted);
+  margin-top:5px;
+  font-weight:300;
+  max-width:680px;
+  line-height:1.5;
+}
+.header-right{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  align-items:flex-end;
+}
+.tag{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:.12em;
+  padding:3px 8px;
+  border-radius:3px;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.tag-demo{background:rgba(220,38,38,.07);color:var(--demo);border:1px solid rgba(220,38,38,.2)}
+.tag-scope{background:rgba(180,83,9,.07);color:var(--c6);border:1px solid rgba(180,83,9,.2)}
+.tag-arch{background:rgba(0,119,170,.07);color:var(--c1);border:1px solid rgba(0,119,170,.2)}
+
+/* ─── Gantt shell ─────────────────────── */
+.gantt-wrap{
+  width:100%;
+  max-width:1380px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+}
+
+/* grid: [label 195px] [9 equal month cols] */
+.g-row{
+  display:grid;
+  grid-template-columns:195px repeat(9,1fr);
+  border-bottom:1px solid var(--border);
+}
+.g-row:last-child{border-bottom:none}
+
+/* ─── Quarter banner ────────────────────── */
+.g-row.q-banner{
+  min-height:22px;
+  background:rgba(0,0,0,.018);
+}
+.q-corner{
+  border-right:2px solid var(--border);
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;
+  letter-spacing:.12em;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+.q-span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-right:1px dashed rgba(216,212,204,.7);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:600;
+}
+.q-span:last-child{border-right:none}
+.q-span.q2{grid-column:1/4;color:rgba(0,119,170,.75)}
+.q-span.q3{grid-column:4/7;color:rgba(194,65,12,.75)}
+.q-span.q4{grid-column:7/10;color:rgba(21,128,61,.75)}
+
+/* ─── Month header ──────────────────────── */
+.g-row.m-header{background:rgba(0,0,0,.022)}
+.m-label{
+  border-right:2px solid var(--border);
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+}
+.m-label span{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:.14em;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+.m-cell{
+  padding:8px 0;
+  text-align:center;
+  border-right:1px solid rgba(216,212,204,.5);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.05em;
+  color:var(--text);
+}
+.m-cell:last-child{border-right:none}
+.m-cell small{display:block;font-size:8.5px;font-weight:400;color:var(--muted);margin-top:1px}
+.m-cell.dec-hi{background:rgba(220,38,38,.04);color:var(--demo)}
+
+/* ─── Lane rows ─────────────────────────── */
+.lane-lbl{
+  padding:10px 14px;
+  border-right:2px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:3px;
+}
+.lane-name{
+  font-size:11.5px;
+  font-weight:600;
+  line-height:1.2;
+}
+.lane-sub{
+  font-size:9.5px;
+  color:var(--muted);
+  font-weight:300;
+  line-height:1.3;
+}
+
+/* bar-area spans all 9 month cols */
+.bar-area{
+  grid-column:2/11;
+  position:relative;
+  /* month gridlines */
+  background:repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent calc(100%/9 - 1px),
+    rgba(216,212,204,.35) calc(100%/9 - 1px),
+    rgba(216,212,204,.35) calc(100%/9)
+  );
+}
+
+/* ─── Bars ───────────────────────────────── */
+.bar{
+  position:absolute;
+  height:24px;
+  top:50%;
+  transform:translateY(-50%);
+  border-radius:3px;
+  display:flex;
+  align-items:center;
+  padding:0 9px;
+  font-size:9.5px;
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  z-index:1;
+}
+.bar.t0{top:calc(50% - 26px)}
+.bar.t2{top:calc(50% + 26px)}
+
+/* color variants */
+.b1{background:rgba(0,119,170,.11);color:var(--c1);border:1px solid rgba(0,119,170,.26)}
+.b2{background:rgba(109,40,217,.10);color:var(--c2);border:1px solid rgba(109,40,217,.24)}
+.b3{background:rgba(194,65,12,.11);color:var(--c3);border:1px solid rgba(194,65,12,.26)}
+.b4{background:rgba(21,128,61,.11);color:var(--c4);border:1px solid rgba(21,128,61,.26)}
+.b5{background:rgba(29,78,216,.10);color:var(--c5);border:1px solid rgba(29,78,216,.24)}
+
+/* lane tints */
+.l1 .bar-area{background-color:rgba(0,119,170,.012)}
+.l2 .bar-area{background-color:rgba(194,65,12,.012)}
+.l3 .bar-area{background-color:rgba(109,40,217,.012)}
+.l4 .bar-area{background-color:rgba(21,128,61,.012)}
+.l5 .bar-area{background-color:rgba(29,78,216,.012)}
+
+/* ─── Milestone row ──────────────────────── */
+.g-row.ms-row{min-height:44px;background:rgba(0,0,0,.01)}
+.ms-row .bar-area{
+  background:rgba(180,83,9,.012) repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent calc(100%/9 - 1px),
+    rgba(216,212,204,.35) calc(100%/9 - 1px),
+    rgba(216,212,204,.35) calc(100%/9)
+  );
+}
+
+/* diamond markers */
+.mdot{
+  position:absolute;
+  top:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+  width:13px;height:13px;
+  border-radius:2px;
+  z-index:2;
+}
+.ml{
+  position:absolute;
+  top:50%;
+  transform:translateX(-50%) translateY(10px);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:8.5px;
+  font-weight:600;
+  letter-spacing:.04em;
+  white-space:nowrap;
+  text-align:center;
+}
+
+/* ─── SDK chips legend ──────────────────── */
+.legend-row{
+  width:100%;
+  max-width:1380px;
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:4px 9px;
+}
+.legend-dot{width:8px;height:8px;border-radius:1px;transform:rotate(45deg);flex-shrink:0}
+.legend-item span{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;
+  letter-spacing:.06em;
+  color:var(--text);
+}
+
+/* ─── Milestone summary ────────────────── */
+.ms-strip{
+  width:100%;
+  max-width:1380px;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+.ms-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:9px 11px;
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+}
+.ms-card.demo-card{border-color:rgba(220,38,38,.25);background:rgba(220,38,38,.025)}
+.ms-ico{
+  width:9px;height:9px;border-radius:1px;
+  transform:rotate(45deg);flex-shrink:0;margin-top:3px;
+}
+.ms-title{font-size:10.5px;font-weight:600;line-height:1.25;color:var(--text)}
+.ms-date{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:8.5px;color:var(--muted);margin-top:2px;
+}
+.ms-desc{font-size:9.5px;color:var(--muted);margin-top:3px;line-height:1.4;font-weight:300}
+</style>
+</head>
+<body>
+
+<!-- ─── Header ──────────────────────────────────── -->
+<div class="header">
+  <div class="title-block">
+    <div class="eyebrow">MDLC Agentic AI Platform &nbsp;·&nbsp; Implementation Roadmap</div>
+    <h1>April – December <em>2026</em></h1>
+    <div class="subtitle">
+      Governed AI operating layer for ECL MDLC — 5 platform layers built in sequence:
+      infrastructure → ECL domain SDKs (Reduced Form PD) → agent orchestration → governance &amp; HITL → reproducibility pack.
+      Workable demo Dec 2026.
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="tag tag-arch">Google ADK · Temporal · CML · S3</span>
+    <span class="tag tag-scope">PD · LGD · EAD · SICR · Overlays &nbsp;·&nbsp; 9 months</span>
+    <span class="tag tag-demo">Demo Day — Dec 2026</span>
+  </div>
+</div>
+
+<!-- ─── Gantt Chart ──────────────────────────────── -->
+<div class="gantt-wrap">
+
+  <!-- Quarter banner -->
+  <div class="g-row q-banner">
+    <div class="q-corner">Quarter</div>
+    <div class="q-span q2" style="grid-column:2/5">Q2 2026</div>
+    <div class="q-span q3" style="grid-column:5/8">Q3 2026</div>
+    <div class="q-span q4" style="grid-column:8/11">Q4 2026</div>
+  </div>
+
+  <!-- Month header -->
+  <div class="g-row m-header">
+    <div class="m-label"><span>Workstream</span></div>
+    <div class="m-cell">APR<small>M 1</small></div>
+    <div class="m-cell">MAY<small>M 2</small></div>
+    <div class="m-cell">JUN<small>M 3</small></div>
+    <div class="m-cell">JUL<small>M 4</small></div>
+    <div class="m-cell">AUG<small>M 5</small></div>
+    <div class="m-cell">SEP<small>M 6</small></div>
+    <div class="m-cell">OCT<small>M 7</small></div>
+    <div class="m-cell">NOV<small>M 8</small></div>
+    <div class="m-cell dec-hi">DEC<small>M 9</small></div>
+  </div>
+
+  <!--
+    Col positions (each col = 11.11%):
+    APR start=0%    MAY start=11.1%  JUN start=22.2%  JUL start=33.3%
+    AUG start=44.4% SEP start=55.5%  OCT start=66.6%  NOV start=77.7%  DEC start=88.8%
+  -->
+
+  <!-- ── Lane 1: Platform Infrastructure ─────────────────────────────── -->
+  <div class="g-row l1">
+    <div class="lane-lbl" style="border-left:3px solid var(--c1)">
+      <span class="lane-name" style="color:var(--c1)">Platform Infrastructure</span>
+      <span class="lane-sub">CML · S3 · Temporal · Core SDKs</span>
+    </div>
+    <div class="bar-area" style="height:80px">
+      <!-- APR-MAY: CML + S3 + metadata store -->
+      <div class="bar b1 t0" style="left:0.5%;width:21%">CML Env + S3 Artifact Store + Metadata DB</div>
+      <!-- APR-MAY: Core control SDKs -->
+      <div class="bar b1 t2" style="left:0.5%;width:21%">governance_sdk · workflow_sdk · registry_sdk · observability_sdk</div>
+      <!-- MAY-JUN: Google ADK + Temporal runtime -->
+      <div class="bar b1" style="left:11.5%;width:22%">Google ADK + Temporal Workflow Runtime</div>
+      <!-- JUL: Agent bridge + CML hardening -->
+      <div class="bar b1 t0" style="left:33.5%;width:11%">CML Hardening</div>
+    </div>
+  </div>
+
+  <!-- ── Lane 2: ECL Domain SDKs ─────────────────────────────────────── -->
+  <div class="g-row l2">
+    <div class="lane-lbl" style="border-left:3px solid var(--c3)">
+      <span class="lane-name" style="color:var(--c3)">ECL Domain SDKs</span>
+      <span class="lane-sub">DataPrep · DQ · Feature · PD (Reduced Form) · LGD · EAD · SICR · Eval · Validation</span>
+    </div>
+    <div class="bar-area" style="height:86px">
+      <!--
+        Reduced Form PD pipeline:
+        (1) ecl_data_prep_sdk + dq_sdk  — MAY-JUN
+        (2) feature_sdk (WOE/binning, macro prep) — JUN-JUL
+        (3) pd_model_sdk: hazard → PIT PD baseline — JUL-AUG
+        (4) pd_model_sdk: term structure + PIT/TTC + macro satellite + fwd-looking — AUG-SEP
+        (5) lgd · ead · sicr · overlay SDKs — SEP-OCT
+        (6) evaluation_sdk + validation_sdk — OCT-NOV
+      -->
+      <!-- ROW top: data prep + later LGD/EAD/SICR -->
+      <div class="bar b3 t0" style="left:11.5%;width:21.5%">ecl_data_prep_sdk + dq_sdk</div>
+      <div class="bar b3 t0" style="left:55.5%;width:21.5%">lgd · ead · sicr · overlay SDKs</div>
+
+      <!-- ROW mid: feature SDK → term structure → eval/validation -->
+      <div class="bar b3" style="left:22.5%;width:21.5%">feature_sdk: WOE / Binning + Macro Prep</div>
+      <div class="bar b3" style="left:44.5%;width:21.5%">Term Structure + PIT/TTC + Macro Satellite + Fwd Scenarios</div>
+      <div class="bar b3" style="left:66.5%;width:21.5%">evaluation_sdk + validation_sdk</div>
+
+      <!-- ROW bot: hazard model fit (core Reduced Form step) -->
+      <div class="bar b3 t2" style="left:33.5%;width:21.5%">pd_model_sdk: Hazard Model → PIT PD Baseline</div>
+    </div>
+  </div>
+
+  <!-- ── Lane 3: Agent & Skills Layer ────────────────────────────────── -->
+  <div class="g-row l3">
+    <div class="lane-lbl" style="border-left:3px solid var(--c2)">
+      <span class="lane-name" style="color:var(--c2)">Agent &amp; Skills Layer</span>
+      <span class="lane-sub">ADK Agents · Domain Skills · Knowledge SDK · Memory SDK · RAG</span>
+    </div>
+    <div class="bar-area" style="height:80px">
+      <!-- APR-MAY: ADK agents wired to SDK layer -->
+      <div class="bar b2 t0" style="left:0.5%;width:21.5%">ADK Agent Bridge + Tool Adapter</div>
+      <!-- JUN-AUG: Domain skills deployed (PD review, calibration, drafting) -->
+      <div class="bar b2" style="left:22.5%;width:33%">Domain Skills: PD Review · Calibration · Limitation Drafting · Committee Narrative</div>
+      <!-- JUL-SEP: knowledge_sdk + memory_sdk seeded -->
+      <div class="bar b2 t2" style="left:33.5%;width:22%">knowledge_sdk + memory_sdk (ECL KB seeded)</div>
+      <!-- SEP-OCT: RAG + token optimization -->
+      <div class="bar b2" style="left:55.5%;width:22%">knowledge_retrieval_sdk + Token Optimization</div>
+    </div>
+  </div>
+
+  <!-- ── Lane 4: Governance & HITL ───────────────────────────────────── -->
+  <div class="g-row l4">
+    <div class="lane-lbl" style="border-left:3px solid var(--c4)">
+      <span class="lane-name" style="color:var(--c4)">Governance &amp; HITL</span>
+      <span class="lane-sub">HITL Review · Policy Gates · Audit Chain · Validation</span>
+    </div>
+    <div class="bar-area" style="height:80px">
+      <!-- MAY-JUN: HITL review lifecycle -->
+      <div class="bar b4 t0" style="left:11.5%;width:21.5%">HITL Review Lifecycle (create / approve / reject / escalate)</div>
+      <!-- JUL-AUG: policy gates + audit chain -->
+      <div class="bar b4" style="left:33.5%;width:22%">Policy Gates + Audit Chain + Approval Records</div>
+      <!-- AUG-OCT: validation SDK: findings + breach summary -->
+      <div class="bar b4 t2" style="left:44.5%;width:33%">validation_sdk: Findings · Threshold Checks · Breach Summary · Challenge Pack</div>
+      <!-- NOV: committee dry run -->
+      <div class="bar b4 t0" style="left:77.5%;width:11%">Committee Dry Run</div>
+    </div>
+  </div>
+
+  <!-- ── Lane 5: Reproducibility & Governance Pack ────────────────────── -->
+  <div class="g-row l5">
+    <div class="lane-lbl" style="border-left:3px solid var(--c5)">
+      <span class="lane-name" style="color:var(--c5)">Reproducibility &amp; Gov Pack</span>
+      <span class="lane-sub">manifest_sdk · repro_sdk · packaging_sdk · reporting · docgen</span>
+    </div>
+    <div class="bar-area" style="height:80px">
+      <!-- SEP-OCT: manifest + repro + packaging SDKs -->
+      <div class="bar b5 t0" style="left:55.5%;width:22%">manifest_sdk + repro_sdk + packaging_sdk</div>
+      <!-- OCT-NOV: audit export + reporting + docgen -->
+      <div class="bar b5" style="left:66.5%;width:22%">Audit Export + reporting_sdk + docgen_sdk</div>
+      <!-- NOV-DEC: committee-ready governance pack -->
+      <div class="bar b5 t2" style="left:77.5%;width:22%">Governance Pack: Manifest · Audit · Rerun Bundle · Committee Note</div>
+    </div>
+  </div>
+
+  <!-- ── Milestone row ────────────────────────────────────────────────── -->
+  <div class="g-row ms-row" style="border-bottom:none">
+    <div class="lane-lbl" style="border-right:2px solid var(--border)">
+      <span class="lane-name" style="color:var(--c6)">Milestones</span>
+      <span class="lane-sub">Checkpoints &amp; Demo</span>
+    </div>
+    <div class="bar-area" style="height:44px">
+      <!--
+        M1 end Apr  = col1 end = 11.1% of bar-area
+        M2 end Jun  = col3 end = 33.3%
+        M3 end Aug  = col5 end = 55.5%
+        M4 end Oct  = col7 end = 77.7%
+        M5 end Nov  = col8 end = 88.8%
+        DEMO mid Dec = ~94%
+      -->
+      <div class="mdot" style="left:11%;background:var(--c1);box-shadow:0 0 0 3px rgba(0,119,170,.18)"></div>
+      <div class="ml"   style="left:11%;color:var(--c1)">M1</div>
+
+      <div class="mdot" style="left:33%;background:var(--c3);box-shadow:0 0 0 3px rgba(194,65,12,.18)"></div>
+      <div class="ml"   style="left:33%;color:var(--c3)">M2</div>
+
+      <div class="mdot" style="left:55.5%;background:var(--c4);box-shadow:0 0 0 3px rgba(21,128,61,.18)"></div>
+      <div class="ml"   style="left:55.5%;color:var(--c4)">M3</div>
+
+      <div class="mdot" style="left:77.5%;background:var(--c5);box-shadow:0 0 0 3px rgba(29,78,216,.18)"></div>
+      <div class="ml"   style="left:77.5%;color:var(--c5)">M4</div>
+
+      <div class="mdot" style="left:88.5%;background:var(--c6);box-shadow:0 0 0 3px rgba(180,83,9,.18)"></div>
+      <div class="ml"   style="left:88.5%;color:var(--c6)">M5</div>
+
+      <div class="mdot" style="left:94.5%;background:var(--demo);width:16px;height:16px;box-shadow:0 0 0 4px rgba(220,38,38,.2)"></div>
+      <div class="ml"   style="left:94.5%;color:var(--demo);font-weight:700">DEMO</div>
+    </div>
+  </div>
+
+</div><!-- /gantt-wrap -->
+
+<!-- ─── SDK legend chips ─────────────────────────────────────────── -->
+<div class="legend-row">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c1)"></div><span>governance_sdk · workflow_sdk · registry_sdk · observability_sdk</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c3)"></div><span>ecl_data_prep · dq · feature · pd · lgd · ead · sicr · overlay · evaluation · validation</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c2)"></div><span>ADK agents · domain skills · knowledge_sdk · memory_sdk · knowledge_retrieval_sdk</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c4)"></div><span>hitlsdk · policysdk · auditsdk · validationsdk · MCP tools</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c5)"></div><span>manifest_sdk · repro_sdk · packaging_sdk · reporting_sdk · docgen_sdk</span></div>
+</div>
+
+<!-- ─── Milestone summary cards ─────────────────────────────────────────── -->
+<div class="ms-strip">
+
+  <div class="ms-card">
+    <div class="ms-ico" style="background:var(--c1)"></div>
+    <div>
+      <div class="ms-title">M1 — Platform Foundation</div>
+      <div class="ms-date">End of April 2026</div>
+      <div class="ms-desc">CML + S3 provisioned. Core control SDKs (governance, workflow, registry, observability) deployed. Google ADK + Temporal runtime wired and passing Phase 0–1 integration tests.</div>
+    </div>
+  </div>
+
+  <div class="ms-card">
+    <div class="ms-ico" style="background:var(--c3)"></div>
+    <div>
+      <div class="ms-title">M2 — ECL Data Pipeline Green</div>
+      <div class="ms-date">End of June 2026</div>
+      <div class="ms-desc">ecl_data_prep_sdk: cohort/panel dataset built on CML. DQ pack (schema, completeness, leakage, temporal) signed off. WOE/binning feature set produced with full lineage &amp; artifact registration.</div>
+    </div>
+  </div>
+
+  <div class="ms-card">
+    <div class="ms-ico" style="background:var(--c4)"></div>
+    <div>
+      <div class="ms-title">M3 — Reduced Form PD + First HITL Gate</div>
+      <div class="ms-date">End of August 2026</div>
+      <div class="ms-desc">Discrete-time hazard model → PIT PD baseline. Lifetime term structure (marginal → cumulative). Macro satellite + forward-looking scenarios. First HITL review gate: policy-checked, audit record captured.</div>
+    </div>
+  </div>
+
+  <div class="ms-card">
+    <div class="ms-ico" style="background:var(--c5)"></div>
+    <div>
+      <div class="ms-title">M4 — Full ECL Coverage + Repro SDKs</div>
+      <div class="ms-date">End of October 2026</div>
+      <div class="ms-desc">lgd / ead / sicr / overlay SDKs wired. evaluation_sdk + validation_sdk producing findings, breach summaries, and challenge packs. manifest_sdk + repro_sdk validated end-to-end.</div>
+    </div>
+  </div>
+
+  <div class="ms-card">
+    <div class="ms-ico" style="background:var(--c6)"></div>
+    <div>
+      <div class="ms-title">M5 — Committee-Ready Pack</div>
+      <div class="ms-date">End of November 2026</div>
+      <div class="ms-desc">Full governance pack assembled: model manifest + execution recipe + dependency lock + artifact hashes. Audit export, validation report, docgen (methodology note, committee note). Rerun bundle validated.</div>
+    </div>
+  </div>
+
+  <div class="ms-card demo-card">
+    <div class="ms-ico" style="background:var(--demo)"></div>
+    <div>
+      <div class="ms-title" style="color:var(--demo)">DEMO — Full MDLC Walkthrough</div>
+      <div class="ms-date">December 2026</div>
+      <div class="ms-desc">Live: intake → panel data → Reduced Form PD → HITL governance gate → LGD/EAD/SICR → ECL output → validation pack → committee note → audit trail → rerun bundle signed off.</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

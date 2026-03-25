@@ -1,0 +1,63 @@
+# Domain configuration.
+# Loaded and validated against DomainsConfig (Pydantic).
+
+version: "1.0.0"
+default_domain_id: generic
+
+domains:
+  generic:
+    domain_id: generic
+    display_name: Generic (Platform Default)
+    description: Domain-agnostic platform shell. No domain SDKs activated.
+    sdk_pack_ids: []
+    policy_pack_ids:
+      - default
+    stage_overrides: []
+    domain_skill_id: ""
+
+  credit_risk:
+    domain_id: credit_risk
+    display_name: Credit Risk Modelling
+    description: Credit risk model development (scorecard, PD, LGD, EAD, ECL, SICR).
+    sdk_pack_ids:
+      - scorecardsdk
+      - pdsdk
+      - lgdsdk
+      - eadsdk
+      - eclsdk
+      - sicr_sdk
+      - evaluation_sdk
+      - feature_sdk
+      - dataset_sdk
+      - dq_sdk
+      - reporting_sdk
+      - monitoring_sdk
+      - stresssdk
+    policy_pack_ids:
+      - default
+    domain_skill_id: credit_risk_skill
+    stage_overrides:
+      - stage_name: model_evaluation
+        skill_stack_additions:
+          - credit_risk_evaluation_skill
+        tool_allowlist_additions:
+          - scorecardsdk
+          - stresssdk
+        governance_gate_additions: []
+
+  time_series:
+    domain_id: time_series
+    display_name: Time Series Modelling
+    description: Time series forecasting and anomaly detection models.
+    sdk_pack_ids:
+      - timeseriessdk
+      - evaluation_sdk
+      - feature_sdk
+      - dataset_sdk
+      - dq_sdk
+      - reporting_sdk
+      - monitoring_sdk
+    policy_pack_ids:
+      - default
+    domain_skill_id: time_series_skill
+    stage_overrides: []

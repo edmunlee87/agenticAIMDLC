@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "policy_findings.schema.json",
+  "title": "PolicyFindings",
+  "description": "Output of a policy evaluation run. Immutable record of all findings, blockers, and waivers for a given stage and run.",
+  "type": "object",
+  "required": ["findings_id", "project_id", "run_id", "session_id", "stage_name", "evaluation_at", "policy_pack_id", "result", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "findings_id": { "type": "string" },
+    "project_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "evaluation_at": { "type": "string", "format": "date-time" },
+    "stage_name": { "type": "string" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "policy_pack_id": { "type": "string" },
+    "policy_pack_version": { "type": "string" },
+    "result": {
+      "type": "string",
+      "enum": ["pass", "warn", "breach", "blocked"]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["finding_id", "rule_id", "severity", "title"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "rule_id": { "type": "string" },
+          "rule_category": { "type": "string" },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "remediation_hint": { "type": "string" },
+          "is_blocking": { "type": "boolean", "default": false },
+          "evidence_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "waiver_eligible": { "type": "boolean", "default": false },
+          "waiver_ref": { "type": "string" }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "description": "Finding IDs that are actively blocking stage transition.",
+      "items": { "type": "string" }
+    },
+    "waivers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["waiver_id", "finding_id", "granted_by", "valid_until"],
+        "properties": {
+          "waiver_id": { "type": "string" },
+          "finding_id": { "type": "string" },
+          "granted_by": { "type": "string" },
+          "granted_at": { "type": "string", "format": "date-time" },
+          "valid_until": { "type": "string", "format": "date-time" },
+          "conditions": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "summary_counts": {
+      "type": "object",
+      "properties": {
+        "low": { "type": "integer", "default": 0 },
+        "medium": { "type": "integer", "default": 0 },
+        "high": { "type": "integer", "default": 0 },
+        "critical": { "type": "integer", "default": 0 },
+        "blocking": { "type": "integer", "default": 0 },
+        "waived": { "type": "integer", "default": 0 }
+      }
+    },
+    "audit_ref": { "type": "string" }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" },
+        "active_policy_pack_id": { "type": "string" }
+      }
+    }
+  }
+}

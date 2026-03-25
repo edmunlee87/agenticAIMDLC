@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "mdl-platform-core"
+version = "0.1.0"
+description = "Platform Core SDK: runtime resolver, schemas, controllers, bridges, utils"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+spark = ["pyspark>=3.4"]
+dev = ["pytest>=7.0", "pytest-cov"]

@@ -1,0 +1,105 @@
+# Loss Given Default (LGD) Model Domain Pack v1.0.0
+domain: lgd
+description: "LGD model development lifecycle for regulatory capital (IFRS9 / Basel III)."
+model_class: loss_given_default
+regulatory_scope: [IFRS9, Basel_III, SR_11_7]
+schema_version: "1.0.0"
+
+stage_registry:
+  - stage_id: data_preparation
+    label: Data Preparation
+    stage_class: development
+    artifact_types: [dataset_snapshot, dq_report]
+
+  - stage_id: collateral_analysis
+    label: Collateral & Recovery Analysis
+    stage_class: development
+    artifact_types: [collateral_report]
+
+  - stage_id: model_development
+    label: LGD Model Development
+    stage_class: development
+    artifact_types: [model_candidate_set, evaluation_pack]
+
+  - stage_id: model_review
+    label: LGD Model Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record, selected_model]
+    policy_pack_ids: [lgd_pol_downturn_adjustment]
+
+  - stage_id: deployment_readiness
+    label: Deployment Readiness
+    stage_class: governance
+    requires_hitl: true
+    governance_gate: true
+    is_terminal: false
+
+  - stage_id: deployed
+    label: Deployed
+    stage_class: terminal
+    is_terminal: true
+
+routing_rules:
+  - from_stage: data_preparation
+    to_stage: collateral_analysis
+    condition: on_success
+  - from_stage: collateral_analysis
+    to_stage: model_development
+    condition: on_success
+  - from_stage: model_development
+    to_stage: model_review
+    condition: on_success
+  - from_stage: model_review
+    to_stage: deployment_readiness
+    condition: on_approval
+    failure_stage: model_development
+  - from_stage: deployment_readiness
+    to_stage: deployed
+    condition: on_approval
+
+metrics_pack:
+  - metric_name: mean_absolute_error
+    display_name: MAE
+    higher_is_better: false
+    threshold_high: 0.10
+    is_primary: true
+  - metric_name: r_squared
+    display_name: R-Squared
+    higher_is_better: true
+    threshold_low: 0.30
+  - metric_name: downturn_lgd_ratio
+    display_name: Downturn LGD Ratio
+    description: "Ratio of downturn LGD to long-run average LGD. Must be >= 1.0."
+    higher_is_better: true
+    threshold_low: 1.0
+
+policy_pack:
+  - rule_id: lgd_pol_downturn_adjustment
+    name: Downturn LGD Adjustment Required
+    description: Regulatory requirement to apply downturn LGD adjustment.
+    severity: critical
+    applies_to_stages: [model_review]
+    condition_expression: "metrics.downturn_lgd_ratio >= 1.0"
+    requires_waiver: false
+
+artifact_pack:
+  - artifact_type: collateral_report
+    display_name: Collateral & Recovery Report
+    produced_at_stage: collateral_analysis
+    is_audit_required: true
+
+review_templates:
+  - template_id: model_review_tmpl
+    stage_id: model_review
+    review_type: selection
+    panel_a_evidence_types: [model_candidate_set, evaluation_pack, collateral_report]
+    required_roles: [model_developer, validator, model_risk]
+
+skill_pack:
+  domain_skill: "skills.domains.lgd.LGDDomainSkill"
+  stage_skills: {}
+
+test_pack:
+  required_test_ids: [test_lgd_full_lifecycle]

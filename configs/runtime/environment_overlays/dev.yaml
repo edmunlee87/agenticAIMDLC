@@ -1,0 +1,20 @@
+# Development Environment Overlay
+overlay:
+  environment: dev
+  description: "Development environment. Relaxed strictness; governance gates still tracked but not all hard-blocked."
+  strictness:
+    enforce_all_governance_gates: false
+    allow_auto_continue_on_warn: true
+    require_policy_acknowledgment: false
+    strict_audit_chain: false
+  retries:
+    max_retries_override: 3
+    retry_mode_override: exponential_backoff
+  block_rules:
+    blocked_tools: []
+    blocked_actions: []
+    blocked_stage_classes: []
+  ui_defaults:
+    default_ui_mode: three_panel_review_workspace
+    default_interaction_mode: edit_and_finalize
+    default_token_mode: compact

@@ -1,0 +1,123 @@
+# Domain Pack Contract Schema v1.0.0
+# ============================================================
+# Every domain pack MUST provide all required sections below.
+# Optional sections are marked with (optional).
+# This schema is validated at runtime by DomainPackLoader.
+# ============================================================
+
+schema_version: "1.0.0"
+schema_type: "domain_pack_contract"
+
+# ------------------------------------------------------------------
+# Required: top-level domain identity
+# ------------------------------------------------------------------
+domain:                       # string: unique domain identifier (e.g. "scorecard")
+description:                  # string: human-readable domain description
+model_class:                  # string: broad model class (e.g. "credit_scorecard", "time_series")
+regulatory_scope:             # list[str]: applicable regulatory frameworks (e.g. ["IFRS9", "Basel"])
+schema_version:               # string: semantic version of this pack
+
+# ------------------------------------------------------------------
+# Required: stage registry -- the ordered list of domain stages
+# ------------------------------------------------------------------
+stage_registry:
+  - stage_id:                 # string: unique stage identifier (must match runtime config)
+    label:                    # string: human-readable label
+    stage_class:              # string: "development" | "review" | "governance" | "terminal"
+    is_terminal: false        # bool: whether this is a terminal stage
+    requires_hitl: false      # bool: whether this stage blocks for human review
+    governance_gate: false    # bool: whether this stage is a governance gate
+    tool_groups:              # list[str]: tool group IDs available in this stage
+      - []
+    artifact_types:           # list[str]: artifact types produced in this stage
+      - []
+    policy_pack_ids:          # list[str]: policy packs applied at this stage
+      - []
+
+# ------------------------------------------------------------------
+# Required: routing rules -- stage transition logic
+# ------------------------------------------------------------------
+routing_rules:
+  - from_stage:               # string: source stage_id
+    to_stage:                 # string: target stage_id (on success)
+    condition:                # string: "always" | "on_success" | "on_approval" | "on_selection"
+    failure_stage:            # (optional) string: stage to route to on failure
+
+# ------------------------------------------------------------------
+# Required: metrics pack -- metric definitions and thresholds
+# ------------------------------------------------------------------
+metrics_pack:
+  - metric_name:              # string: metric identifier (e.g. "gini")
+    display_name:             # string: human-readable name
+    description:              # string
+    higher_is_better: true    # bool
+    threshold_low:            # (optional) float: minimum acceptable value
+    threshold_high:           # (optional) float: maximum acceptable value
+    warn_threshold_low:       # (optional) float: warning lower bound
+    dataset_splits:           # list[str]: which splits to compute on
+      - ["test"]
+    is_primary: false         # bool: whether this is the primary selection metric
+
+# ------------------------------------------------------------------
+# Required: policy pack -- domain-specific governance rules
+# ------------------------------------------------------------------
+policy_pack:
+  - rule_id:                  # string: unique rule ID
+    name:                     # string
+    description:              # string
+    severity:                 # "critical" | "high" | "medium" | "low"
+    applies_to_stages:        # list[str]: stage_ids where this rule is evaluated
+      - []
+    condition_expression:     # string: human-readable condition (not executed; for documentation)
+    requires_waiver: false    # bool: whether a waiver is required to bypass
+
+# ------------------------------------------------------------------
+# Required: artifact pack -- artifact type definitions
+# ------------------------------------------------------------------
+artifact_pack:
+  - artifact_type:            # string: unique artifact type identifier
+    display_name:             # string
+    description:              # string
+    produced_at_stage:        # string: stage_id where this artifact is produced
+    schema_ref:               # (optional) string: path to JSON schema for validation
+    is_audit_required: false  # bool: whether this artifact must be in the audit trail
+
+# ------------------------------------------------------------------
+# Required: review templates -- HITL review panel configurations
+# ------------------------------------------------------------------
+review_templates:
+  - template_id:              # string: unique template identifier
+    stage_id:                 # string: stage this template is for
+    review_type:              # "approval" | "selection" | "recovery"
+    panel_a_evidence_types:   # list[str]: artifact types shown in Panel A
+      - []
+    required_form_fields:     # list[str]: field IDs required in Panel B
+      - ["rationale", "policy_acknowledged"]
+    action_types:             # list[str]: action types available in Panel C
+      - ["approve", "reject", "escalate"]
+    required_roles:           # list[str]: role IDs who can submit
+      - []
+
+# ------------------------------------------------------------------
+# Required: skill pack -- skill class references for this domain
+# ------------------------------------------------------------------
+skill_pack:
+  domain_skill:               # string: fully-qualified Python class (e.g. "skills.domains.scorecard.DomainSkill")
+  stage_skills:               # dict: stage_id -> fully-qualified Python class
+    {}
+
+# ------------------------------------------------------------------
+# Optional: domain overlay -- runtime config overrides for this domain
+# ------------------------------------------------------------------
+domain_overlay:
+  ui_overrides: []
+  tool_additions: []
+  governance_gate_additions: []
+
+# ------------------------------------------------------------------
+# Optional: test pack -- acceptance test references for this domain
+# ------------------------------------------------------------------
+test_pack:
+  test_module:                # (optional) string: Python test module
+  required_test_ids:          # list[str]: test IDs that must pass for domain validation
+    []

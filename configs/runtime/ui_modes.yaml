@@ -1,0 +1,79 @@
+# UI Mode Definitions
+# Defines each UI layout mode with its panels and default mappings.
+
+modes:
+  three_panel_review_workspace:
+    mode: three_panel_review_workspace
+    description: "3-panel review workspace. Panel A: proposal+evidence; Panel B: editable; Panel C: actions/status."
+    panels:
+      - proposal_panel
+      - editable_workspace_panel
+      - actions_status_panel
+    default_for_stage_classes:
+      - review
+      - approval
+    token_budget_hint: compact
+
+  validation_review_workspace:
+    mode: validation_review_workspace
+    description: "Validation-focused workspace with findings, evidence, and conclusion panels."
+    panels:
+      - findings_panel
+      - evidence_panel
+      - conclusion_panel
+    default_for_stage_classes:
+      - validation
+    token_budget_hint: compact
+
+  dashboard_review_workspace:
+    mode: dashboard_review_workspace
+    description: "Dashboard view for monitoring and summary reviews."
+    panels:
+      - summary_panel
+      - metrics_panel
+      - actions_panel
+    default_for_stage_classes:
+      - monitoring
+    token_budget_hint: minimal
+
+  bootstrap_workspace:
+    mode: bootstrap_workspace
+    description: "Project and session bootstrap workspace."
+    panels:
+      - project_selection_panel
+      - session_options_panel
+    default_for_stage_classes:
+      - bootstrap
+    token_budget_hint: compact
+
+  recovery_workspace:
+    mode: recovery_workspace
+    description: "Recovery decision workspace showing failure context and recovery options."
+    panels:
+      - failure_context_panel
+      - recovery_options_panel
+      - audit_trail_panel
+    default_for_stage_classes:
+      - recovery
+    token_budget_hint: compact
+
+  monitoring_workspace:
+    mode: monitoring_workspace
+    description: "Monitoring operational workspace."
+    panels:
+      - metrics_panel
+      - alerts_panel
+      - drift_panel
+    default_for_stage_classes:
+      - monitoring
+    token_budget_hint: minimal
+
+  read_only_workspace:
+    mode: read_only_workspace
+    description: "Read-only workspace for stages where no user edits are permitted."
+    panels:
+      - summary_panel
+      - audit_trail_panel
+    default_for_stage_classes:
+      - build
+    token_budget_hint: routing_only

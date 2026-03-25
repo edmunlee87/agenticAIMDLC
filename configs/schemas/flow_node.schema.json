@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "flow_node.schema.json",
+  "title": "FlowNode",
+  "description": "Visual flow node derived from observability events. Used by flowvizsdk for workflow visualization.",
+  "type": "object",
+  "required": ["node_id", "node_type", "title", "run_id", "project_id", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "node_id": { "type": "string" },
+    "node_type": {
+      "type": "string",
+      "enum": ["task", "approval", "artefact", "validation_gate", "agent_step", "recovery", "decision"]
+    },
+    "title": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started", "queued", "running", "waiting_input", "waiting_review",
+        "completed", "completed_with_warning", "failed", "skipped", "approved", "rejected"
+      ]
+    },
+    "stage_name": { "type": "string" },
+    "owner": { "type": "string" },
+    "last_updated": { "type": "string", "format": "date-time" },
+    "progress": { "type": "number", "minimum": 0, "maximum": 100 },
+    "run_id": { "type": "string" },
+    "project_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "source_event_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "artifact_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "audit_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" }
+      }
+    }
+  }
+}

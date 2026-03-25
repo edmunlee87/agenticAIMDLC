@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "interaction_payload.schema.json",
+  "title": "InteractionPayload",
+  "description": "Structured input from UI or agent to a controller. Carries the user action, edits, and policy acknowledgments.",
+  "type": "object",
+  "required": ["interaction_id", "project_id", "run_id", "session_id", "stage_name", "interaction_type", "action", "actor", "timestamp", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "interaction_id": { "type": "string" },
+    "project_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "stage_name": { "type": "string" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "review_id": { "type": "string" },
+    "interaction_type": {
+      "type": "string",
+      "enum": ["stage_action", "review_response", "recovery_choice", "session_command", "query"]
+    },
+    "action": { "type": "string" },
+    "structured_edits": {
+      "type": "object",
+      "description": "Structured edits made by the reviewer (e.g. updated bins, parameter overrides).",
+      "additionalProperties": true
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Action-specific parameters (e.g. rerun parameters, selection rationale).",
+      "additionalProperties": true
+    },
+    "user_comment": { "type": "string" },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "content_type": { "type": "string" },
+          "uri": { "type": "string" }
+        }
+      }
+    },
+    "policy_acknowledgments": {
+      "type": "array",
+      "description": "Policy findings the actor has explicitly seen and acknowledged before taking action.",
+      "items": {
+        "type": "object",
+        "required": ["finding_id", "acknowledged_at"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "acknowledged_at": { "type": "string", "format": "date-time" },
+          "comment": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" },
+        "active_policy_pack_id": { "type": "string" }
+      }
+    }
+  }
+}

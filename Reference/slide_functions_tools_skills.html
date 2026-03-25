@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1500">
+<title>MDLC Agentic AI – Functions, Tools &amp; Skills</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f5f4f0;
+  --surface:#fff;
+  --rule:#d8d4cc;
+  --ink:#1a1d27;
+  --ink2:#3d4258;
+  --ink3:#8a8fa8;
+
+  --skill:#5b21b6;       /* violet */
+  --skill-bg:#f0ebff;
+  --skill-mid:#ede2ff;
+
+  --mcp:#0c4a6e;         /* deep navy */
+  --mcp-bg:#e0f2fe;
+  --mcp-mid:#bae6fd;
+
+  --sdk:#1e3a5f;         /* dark blue */
+  --sdk-bg:#e8f0fb;
+  --sdk-mid:#c7d9f5;
+
+  --hybrid:#9a3412;      /* burnt orange */
+  --hybrid-bg:#fff0e8;
+
+  --gate:#7c0f00;
+  --gate-bg:#fde8e4;
+}
+body{
+  background:var(--bg);
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:24px 28px 32px;
+}
+
+/* ── Header ── */
+.header{
+  width:100%;
+  max-width:1440px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  border-bottom:2.5px solid var(--ink);
+  padding-bottom:12px;
+  margin-bottom:16px;
+}
+.title-block .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.2em;
+  color:var(--ink3);
+  text-transform:uppercase;
+  margin-bottom:3px;
+}
+.title-block h1{
+  font-family:'Syne',sans-serif;
+  font-size:26px;
+  font-weight:800;
+  color:var(--ink);
+  line-height:1.05;
+}
+.title-block h1 em{font-style:normal;color:var(--skill)}
+.subtitle{
+  font-size:11.5px;
+  color:var(--ink2);
+  margin-top:4px;
+  line-height:1.5;
+  max-width:640px;
+}
+
+/* ── Principle banner ── */
+.principle{
+  width:100%;
+  max-width:1440px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:0;
+  border:1.5px solid var(--rule);
+  border-radius:4px;
+  overflow:hidden;
+  margin-bottom:14px;
+}
+.principle-cell{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 16px;
+  border-right:1px solid var(--rule);
+  background:var(--surface);
+}
+.principle-cell:last-child{border-right:none}
+.pc-icon{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+.pc-text .label{
+  font-family:'Syne',sans-serif;
+  font-size:12.5px;font-weight:700;
+}
+.pc-text .desc{
+  font-size:10.5px;color:var(--ink3);margin-top:1px;
+}
+
+/* ── Main three-column grid ── */
+.main-grid{
+  width:100%;
+  max-width:1440px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+/* Column card */
+.col-card{
+  background:var(--surface);
+  border-radius:5px;
+  overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  display:flex;
+  flex-direction:column;
+}
+.col-header{
+  padding:11px 14px 10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:1px solid var(--rule);
+}
+.col-icon{
+  width:28px;height:28px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+.col-title{
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:800;
+}
+.col-subtitle{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;letter-spacing:0.14em;text-transform:uppercase;
+  margin-top:1px;
+}
+.col-body{
+  padding:10px 12px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* Sub-group inside a column */
+.subgroup{}
+.sg-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;
+  margin-bottom:4px;
+  padding-bottom:3px;
+  border-bottom:1px solid var(--rule);
+}
+.item-list{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.item{
+  display:flex;
+  align-items:flex-start;
+  gap:7px;
+  font-size:11px;
+  color:var(--ink2);
+  line-height:1.4;
+}
+.item-bullet{
+  width:5px;height:5px;border-radius:50%;
+  margin-top:4px;flex-shrink:0;
+}
+.item strong{
+  font-weight:600;
+  color:var(--ink);
+  font-size:11px;
+}
+
+/* API chips inside SDK column */
+.api-chip{
+  display:inline-block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;
+  padding:2px 7px;
+  border-radius:2px;
+  margin:1px 2px 1px 0;
+  white-space:nowrap;
+}
+
+/* ── Hybrid row ── */
+.hybrid-row{
+  width:100%;
+  max-width:1440px;
+  background:var(--surface);
+  border-radius:5px;
+  overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  margin-bottom:12px;
+}
+.hybrid-header{
+  padding:9px 16px;
+  border-bottom:1px solid var(--rule);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:var(--hybrid-bg);
+}
+.hybrid-header .col-title{color:var(--hybrid)}
+.hybrid-header .col-subtitle{color:var(--hybrid);opacity:.7}
+.hybrid-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:0;
+  padding:10px 14px;
+}
+.hybrid-cell{
+  padding:6px 8px;
+  border-right:1px solid var(--rule);
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.hybrid-cell:last-child{border-right:none}
+.hc-name{
+  font-family:'Syne',sans-serif;
+  font-size:11.5px;font-weight:700;
+  color:var(--hybrid);
+}
+.hc-mcp,.hc-skill{
+  font-size:10px;color:var(--ink2);
+  display:flex;align-items:flex-start;gap:4px;line-height:1.35;
+}
+.hc-badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:8px;letter-spacing:0.08em;text-transform:uppercase;
+  padding:1px 5px;border-radius:2px;flex-shrink:0;margin-top:0.5px;
+  white-space:nowrap;
+}
+.badge-mcp{background:var(--mcp-bg);color:var(--mcp)}
+.badge-skill{background:var(--skill-bg);color:var(--skill)}
+
+/* ── Decision rule box ── */
+.rule-row{
+  width:100%;
+  max-width:1440px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.rule-card{
+  background:var(--surface);
+  border-radius:5px;
+  overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.rule-header{
+  padding:8px 14px;
+  border-bottom:1px solid var(--rule);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;letter-spacing:0.15em;text-transform:uppercase;
+}
+.rule-body{
+  padding:8px 14px 10px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px 20px;
+}
+.rule-item{
+  display:flex;align-items:flex-start;gap:7px;
+  font-size:11px;color:var(--ink2);line-height:1.4;
+}
+.r-dot{width:5px;height:5px;border-radius:50%;margin-top:4px;flex-shrink:0}
+
+/* ── Colour helpers ── */
+.skill-color{color:var(--skill)}
+.mcp-color{color:var(--mcp)}
+.sdk-color{color:var(--sdk)}
+
+.skill-bg2{background:var(--skill-bg)}
+.mcp-bg2{background:var(--mcp-bg)}
+.sdk-bg2{background:var(--sdk-bg)}
+
+/* animate */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.col-card,.hybrid-row,.rule-card,.principle{animation:rise .35s ease both}
+.col-card:nth-child(1){animation-delay:.04s}
+.col-card:nth-child(2){animation-delay:.10s}
+.col-card:nth-child(3){animation-delay:.16s}
+.hybrid-row{animation-delay:.22s}
+.rule-card:nth-child(1){animation-delay:.28s}
+.rule-card:nth-child(2){animation-delay:.32s}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="title-block">
+    <div class="eyebrow">MDLC Agentic AI Platform</div>
+    <h1>Key Functions, <em>Tools</em> &amp; Skills</h1>
+    <div class="subtitle">The platform operates through three cooperating capability types: Skills shape reasoning. MCP Tools expose authoritative system actions. Deterministic SDKs perform all material execution.</div>
+  </div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px">
+    Separation of Concerns · Governance-First · Token-Thrifty
+  </div>
+</div>
+
+<!-- Principle banner -->
+<div class="principle">
+  <div class="principle-cell">
+    <div class="pc-icon" style="background:var(--skill-bg)">🎯</div>
+    <div class="pc-text">
+      <div class="label skill-color">Skills</div>
+      <div class="desc">Reusable reasoning, review, checklist, and drafting patterns — shape <em>how</em> the agent thinks</div>
+    </div>
+  </div>
+  <div class="principle-cell">
+    <div class="pc-icon" style="background:var(--mcp-bg)">🔑</div>
+    <div class="pc-text">
+      <div class="label mcp-color">MCP Tools</div>
+      <div class="desc">Authoritative callables for state reads, writes, governance, registry, and knowledge retrieval</div>
+    </div>
+  </div>
+  <div class="principle-cell">
+    <div class="pc-icon" style="background:var(--sdk-bg)">⚙</div>
+    <div class="pc-text">
+      <div class="label sdk-color">SDK Functions</div>
+      <div class="desc">Deterministic, testable SDK packages that execute all ECL domain, governance, and publication logic</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main three columns -->
+<div class="main-grid">
+
+  <!-- COLUMN 1: SKILLS -->
+  <div class="col-card">
+    <div class="col-header" style="background:var(--skill-bg);border-bottom:2px solid var(--skill-mid)">
+      <div class="col-icon" style="background:var(--skill);color:#fff">S</div>
+      <div>
+        <div class="col-title skill-color">Skills</div>
+        <div class="col-subtitle skill-color" style="opacity:.7">Reasoning assets · Never own authoritative state</div>
+      </div>
+    </div>
+    <div class="col-body">
+
+      <div class="subgroup">
+        <div class="sg-label skill-color">Review &amp; Challenge Playbooks</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>PD candidate review</strong> — discrimination, calibration, stability checklist</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>LGD recursive challenge</strong> — forward-looking, macro linkage, cure logic</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>EAD methodological review</strong> — utilisation dynamics, CCF interpretation</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>SICR threshold challenge</strong> — rule-vs-model trade-off framework</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>Overlay rationale review</strong> — justification, governance tone guide</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>Monitoring breach interpretation</strong> — stability and drift narrative</div></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <div class="sg-label skill-color">Drafting Playbooks</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>Methodology note style</strong> — approved narrative structure and wording</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>Committee summary style</strong> — CRO deck and senior management tone</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>Validation rebuttal style</strong> — challenge response drafting pattern</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>Limitation summary</strong> — structured exception and caveat drafting</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div><strong>Monitoring commentary</strong> — periodic review narrative guide</div></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <div class="sg-label skill-color">Process &amp; Analyst Guidance</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div>ECL MDLC stage checklist</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div>Evidence completeness checklist</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div>Candidate comparison checklist</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div>Pre-submission governance checklist</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div>Reviewer handoff checklist</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div>DQ issue interpretation guide</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--skill)"></div><div>Performance trade-off review guide</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COLUMN 2: MCP TOOLS -->
+  <div class="col-card">
+    <div class="col-header" style="background:var(--mcp-bg);border-bottom:2px solid var(--mcp-mid)">
+      <div class="col-icon" style="background:var(--mcp);color:#fff">M</div>
+      <div>
+        <div class="col-title mcp-color">MCP Tools</div>
+        <div class="col-subtitle mcp-color" style="opacity:.7">Authoritative callables · Audited · Schema-enforced</div>
+      </div>
+    </div>
+    <div class="col-body">
+
+      <div class="subgroup">
+        <div class="sg-label mcp-color">Governance &amp; Approvals</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>request_approval</strong>(payload) → approval_id</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>record_approval_decision</strong>(id, payload) → decision_record</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>validate_stage_transition</strong>(run, from, to) → result</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>freeze_candidate</strong>(run_id, candidate_id) → freeze</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>register_policy_exception</strong>(payload) → exception_id</div></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <div class="sg-label mcp-color">Workflow State</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>create_workflow_run</strong>(project, type) → run_id</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>advance_stage</strong>(run_id, stage, payload) → result</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>pause_for_approval</strong>(run_id, payload) → pause</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>resume_run</strong>(run_id, signal) → result</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>get_run_state</strong>(run_id) → run_state</div></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <div class="sg-label mcp-color">Registry &amp; Lineage</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>register_candidate</strong> / <strong>register_artifact</strong></div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>fetch_run_lineage</strong> / <strong>fetch_artifact_index</strong></div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>fetch_candidate_summary</strong>(candidate_id)</div></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <div class="sg-label mcp-color">Knowledge &amp; Memory</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>search_approved_knowledge</strong>(query, filters)</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>fetch_policy_note</strong> / <strong>fetch_validation_precedent</strong></div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>retrieve_run_memory</strong> / <strong>add_approved_memory</strong></div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>compress_run_memory</strong>(run_id) → project_memory</div></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <div class="sg-label mcp-color">Manifest &amp; Artifacts</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>build_manifest</strong> / <strong>validate_manifest</strong></div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>rerun_from_manifest</strong>(manifest_id)</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--mcp)"></div><div><strong>publish_model_product</strong> / <strong>get_validation_pack</strong></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COLUMN 3: SDK FUNCTIONS -->
+  <div class="col-card">
+    <div class="col-header" style="background:var(--sdk-bg);border-bottom:2px solid var(--sdk-mid)">
+      <div class="col-icon" style="background:var(--sdk);color:#fff">K</div>
+      <div>
+        <div class="col-title sdk-color">SDK Key Functions</div>
+        <div class="col-subtitle sdk-color" style="opacity:.7">Deterministic · Testable · No ADK dependency</div>
+      </div>
+    </div>
+    <div class="col-body">
+
+      <div class="subgroup">
+        <div class="sg-label sdk-color">Core Control</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>governance_sdk</strong> — policy gates, audit, freeze, publish, sign-off</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>workflow_sdk</strong> — run lifecycle, stage transitions, checkpoint semantics</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>registry_sdk</strong> — project/run/candidate/artifact/manifest registration</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>observability_sdk</strong> — event, tool-call, decision, and lineage logging</div></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <div class="sg-label sdk-color">ECL Domain Execution</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>ecl_data_prep_sdk</strong> — snapshot, panel, cohort, macro alignment</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>dq_sdk</strong> — schema, temporal, business-rule, join, leakage checks</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>feature_sdk</strong> — lags, WoE/binning, macro prep, feature lineage</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>pd_model_sdk</strong> — PD candidate fitting, term structure, evaluation</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>lgd_model_sdk</strong> — macro-linked LGD, cure/severity, workout support</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>ead_model_sdk</strong> — CCF/EAD candidate fitting and outputs</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>sicr_sdk</strong> — rule-based and model-based SICR, threshold impact</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>evaluation_sdk</strong> — metric pack, candidate comparison, shortlist</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>validation_sdk</strong> — threshold tests, exception packs, limitation summary</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>overlay_sdk</strong> — overlay pack, rationale assessment, governance trail</div></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <div class="sg-label sdk-color">Output, Reproducibility &amp; Knowledge</div>
+        <div class="item-list">
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>reporting_sdk</strong> — charts, summary tables, stakeholder packs</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>docgen_sdk</strong> — methodology note, validation response, committee pack</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>manifest_sdk</strong> — final manifest, execution recipe, fingerprints</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>repro_sdk</strong> — rerun from manifest, output comparison, repro report</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>packaging_sdk</strong> — immutable model product bundle, publish</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>memory_sdk</strong> — scoped add/update/retire/retrieve/compress memory</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>knowledge_sdk</strong> — ingest, curate, approve, version, retire knowledge</div></div>
+          <div class="item"><div class="item-bullet" style="background:var(--sdk)"></div><div><strong>rag_sdk</strong> — index curated content, semantic search, prompt assembly</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Hybrid row -->
+<div class="hybrid-row">
+  <div class="hybrid-header">
+    <div class="col-icon" style="background:var(--hybrid);color:#fff;width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:13px">H</div>
+    <div>
+      <div class="col-title" style="color:var(--hybrid)">Hybrid Capabilities</div>
+      <div class="col-subtitle" style="color:var(--hybrid);opacity:.7;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase">MCP tool retrieves authoritative data · Skill interprets and drafts</div>
+    </div>
+  </div>
+  <div class="hybrid-grid">
+    <div class="hybrid-cell">
+      <div class="hc-name">Data Quality</div>
+      <div class="hc-mcp"><span class="hc-badge badge-mcp">MCP</span>Run &amp; fetch DQ results</div>
+      <div class="hc-skill"><span class="hc-badge badge-skill">Skill</span>Interpret ECL suitability implications</div>
+    </div>
+    <div class="hybrid-cell">
+      <div class="hc-name">Feature Eng.</div>
+      <div class="hc-mcp"><span class="hc-badge badge-mcp">MCP</span>Fetch feature summary &amp; lineage</div>
+      <div class="hc-skill"><span class="hc-badge badge-skill">Skill</span>Explain quality &amp; shortlist rationale</div>
+    </div>
+    <div class="hybrid-cell">
+      <div class="hc-name">Evaluation</div>
+      <div class="hc-mcp"><span class="hc-badge badge-mcp">MCP</span>Compare candidates, fetch metrics</div>
+      <div class="hc-skill"><span class="hc-badge badge-skill">Skill</span>Interpret trade-offs, draft recommendation</div>
+    </div>
+    <div class="hybrid-cell">
+      <div class="hc-name">Validation</div>
+      <div class="hc-mcp"><span class="hc-badge badge-mcp">MCP</span>Fetch validation pack &amp; exceptions</div>
+      <div class="hc-skill"><span class="hc-badge badge-skill">Skill</span>Draft validation response &amp; rebuttal</div>
+    </div>
+    <div class="hybrid-cell">
+      <div class="hc-name">Knowledge</div>
+      <div class="hc-mcp"><span class="hc-badge badge-mcp">MCP</span>Retrieve approved knowledge items</div>
+      <div class="hc-skill"><span class="hc-badge badge-skill">Skill</span>Explain how to apply in context</div>
+    </div>
+    <div class="hybrid-cell">
+      <div class="hc-name">Memory</div>
+      <div class="hc-mcp"><span class="hc-badge badge-mcp">MCP</span>Retrieve scoped memory summary</div>
+      <div class="hc-skill"><span class="hc-badge badge-skill">Skill</span>Judge relevance for current reasoning</div>
+    </div>
+    <div class="hybrid-cell">
+      <div class="hc-name">Monitoring</div>
+      <div class="hc-mcp"><span class="hc-badge badge-mcp">MCP</span>Fetch metrics &amp; threshold breaches</div>
+      <div class="hc-skill"><span class="hc-badge badge-skill">Skill</span>Draft monitoring commentary &amp; escalation</div>
+    </div>
+  </div>
+</div>
+
+<!-- Decision rules -->
+<div class="rule-row">
+  <div class="rule-card">
+    <div class="rule-header mcp-color">Use MCP tools when the capability...</div>
+    <div class="rule-body">
+      <div class="rule-item"><div class="r-dot" style="background:var(--mcp)"></div>Changes or reads authoritative system state</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--mcp)"></div>Touches governance, registry, approvals, or artifacts</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--mcp)"></div>Requires a strict schema-validated payload</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--mcp)"></div>Must be auditable and deterministic</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--mcp)"></div>Must be shared across agents or runtimes</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--mcp)"></div>Involves manifest, lineage, or model product operations</div>
+    </div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-header skill-color">Use skills when the capability...</div>
+    <div class="rule-body">
+      <div class="rule-item"><div class="r-dot" style="background:var(--skill)"></div>Is primarily a reasoning or review pattern</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--skill)"></div>Is a drafting, checklist, or interpretation guide</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--skill)"></div>Does not own or mutate authoritative state</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--skill)"></div>Shapes how the agent thinks, not what it records</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--skill)"></div>Can be reused across agents and model families</div>
+      <div class="rule-item"><div class="r-dot" style="background:var(--skill)"></div>Benefits from compact, token-thrifty instruction</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

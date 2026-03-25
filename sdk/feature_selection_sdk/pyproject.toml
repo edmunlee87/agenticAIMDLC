@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mdl-feature-selection-sdk"
+version = "0.1.0"
+description = "Model-agnostic feature selection SDK: SHAP, mutual information, RFE, permutation importance, and stability selection with full audit provenance"
+requires-python = ">=3.11"
+dependencies = [
+    "mdl-platform-contracts",
+    "mdl-artifact-sdk",
+    "mdl-observability-sdk",
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scikit-learn>=1.4",
+]
+
+[project.optional-dependencies]
+shap = ["shap>=0.45"]
+spark = ["pyspark>=3.5"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/feature_selection_sdk"]

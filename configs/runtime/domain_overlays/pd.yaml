@@ -1,0 +1,116 @@
+# Probability of Default (PD) Model Domain Pack v1.0.0
+domain: pd
+description: "PD / through-the-cycle rating model development for IFRS9/Basel."
+model_class: probability_of_default
+regulatory_scope: [IFRS9, Basel_III]
+schema_version: "1.0.0"
+
+stage_registry:
+  - stage_id: data_preparation
+    label: Data Preparation
+    stage_class: development
+    artifact_types: [dataset_snapshot, dq_report]
+  - stage_id: default_definition_review
+    label: Default Definition Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record]
+    policy_pack_ids: [pd_pol_default_definition]
+  - stage_id: model_development
+    label: PD Model Development
+    stage_class: development
+    artifact_types: [model_candidate_set, evaluation_pack]
+  - stage_id: calibration
+    label: TTC / PIT Calibration
+    stage_class: development
+    artifact_types: [calibration_report]
+  - stage_id: model_review
+    label: PD Model Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record, selected_model]
+    policy_pack_ids: [pd_pol_discriminatory_power]
+  - stage_id: deployment_readiness
+    label: Deployment Readiness
+    stage_class: governance
+    requires_hitl: true
+    governance_gate: true
+    is_terminal: false
+  - stage_id: deployed
+    label: Deployed
+    stage_class: terminal
+    is_terminal: true
+
+routing_rules:
+  - from_stage: data_preparation
+    to_stage: default_definition_review
+    condition: on_success
+  - from_stage: default_definition_review
+    to_stage: model_development
+    condition: on_approval
+  - from_stage: model_development
+    to_stage: calibration
+    condition: on_success
+  - from_stage: calibration
+    to_stage: model_review
+    condition: on_success
+  - from_stage: model_review
+    to_stage: deployment_readiness
+    condition: on_approval
+    failure_stage: model_development
+  - from_stage: deployment_readiness
+    to_stage: deployed
+    condition: on_approval
+
+metrics_pack:
+  - metric_name: gini
+    display_name: Gini Coefficient
+    higher_is_better: true
+    threshold_low: 0.35
+    is_primary: true
+  - metric_name: brier_score
+    display_name: Brier Score
+    higher_is_better: false
+    threshold_high: 0.20
+  - metric_name: hosmer_lemeshow_p
+    display_name: Hosmer-Lemeshow p-value
+    description: "p > 0.05 indicates good calibration."
+    higher_is_better: true
+    threshold_low: 0.05
+
+policy_pack:
+  - rule_id: pd_pol_default_definition
+    name: Default Definition Alignment
+    description: Default definition must align with CRD IV / Basel III Article 178.
+    severity: critical
+    applies_to_stages: [default_definition_review]
+    requires_waiver: false
+  - rule_id: pd_pol_discriminatory_power
+    name: Discriminatory Power
+    description: Gini >= 0.35 required.
+    severity: critical
+    applies_to_stages: [model_review]
+    condition_expression: "metrics.gini >= 0.35"
+    requires_waiver: false
+
+artifact_pack:
+  - artifact_type: calibration_report
+    display_name: TTC/PIT Calibration Report
+    produced_at_stage: calibration
+    is_audit_required: true
+
+review_templates:
+  - template_id: model_review_tmpl
+    stage_id: model_review
+    review_type: selection
+    panel_a_evidence_types: [model_candidate_set, evaluation_pack, calibration_report]
+    required_roles: [model_developer, validator, model_risk]
+
+skill_pack:
+  domain_skill: "skills.domains.pd.PDDomainSkill"
+  stage_skills: {}
+
+test_pack:
+  required_test_ids: [test_pd_full_lifecycle]

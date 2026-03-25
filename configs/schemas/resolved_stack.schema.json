@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "resolved_stack.schema.json",
+  "title": "ResolvedStack",
+  "description": "Output of the runtime resolver. Defines the effective skill stack, tool allowlist, UI contract, and governance constraints for the current stage/role/domain context.",
+  "type": "object",
+  "required": ["project_id", "run_id", "session_id", "stage_name", "active_role", "resolved_skills", "sdk_allowlist", "ui_contract", "response_contract", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "project_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "stage_name": { "type": "string" },
+    "active_role": { "type": "string" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "resolved_skills": {
+      "type": "object",
+      "properties": {
+        "base_skills": { "type": "array", "items": { "type": "string" } },
+        "role_skill": { "type": "string" },
+        "domain_skill": { "type": "string" },
+        "stage_skill": { "type": "string" },
+        "overlay_skills": { "type": "array", "items": { "type": "string" } },
+        "support_skills": { "type": "array", "items": { "type": "string" } },
+        "ordered_skill_ids": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["base_skills", "ordered_skill_ids"]
+    },
+    "sdk_allowlist": {
+      "type": "array",
+      "description": "SDK/tool identifiers the agent is permitted to call in this context.",
+      "items": { "type": "string" }
+    },
+    "sdk_blocklist": {
+      "type": "array",
+      "description": "SDK/tool identifiers explicitly blocked in this context.",
+      "items": { "type": "string" }
+    },
+    "ui_contract": {
+      "type": "object",
+      "properties": {
+        "ui_mode": { "type": "string" },
+        "interaction_mode": { "type": "string" },
+        "token_mode": { "type": "string" },
+        "requires_human_action": { "type": "boolean" },
+        "display_sections": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["ui_mode", "interaction_mode"]
+    },
+    "response_contract": {
+      "type": "object",
+      "properties": {
+        "expected_response_schema": { "type": "string" },
+        "mandatory_statuses": { "type": "array", "items": { "type": "string" } },
+        "requires_audit_ref": { "type": "boolean" },
+        "requires_event_ref": { "type": "boolean" }
+      }
+    },
+    "access_mode": {
+      "type": "string",
+      "enum": ["READ_ONLY", "BUILD_ONLY", "REVIEW_REQUIRED", "FINALIZATION_GATED", "MONITORING_OPERATIONAL"]
+    },
+    "governance_constraints": {
+      "type": "object",
+      "properties": {
+        "blocked_actions": { "type": "array", "items": { "type": "string" } },
+        "mandatory_review_reasons": { "type": "array", "items": { "type": "string" } },
+        "mandatory_audit_reasons": { "type": "array", "items": { "type": "string" } },
+        "approval_required": { "type": "boolean" },
+        "auto_continue_allowed": { "type": "boolean" },
+        "review_required": { "type": "boolean" }
+      }
+    },
+    "retry_policy": {
+      "type": "object",
+      "properties": {
+        "max_retries": { "type": "integer" },
+        "retry_on": { "type": "array", "items": { "type": "string" } },
+        "backoff_mode": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" },
+        "active_policy_pack_id": { "type": "string" }
+      }
+    }
+  }
+}

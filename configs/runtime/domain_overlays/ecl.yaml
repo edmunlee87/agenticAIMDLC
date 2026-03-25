@@ -1,0 +1,114 @@
+# ECL (Expected Credit Loss) Model Domain Pack v1.0.0
+domain: ecl
+description: "IFRS9 ECL model combining PD, LGD, and EAD with staging logic (Stages 1/2/3)."
+model_class: expected_credit_loss
+regulatory_scope: [IFRS9]
+schema_version: "1.0.0"
+
+stage_registry:
+  - stage_id: data_preparation
+    label: Data Preparation
+    stage_class: development
+    artifact_types: [dataset_snapshot, dq_report]
+  - stage_id: staging_logic_review
+    label: IFRS9 Staging Logic Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record]
+    policy_pack_ids: [ecl_pol_staging_criteria]
+  - stage_id: pd_lgd_ead_assembly
+    label: PD/LGD/EAD Component Assembly
+    stage_class: development
+    artifact_types: [ecl_component_pack]
+  - stage_id: macroeconomic_overlay
+    label: Macroeconomic Overlay
+    stage_class: development
+    artifact_types: [macro_overlay_report]
+  - stage_id: model_review
+    label: ECL Model Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record, selected_model]
+    policy_pack_ids: [ecl_pol_provision_coverage]
+  - stage_id: deployment_readiness
+    label: Deployment Readiness
+    stage_class: governance
+    requires_hitl: true
+    governance_gate: true
+    is_terminal: false
+  - stage_id: deployed
+    label: Deployed
+    stage_class: terminal
+    is_terminal: true
+
+routing_rules:
+  - from_stage: data_preparation
+    to_stage: staging_logic_review
+    condition: on_success
+  - from_stage: staging_logic_review
+    to_stage: pd_lgd_ead_assembly
+    condition: on_approval
+  - from_stage: pd_lgd_ead_assembly
+    to_stage: macroeconomic_overlay
+    condition: on_success
+  - from_stage: macroeconomic_overlay
+    to_stage: model_review
+    condition: on_success
+  - from_stage: model_review
+    to_stage: deployment_readiness
+    condition: on_approval
+    failure_stage: pd_lgd_ead_assembly
+  - from_stage: deployment_readiness
+    to_stage: deployed
+    condition: on_approval
+
+metrics_pack:
+  - metric_name: ecl_coverage_ratio
+    display_name: ECL Coverage Ratio
+    higher_is_better: true
+    threshold_low: 0.005
+    is_primary: true
+  - metric_name: stage_2_migration_rate
+    display_name: Stage 2 Migration Rate
+    higher_is_better: false
+    threshold_high: 0.30
+
+policy_pack:
+  - rule_id: ecl_pol_staging_criteria
+    name: IFRS9 Staging Criteria Compliance
+    description: Staging triggers must comply with IFRS9 paragraphs 5.5.3-5.5.11.
+    severity: critical
+    applies_to_stages: [staging_logic_review]
+    requires_waiver: false
+  - rule_id: ecl_pol_provision_coverage
+    name: Provision Coverage Adequacy
+    description: ECL coverage ratio must be within acceptable range.
+    severity: high
+    applies_to_stages: [model_review]
+    requires_waiver: true
+
+artifact_pack:
+  - artifact_type: ecl_component_pack
+    display_name: ECL Component Pack (PD/LGD/EAD)
+    produced_at_stage: pd_lgd_ead_assembly
+    is_audit_required: true
+  - artifact_type: macro_overlay_report
+    display_name: Macroeconomic Overlay Report
+    produced_at_stage: macroeconomic_overlay
+    is_audit_required: true
+
+review_templates:
+  - template_id: model_review_tmpl
+    stage_id: model_review
+    review_type: approval
+    panel_a_evidence_types: [ecl_component_pack, macro_overlay_report, evaluation_pack]
+    required_roles: [model_developer, validator, model_risk, finance]
+
+skill_pack:
+  domain_skill: "skills.domains.ecl.ECLDomainSkill"
+  stage_skills: {}
+
+test_pack:
+  required_test_ids: [test_ecl_full_lifecycle]

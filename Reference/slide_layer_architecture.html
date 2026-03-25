@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1400">
+<title>MDLC Agentic AI – Layer Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f5f4f0;
+  --panel:#ffffff;
+  --border:#d8d4cc;
+  --text:#1a1d27;
+  --muted:#8a8fa8;
+  --c1:#0077aa; /* interaction – deep cyan */
+  --c2:#6d28d9; /* agent – violet */
+  --c3:#c2410c; /* workflow – burnt orange */
+  --c4:#1d4ed8; /* execution – blue */
+  --c5:#15803d; /* persistence – green */
+  --c6:#b45309; /* audit – amber */
+}
+body{
+  background:var(--bg);
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:28px 32px;
+}
+
+/* ── Header ── */
+.header{
+  width:100%;
+  max-width:1340px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:22px;
+}
+.title-block .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.18em;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.title-block h1{
+  font-family:'Syne',sans-serif;
+  font-size:32px;
+  font-weight:800;
+  letter-spacing:-0.5px;
+  color:var(--text);
+  line-height:1.1;
+}
+.title-block h1 span{
+  background:linear-gradient(90deg,var(--c1),var(--c2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.tagline{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:6px;
+  max-width:560px;
+  line-height:1.5;
+}
+.badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  padding:5px 12px;
+  border:1px solid var(--border);
+  color:var(--muted);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  border-radius:2px;
+  margin-top:4px;
+}
+
+/* ── Layer stack ── */
+.stack{
+  width:100%;
+  max-width:1340px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.layer{
+  display:grid;
+  grid-template-columns:90px 1fr;
+  gap:0;
+  border-radius:4px;
+  overflow:hidden;
+  transition:transform .15s,box-shadow .15s;
+  position:relative;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+}
+.layer:hover{box-shadow:0 3px 12px rgba(0,0,0,.1)}
+.layer:hover{transform:translateX(2px)}
+
+.layer-id{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:14px 8px;
+  gap:5px;
+  position:relative;
+}
+.layer-id::after{
+  content:'';
+  position:absolute;
+  right:0;top:0;bottom:0;
+  width:1px;
+  background:var(--border);
+  opacity:0.5;
+}
+.layer-num{
+  font-family:'Syne',sans-serif;
+  font-size:22px;
+  font-weight:800;
+  opacity:.15;
+  line-height:1;
+}
+.layer-icon{
+  font-size:20px;
+  line-height:1;
+}
+
+.layer-body{
+  padding:12px 18px 14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.layer-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.layer-name{
+  font-family:'Syne',sans-serif;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:0.01em;
+}
+.layer-sub{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.12em;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.chip{
+  font-size:11.5px;
+  padding:3px 10px;
+  border-radius:2px;
+  font-family:'IBM Plex Mono',monospace;
+  letter-spacing:0.02em;
+  white-space:nowrap;
+}
+
+/* Connector arrows between layers */
+.connector{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:8px;
+  color:var(--muted);
+  font-size:14px;
+  opacity:0.5;
+  position:relative;
+}
+.connector::before{
+  content:'';
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  height:8px;
+  width:2px;
+  background:var(--border);
+}
+
+/* ── Colour themes per layer ── */
+.l1{border-left:3px solid var(--c1);background:linear-gradient(90deg,rgba(0,119,170,.06) 0%,var(--panel) 40%);border:1px solid rgba(0,119,170,.2);border-left:3px solid var(--c1)}
+.l1 .layer-id{background:rgba(0,119,170,.07)}
+.l1 .layer-num{color:var(--c1)}
+.l1 .chip{background:rgba(0,119,170,.08);color:var(--c1);border:1px solid rgba(0,119,170,.22)}
+
+.l2{border-left:3px solid var(--c2);background:linear-gradient(90deg,rgba(109,40,217,.05) 0%,var(--panel) 40%);border:1px solid rgba(109,40,217,.2);border-left:3px solid var(--c2)}
+.l2 .layer-id{background:rgba(109,40,217,.06)}
+.l2 .layer-num{color:var(--c2)}
+.l2 .chip{background:rgba(109,40,217,.07);color:var(--c2);border:1px solid rgba(109,40,217,.2)}
+
+.l3{border-left:3px solid var(--c3);background:linear-gradient(90deg,rgba(194,65,12,.05) 0%,var(--panel) 40%);border:1px solid rgba(194,65,12,.2);border-left:3px solid var(--c3)}
+.l3 .layer-id{background:rgba(194,65,12,.06)}
+.l3 .layer-num{color:var(--c3)}
+.l3 .chip{background:rgba(194,65,12,.07);color:var(--c3);border:1px solid rgba(194,65,12,.2)}
+
+.l4{border-left:3px solid var(--c4);background:linear-gradient(90deg,rgba(29,78,216,.05) 0%,var(--panel) 40%);border:1px solid rgba(29,78,216,.2);border-left:3px solid var(--c4)}
+.l4 .layer-id{background:rgba(29,78,216,.06)}
+.l4 .layer-num{color:var(--c4)}
+.l4 .chip{background:rgba(29,78,216,.07);color:var(--c4);border:1px solid rgba(29,78,216,.2)}
+
+.l5{border-left:3px solid var(--c5);background:linear-gradient(90deg,rgba(21,128,61,.05) 0%,var(--panel) 40%);border:1px solid rgba(21,128,61,.2);border-left:3px solid var(--c5)}
+.l5 .layer-id{background:rgba(21,128,61,.06)}
+.l5 .layer-num{color:var(--c5)}
+.l5 .chip{background:rgba(21,128,61,.07);color:var(--c5);border:1px solid rgba(21,128,61,.2)}
+
+.l6{border-left:3px solid var(--c6);background:linear-gradient(90deg,rgba(180,83,9,.05) 0%,var(--panel) 40%);border:1px solid rgba(180,83,9,.2);border-left:3px solid var(--c6)}
+.l6 .layer-id{background:rgba(180,83,9,.06)}
+.l6 .layer-num{color:var(--c6)}
+.l6 .chip{background:rgba(180,83,9,.07);color:var(--c6);border:1px solid rgba(180,83,9,.2)}
+
+/* ── Footer ── */
+.footer{
+  width:100%;
+  max-width:1340px;
+  margin-top:18px;
+  display:flex;
+  gap:28px;
+  align-items:center;
+}
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  color:var(--muted);
+  font-family:'IBM Plex Mono',monospace;
+}
+.legend-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.divider{color:var(--border);font-size:16px}
+
+/* Animate in */
+@keyframes slide-in{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:translateX(0)}}
+.layer{animation:slide-in .4s ease both}
+.l1{animation-delay:.05s}.l2{animation-delay:.12s}.l3{animation-delay:.19s}
+.l4{animation-delay:.26s}.l5{animation-delay:.33s}.l6{animation-delay:.40s}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="title-block">
+    <div class="eyebrow">Platform Architecture</div>
+    <h1>MDLC <span>Agentic AI</span> Platform</h1>
+    <div class="tagline">Six-layer architecture for governed, reproducible, durable model development lifecycle — ECL models in regulated environments.</div>
+  </div>
+  <div class="badge">v1.0 &nbsp;·&nbsp; CML / GCP &nbsp;·&nbsp; Google ADK</div>
+</div>
+
+<div class="stack">
+
+  <!-- L1 -->
+  <div class="layer l1">
+    <div class="layer-id">
+      <div class="layer-num">1</div>
+      <div class="layer-icon">⬡</div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-header">
+        <div>
+          <div class="layer-name">Interaction Layer</div>
+          <div class="layer-sub">Entry points &amp; adapters</div>
+        </div>
+      </div>
+      <div class="chips">
+        <span class="chip">Python SDK</span>
+        <span class="chip">CLI Bridge</span>
+        <span class="chip">REST API</span>
+        <span class="chip">Reviewer App</span>
+        <span class="chip">ADK Web (dev)</span>
+        <span class="chip">Notebook Adapter</span>
+        <span class="chip">IDE Adapter</span>
+        <span class="chip">Custom UI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- L2 -->
+  <div class="layer l2">
+    <div class="layer-id">
+      <div class="layer-num">2</div>
+      <div class="layer-icon">◈</div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-header">
+        <div>
+          <div class="layer-name">Agent Orchestration Layer</div>
+          <div class="layer-sub">Google ADK · reasoning &amp; coordination</div>
+        </div>
+      </div>
+      <div class="chips">
+        <span class="chip">Intake Agent</span>
+        <span class="chip">Planning Agent</span>
+        <span class="chip">Data Assessment Agent</span>
+        <span class="chip">Feature Agent</span>
+        <span class="chip">Modelling Agent</span>
+        <span class="chip">Evaluation Agent</span>
+        <span class="chip">Validation Agent</span>
+        <span class="chip">Documentation Agent</span>
+        <span class="chip">Governance Agent</span>
+        <span class="chip">Memory Curator Agent</span>
+        <span class="chip">Workflow Coordinator</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- L3 -->
+  <div class="layer l3">
+    <div class="layer-id">
+      <div class="layer-num">3</div>
+      <div class="layer-icon">⟳</div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-header">
+        <div>
+          <div class="layer-name">Durable Workflow / State Layer</div>
+          <div class="layer-sub">Pause · resume · approvals · recovery</div>
+        </div>
+      </div>
+      <div class="chips">
+        <span class="chip">Workflow Instance State</span>
+        <span class="chip">Stage Checkpointing</span>
+        <span class="chip">Pause / Resume</span>
+        <span class="chip">HITL Approval Wait</span>
+        <span class="chip">Retry &amp; Timeout</span>
+        <span class="chip">Escalation Handler</span>
+        <span class="chip">Crash Recovery</span>
+        <span class="chip">Run Continuity</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- L4 -->
+  <div class="layer l4">
+    <div class="layer-id">
+      <div class="layer-num">4</div>
+      <div class="layer-icon">⬡</div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-header">
+        <div>
+          <div class="layer-name">Deterministic Execution Layer</div>
+          <div class="layer-sub">SDK packages · MCP tools · skills</div>
+        </div>
+      </div>
+      <div class="chips">
+        <span class="chip">governance_sdk</span>
+        <span class="chip">workflow_sdk</span>
+        <span class="chip">registry_sdk</span>
+        <span class="chip">observability_sdk</span>
+        <span class="chip">dq_sdk</span>
+        <span class="chip">feature_sdk</span>
+        <span class="chip">pd_model_sdk</span>
+        <span class="chip">lgd_model_sdk</span>
+        <span class="chip">ead_model_sdk</span>
+        <span class="chip">evaluation_sdk</span>
+        <span class="chip">validation_sdk</span>
+        <span class="chip">manifest_sdk</span>
+        <span class="chip">knowledge_sdk</span>
+        <span class="chip">memory_sdk</span>
+        <span class="chip">reporting_sdk</span>
+        <span class="chip">docgen_sdk</span>
+        <span class="chip">monitoring_sdk</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- L5 -->
+  <div class="layer l5">
+    <div class="layer-id">
+      <div class="layer-num">5</div>
+      <div class="layer-icon">◷</div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-header">
+        <div>
+          <div class="layer-name">Persistence Layer</div>
+          <div class="layer-sub">Authoritative stores &amp; registries</div>
+        </div>
+      </div>
+      <div class="chips">
+        <span class="chip">Artifact Store</span>
+        <span class="chip">Metadata Store</span>
+        <span class="chip">Model Registry</span>
+        <span class="chip">Memory Store</span>
+        <span class="chip">Knowledge Store</span>
+        <span class="chip">Dataset Snapshots</span>
+        <span class="chip">Feature Registry</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- L6 -->
+  <div class="layer l6">
+    <div class="layer-id">
+      <div class="layer-num">6</div>
+      <div class="layer-icon">◈</div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-header">
+        <div>
+          <div class="layer-name">Observability &amp; Audit Layer</div>
+          <div class="layer-sub">Cross-cutting · always-on</div>
+        </div>
+      </div>
+      <div class="chips">
+        <span class="chip">Structured Event Logs</span>
+        <span class="chip">Agent Decision Logs</span>
+        <span class="chip">Tool Call Trace</span>
+        <span class="chip">Approval Records</span>
+        <span class="chip">Artifact Lineage</span>
+        <span class="chip">Memory Change Log</span>
+        <span class="chip">Knowledge Change Log</span>
+        <span class="chip">Rerun Validation Log</span>
+        <span class="chip">Monitoring Logs</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c1)"></div>Interaction</div>
+  <div class="divider">·</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c2)"></div>Agent Orchestration</div>
+  <div class="divider">·</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c3)"></div>Workflow State</div>
+  <div class="divider">·</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c4)"></div>SDK Execution</div>
+  <div class="divider">·</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c5)"></div>Persistence</div>
+  <div class="divider">·</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c6)"></div>Observability &amp; Audit</div>
+</div>
+
+</body>
+</html>

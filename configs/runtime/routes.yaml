@@ -1,0 +1,165 @@
+# Stage routing configuration.
+# Defines transition edges in the MDLC workflow graph.
+# Loaded and validated against RoutesConfig (Pydantic).
+
+version: "1.0.0"
+
+routes:
+  bootstrap_to_data:
+    route_id: bootstrap_to_data
+    from_stage: project_bootstrap
+    to_stage: data_preparation
+    priority: 10
+    label: Bootstrap complete
+    is_error_path: false
+    guards:
+      - guard_id: bootstrap_completed
+        condition_type: stage_completed
+        condition_ref: project_bootstrap
+        negate: false
+      - guard_id: bootstrap_review_passed
+        condition_type: gate_passed
+        condition_ref: bootstrap_review
+        negate: false
+
+  data_to_features:
+    route_id: data_to_features
+    from_stage: data_preparation
+    to_stage: feature_engineering
+    priority: 10
+    label: Data snapshot approved
+    is_error_path: false
+    guards:
+      - guard_id: data_prep_completed
+        condition_type: stage_completed
+        condition_ref: data_preparation
+        negate: false
+      - guard_id: data_selection_passed
+        condition_type: gate_passed
+        condition_ref: data_selection_review
+        negate: false
+
+  features_to_training:
+    route_id: features_to_training
+    from_stage: feature_engineering
+    to_stage: model_training
+    priority: 10
+    label: Feature set selected
+    is_error_path: false
+    guards:
+      - guard_id: feature_selection_completed
+        condition_type: stage_completed
+        condition_ref: feature_engineering
+        negate: false
+      - guard_id: feature_selection_passed
+        condition_type: gate_passed
+        condition_ref: feature_selection_review
+        negate: false
+      - guard_id: feature_selection_present
+        condition_type: selection_present
+        condition_ref: feature_engineering
+        negate: false
+
+  training_to_evaluation:
+    route_id: training_to_evaluation
+    from_stage: model_training
+    to_stage: model_evaluation
+    priority: 10
+    label: Model candidate selected
+    is_error_path: false
+    guards:
+      - guard_id: training_completed
+        condition_type: stage_completed
+        condition_ref: model_training
+        negate: false
+      - guard_id: model_selection_passed
+        condition_type: gate_passed
+        condition_ref: model_selection_review
+        negate: false
+      - guard_id: model_selection_present
+        condition_type: selection_present
+        condition_ref: model_training
+        negate: false
+
+  evaluation_to_validation:
+    route_id: evaluation_to_validation
+    from_stage: model_evaluation
+    to_stage: model_validation
+    priority: 10
+    label: Evaluation complete
+    is_error_path: false
+    guards:
+      - guard_id: evaluation_completed
+        condition_type: stage_completed
+        condition_ref: model_evaluation
+        negate: false
+      - guard_id: evaluation_policy_check
+        condition_type: policy_check
+        condition_ref: POL_MODEL_001
+        negate: false
+
+  validation_to_approval:
+    route_id: validation_to_approval
+    from_stage: model_validation
+    to_stage: final_approval
+    priority: 10
+    label: Validation signed off
+    is_error_path: false
+    guards:
+      - guard_id: validation_completed
+        condition_type: stage_completed
+        condition_ref: model_validation
+        negate: false
+      - guard_id: validation_signoff_passed
+        condition_type: gate_passed
+        condition_ref: validation_signoff
+        negate: false
+
+  approval_to_deployment:
+    route_id: approval_to_deployment
+    from_stage: final_approval
+    to_stage: production_deployment
+    priority: 10
+    label: Final approval granted
+    is_error_path: false
+    guards:
+      - guard_id: final_approval_completed
+        condition_type: stage_completed
+        condition_ref: final_approval
+        negate: false
+      - guard_id: final_approval_gate_passed
+        condition_type: gate_passed
+        condition_ref: final_approval_gate
+        negate: false
+
+  deployment_to_monitoring:
+    route_id: deployment_to_monitoring
+    from_stage: production_deployment
+    to_stage: monitoring
+    priority: 10
+    label: Model deployed
+    is_error_path: false
+    guards:
+      - guard_id: deployment_completed
+        condition_type: stage_completed
+        condition_ref: production_deployment
+        negate: false
+
+  # Error / recovery paths
+  training_to_data_recovery:
+    route_id: training_to_data_recovery
+    from_stage: model_training
+    to_stage: data_preparation
+    priority: 90
+    label: Recovery -- restart from data
+    is_error_path: true
+    guards: []
+
+  evaluation_to_training_rerun:
+    route_id: evaluation_to_training_rerun
+    from_stage: model_evaluation
+    to_stage: model_training
+    priority: 90
+    label: Recovery -- retrain model
+    is_error_path: true
+    guards: []

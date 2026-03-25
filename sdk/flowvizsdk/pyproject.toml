@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mdl-flowviz-sdk"
+version = "0.1.0"
+description = "Flow visualization SDK -- events to FlowNode/FlowEdge graph with export"
+requires-python = ">=3.11"
+dependencies = [
+    "mdl-platform-contracts",
+    "mdl-platform-core",
+    "mdl-observability-sdk",
+    "pydantic>=2.0",
+    "structlog>=23.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/flowvizsdk"]

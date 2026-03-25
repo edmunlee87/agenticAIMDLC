@@ -1,0 +1,45 @@
+# Runtime Master Configuration
+# Loaded first; defines environment, behavior defaults, and file references.
+# schema_version must be semver X.Y.Z
+
+runtime:
+  environment: dev
+  runtime_mode: development
+  schema_version: "1.0.0"
+  description: "Agentic AI MDLC Platform - Development Runtime"
+  unknown_stage_behavior: fail
+  stale_state_behavior: block
+  review_missing_behavior: block
+
+modules:
+  modules:
+    hitl: true
+    policy: true
+    flow_viz: true
+    observability: true
+    audit: true
+    artifacts: true
+    rag: false
+    workflow_canvas: false
+
+file_refs:
+  files:
+    tool_groups: "configs/runtime/tool_groups.yaml"
+    role_capabilities: "configs/runtime/role_capabilities.yaml"
+    ui_modes: "configs/runtime/ui_modes.yaml"
+    interaction_modes: "configs/runtime/interaction_modes.yaml"
+    token_modes: "configs/runtime/token_modes.yaml"
+    stage_registry: "configs/runtime/stage_registry.yaml"
+    stage_tool_matrix: "configs/runtime/stage_tool_matrix.yaml"
+    stage_preconditions: "configs/runtime/stage_preconditions.yaml"
+    governance_overlays: "configs/runtime/governance_overlays.yaml"
+    retry_policies: "configs/runtime/retry_policies.yaml"
+    failure_routes: "configs/runtime/failure_routes.yaml"
+    workflow_routes: "configs/runtime/workflow_routes.yaml"
+
+resolver_defaults:
+  unknown_stage_behavior: fail
+  stale_state_behavior: block
+  review_missing_behavior: block
+  max_skill_stack_depth: 8
+  enable_overlay_resolution: true

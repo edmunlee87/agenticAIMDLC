@@ -1,0 +1,110 @@
+# Time Series Model Domain Pack v1.0.0
+domain: time_series
+description: "Time-series model development lifecycle (ARIMA, Prophet, LSTM, XGBoost-based)."
+model_class: time_series_forecasting
+regulatory_scope: [IFRS9, BCBS239]
+schema_version: "1.0.0"
+
+stage_registry:
+  - stage_id: data_preparation
+    label: Data Preparation & Stationarity
+    stage_class: development
+    artifact_types: [dataset_snapshot, stationarity_report]
+
+  - stage_id: feature_engineering
+    label: Feature Engineering (Lags, Windows)
+    stage_class: development
+    artifact_types: [feature_set]
+
+  - stage_id: model_development
+    label: Model Development
+    stage_class: development
+    artifact_types: [model_candidate_set, evaluation_pack]
+
+  - stage_id: model_review
+    label: Model Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record, selected_model]
+    policy_pack_ids: [ts_pol_forecast_accuracy]
+
+  - stage_id: deployment_readiness
+    label: Deployment Readiness
+    stage_class: governance
+    requires_hitl: true
+    governance_gate: true
+    is_terminal: false
+    artifact_types: [deployment_approval]
+
+  - stage_id: deployed
+    label: Deployed
+    stage_class: terminal
+    is_terminal: true
+
+routing_rules:
+  - from_stage: data_preparation
+    to_stage: feature_engineering
+    condition: on_success
+  - from_stage: feature_engineering
+    to_stage: model_development
+    condition: on_success
+  - from_stage: model_development
+    to_stage: model_review
+    condition: on_success
+  - from_stage: model_review
+    to_stage: deployment_readiness
+    condition: on_approval
+    failure_stage: model_development
+  - from_stage: deployment_readiness
+    to_stage: deployed
+    condition: on_approval
+
+metrics_pack:
+  - metric_name: mape
+    display_name: MAPE
+    description: Mean Absolute Percentage Error
+    higher_is_better: false
+    threshold_high: 0.15
+    is_primary: true
+  - metric_name: rmse
+    display_name: RMSE
+    higher_is_better: false
+  - metric_name: forecast_bias
+    display_name: Forecast Bias
+    higher_is_better: false
+    threshold_high: 0.05
+
+policy_pack:
+  - rule_id: ts_pol_forecast_accuracy
+    name: Forecast Accuracy Gate
+    description: MAPE must be below 15% on out-of-sample test period.
+    severity: critical
+    applies_to_stages: [model_review]
+    condition_expression: "metrics.mape <= 0.15"
+    requires_waiver: false
+
+artifact_pack:
+  - artifact_type: stationarity_report
+    display_name: Stationarity Report
+    produced_at_stage: data_preparation
+    is_audit_required: true
+  - artifact_type: feature_set
+    display_name: Feature Set
+    produced_at_stage: feature_engineering
+    is_audit_required: true
+
+review_templates:
+  - template_id: model_review_tmpl
+    stage_id: model_review
+    review_type: selection
+    panel_a_evidence_types: [model_candidate_set, evaluation_pack]
+    required_roles: [model_developer, validator]
+
+skill_pack:
+  domain_skill: "skills.domains.time_series.TimeSeriesDomainSkill"
+  stage_skills: {}
+
+test_pack:
+  test_module: "tests.domains.test_time_series_domain"
+  required_test_ids: [test_ts_full_lifecycle]

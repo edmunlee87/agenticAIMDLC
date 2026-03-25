@@ -1,0 +1,399 @@
+# Stage Registry
+# All 38+ platform stages. Domain-specific stages are included here with domain field set.
+# Stage classes: build, review, selection, approval, monitoring, remediation, validation, bootstrap, recovery
+
+stages:
+  # ---- Bootstrap and session ----
+  session_bootstrap:
+    stage_name: session_bootstrap
+    stage_class: bootstrap
+    description: "Project and session creation/discovery."
+    requires_review: false
+    requires_approval: false
+    requires_audit: false
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    is_terminal: false
+
+  # ---- Data intake and quality ----
+  intake:
+    stage_name: intake
+    stage_class: build
+    description: "Initial project intake and scoping."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    artifact_expectations: [intake_summary]
+
+  data_readiness:
+    stage_name: data_readiness
+    stage_class: build
+    description: "Data readiness checks: availability, coverage, freshness."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    skill_stack_hints: [data-readiness-review]
+    artifact_expectations: [data_readiness_report]
+
+  dq_review:
+    stage_name: dq_review
+    stage_class: review
+    description: "Data quality review: schema, missingness, consistency, distribution."
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [data-validation-review]
+    artifact_expectations: [dq_report]
+
+  eda:
+    stage_name: eda
+    stage_class: build
+    description: "Exploratory data analysis."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    artifact_expectations: [eda_report]
+
+  # ---- Feature engineering ----
+  feature_engineering:
+    stage_name: feature_engineering
+    stage_class: build
+    description: "Feature transformation, computation, and lineage."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    artifact_expectations: [feature_set]
+
+  feature_screening:
+    stage_name: feature_screening
+    stage_class: build
+    description: "Statistical screening of candidate features."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    artifact_expectations: [feature_screening_report]
+
+  # ---- Scorecard-specific stages ----
+  segmentation_review:
+    stage_name: segmentation_review
+    stage_class: review
+    description: "Review of population segmentation approach."
+    domain: scorecard
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+
+  fine_classing:
+    stage_name: fine_classing
+    stage_class: build
+    description: "Fine classing of continuous variables for WoE analysis."
+    domain: scorecard
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    artifact_expectations: [fine_classing_output]
+
+  coarse_classing:
+    stage_name: coarse_classing
+    stage_class: build
+    description: "Coarse classing: merge of fine bins."
+    domain: scorecard
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    artifact_expectations: [coarse_classing_output]
+
+  coarse_classing_review:
+    stage_name: coarse_classing_review
+    stage_class: review
+    description: "HITL review of coarse classing output."
+    domain: scorecard
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [coarse-classing-review]
+
+  binning_candidate_generation:
+    stage_name: binning_candidate_generation
+    stage_class: build
+    description: "Generation of multiple binning candidate versions."
+    domain: scorecard
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+
+  binning_version_selection_review:
+    stage_name: binning_version_selection_review
+    stage_class: selection
+    description: "Selection of the final binning scheme from candidates."
+    domain: scorecard
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [binning-version-selection]
+
+  selected_binning_finalization:
+    stage_name: selected_binning_finalization
+    stage_class: build
+    description: "Finalization of the selected binning scheme."
+    domain: scorecard
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: FINALIZATION_GATED
+
+  woe_iv_review:
+    stage_name: woe_iv_review
+    stage_class: review
+    description: "Review of WoE/IV analysis."
+    domain: scorecard
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [woe-iv-review]
+    artifact_expectations: [woe_iv_report]
+
+  policy_variable_review:
+    stage_name: policy_variable_review
+    stage_class: review
+    description: "Policy variable inclusion/exclusion review."
+    domain: scorecard
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [feature-shortlist-review]
+
+  model_fitting:
+    stage_name: model_fitting
+    stage_class: build
+    description: "Model fitting and estimation."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    artifact_expectations: [model_object]
+
+  scaling_and_calibration:
+    stage_name: scaling_and_calibration
+    stage_class: build
+    description: "Score scaling and probability calibration."
+    domain: scorecard
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+
+  reject_inference_review:
+    stage_name: reject_inference_review
+    stage_class: review
+    description: "Review of reject inference methodology."
+    domain: scorecard
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+
+  champion_challenger_review:
+    stage_name: champion_challenger_review
+    stage_class: review
+    description: "Champion vs challenger model comparison review."
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [candidate-comparison-assistant]
+
+  model_review:
+    stage_name: model_review
+    stage_class: review
+    description: "Full model performance and diagnostics review."
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [model-review]
+    artifact_expectations: [model_performance_pack]
+
+  # ---- Validation ----
+  validation_pack:
+    stage_name: validation_pack
+    stage_class: validation
+    description: "Independent validation workstream."
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [validation-orchestrator]
+    artifact_expectations: [validation_report]
+
+  # ---- Committee and approval ----
+  committee_pack:
+    stage_name: committee_pack
+    stage_class: approval
+    description: "Committee review pack preparation and approval."
+    requires_review: true
+    requires_approval: true
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: FINALIZATION_GATED
+    artifact_expectations: [committee_pack]
+
+  deployment_readiness:
+    stage_name: deployment_readiness
+    stage_class: approval
+    description: "Deployment readiness review and sign-off."
+    requires_review: true
+    requires_approval: true
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: FINALIZATION_GATED
+    skill_stack_hints: [deployment-readiness]
+
+  deployment_approval:
+    stage_name: deployment_approval
+    stage_class: approval
+    description: "Final deployment approval."
+    requires_review: true
+    requires_approval: true
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: FINALIZATION_GATED
+
+  # ---- Monitoring ----
+  monitoring_pack:
+    stage_name: monitoring_pack
+    stage_class: monitoring
+    description: "Monitoring pack setup and configuration."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: MONITORING_OPERATIONAL
+
+  monitoring_snapshot:
+    stage_name: monitoring_snapshot
+    stage_class: monitoring
+    description: "Periodic monitoring snapshot ingestion and metric generation."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: MONITORING_OPERATIONAL
+    skill_stack_hints: [monitoring-snapshot-ingestion, monitoring-metric-generation]
+
+  monitoring_breach_review:
+    stage_name: monitoring_breach_review
+    stage_class: review
+    description: "HITL review triggered by a monitoring breach."
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [monitoring-breach-review]
+
+  annual_review:
+    stage_name: annual_review
+    stage_class: review
+    description: "Annual model review."
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [annual-review-outcome]
+
+  # ---- Remediation ----
+  remediation_planning:
+    stage_name: remediation_planning
+    stage_class: remediation
+    description: "Remediation issue identification and planning."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    skill_stack_hints: [issue-remediation-planner]
+
+  remediation_review:
+    stage_name: remediation_review
+    stage_class: review
+    description: "Review of remediation outcomes."
+    requires_review: true
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: REVIEW_REQUIRED
+    skill_stack_hints: [remediation-closure]
+
+  # ---- Recovery ----
+  recovery:
+    stage_name: recovery
+    stage_class: recovery
+    description: "Workflow failure recovery decision."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: BUILD_ONLY
+    skill_stack_hints: [recovery-orchestrator]
+
+  # ---- Documentation ----
+  documentation_pack:
+    stage_name: documentation_pack
+    stage_class: build
+    description: "Documentation pack preparation."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: true
+    default_access_mode: BUILD_ONLY
+    skill_stack_hints: [documentation-pack-preparation]
+    artifact_expectations: [documentation_pack]
+
+  # ---- Terminal ----
+  closed:
+    stage_name: closed
+    stage_class: build
+    description: "Workflow closed. Terminal stage."
+    requires_review: false
+    requires_approval: false
+    requires_audit: true
+    auto_continue_allowed: false
+    default_access_mode: READ_ONLY
+    is_terminal: true

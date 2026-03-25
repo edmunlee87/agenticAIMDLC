@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skill_event.schema.json",
+  "title": "SkillEvent",
+  "description": "Append-only observability event for skill/stage/HITL/candidate/artifact/workflow/recovery actions.",
+  "type": "object",
+  "required": ["event_id", "event_type", "timestamp", "project_id", "run_id", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": { "type": "string" },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "skill_started", "skill_completed", "skill_failed",
+        "stage_started", "stage_completed", "stage_failed", "stage_transition",
+        "hitl_review_created", "hitl_user_responded", "hitl_review_completed",
+        "candidate_version_created", "version_selection_created",
+        "artifact_registered",
+        "workflow_blocked", "workflow_resumed",
+        "override_logged", "rerun_requested",
+        "recovery_action_started", "recovery_action_completed", "recovery_action_failed",
+        "config_loaded", "policy_evaluated", "governance_gate_triggered",
+        "session_created", "session_resumed", "session_suspended", "session_closed"
+      ]
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "project_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "parent_event_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "stage_name": { "type": "string" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "skill_name": { "type": "string" },
+    "skill_version": { "type": "string" },
+    "duration_ms": { "type": "integer", "minimum": 0 },
+    "token_usage": {
+      "type": "object",
+      "properties": {
+        "prompt_tokens": { "type": "integer" },
+        "completion_tokens": { "type": "integer" },
+        "total_tokens": { "type": "integer" }
+      }
+    },
+    "input_hash": { "type": "string" },
+    "output_hash": { "type": "string" },
+    "status": { "type": "string", "enum": ["started", "completed", "failed", "blocked", "skipped"] },
+    "error_detail": {
+      "type": "object",
+      "properties": {
+        "error_code": { "type": "string" },
+        "message": { "type": "string" },
+        "stack_trace": { "type": "string" }
+      }
+    },
+    "artifacts_produced": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "governance_gate_hit": { "type": "boolean", "default": false },
+    "review_created": { "type": "boolean", "default": false },
+    "payload": {
+      "type": "object",
+      "description": "Event-type-specific payload. Structure varies by event_type.",
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" },
+        "active_policy_pack_id": { "type": "string" }
+      }
+    }
+  }
+}

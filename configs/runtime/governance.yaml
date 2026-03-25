@@ -1,0 +1,138 @@
+# Governance and policy pack configuration.
+# Loaded and validated against GovernanceConfig (Pydantic).
+
+version: "1.0.0"
+default_policy_pack_id: default
+breach_action: block
+
+policy_packs:
+  default:
+    pack_id: default
+    version: "1.0.0"
+    description: Default platform governance pack. Applies to all domains and environments.
+    policy_mode: strict
+    rules:
+      POL_DATA_001:
+        rule_id: POL_DATA_001
+        rule_category: data_quality
+        description: Dataset must have a documented data quality report.
+        severity: high
+        is_blocking: true
+        applies_to_stages: [data_preparation]
+        waiver_eligible: true
+
+      POL_DATA_002:
+        rule_id: POL_DATA_002
+        rule_category: data_lineage
+        description: Dataset snapshot must carry full lineage to source systems.
+        severity: high
+        is_blocking: true
+        applies_to_stages: [data_preparation]
+        waiver_eligible: false
+
+      POL_FEAT_001:
+        rule_id: POL_FEAT_001
+        rule_category: feature_governance
+        description: Feature set must include importance scores and selection rationale.
+        severity: medium
+        is_blocking: false
+        applies_to_stages: [feature_engineering]
+        waiver_eligible: true
+
+      POL_MODEL_001:
+        rule_id: POL_MODEL_001
+        rule_category: model_performance
+        description: Selected model must meet minimum discriminatory power threshold (Gini >= 0.3).
+        severity: critical
+        is_blocking: true
+        applies_to_stages: [model_training, model_evaluation]
+        waiver_eligible: true
+
+      POL_MODEL_002:
+        rule_id: POL_MODEL_002
+        rule_category: model_documentation
+        description: Model binary must have a registered methodology document.
+        severity: high
+        is_blocking: true
+        applies_to_stages: [model_training]
+        waiver_eligible: false
+
+      POL_VAL_001:
+        rule_id: POL_VAL_001
+        rule_category: validation_independence
+        description: Validator must be independent from the development team.
+        severity: critical
+        is_blocking: true
+        applies_to_stages: [model_validation]
+        waiver_eligible: false
+
+      POL_VAL_002:
+        rule_id: POL_VAL_002
+        rule_category: validation_evidence
+        description: Validation report must include backtesting and stress test results.
+        severity: high
+        is_blocking: true
+        applies_to_stages: [model_validation]
+        waiver_eligible: false
+
+      POL_VAL_003:
+        rule_id: POL_VAL_003
+        rule_category: validation_findings
+        description: All critical validation findings must be remediated or waived before sign-off.
+        severity: critical
+        is_blocking: true
+        applies_to_stages: [model_validation]
+        waiver_eligible: true
+
+      POL_GOV_001:
+        rule_id: POL_GOV_001
+        rule_category: governance_gate
+        description: Final approval requires model owner sign-off.
+        severity: critical
+        is_blocking: true
+        applies_to_stages: [final_approval]
+        waiver_eligible: false
+
+      POL_GOV_002:
+        rule_id: POL_GOV_002
+        rule_category: audit_trail
+        description: All material decisions must be backed by an immutable audit record.
+        severity: critical
+        is_blocking: true
+        applies_to_stages: []
+        waiver_eligible: false
+
+  advisory:
+    pack_id: advisory
+    version: "1.0.0"
+    description: Advisory-only pack for development and UAT environments.
+    policy_mode: advisory
+    rules:
+      POL_ADV_001:
+        rule_id: POL_ADV_001
+        rule_category: documentation
+        description: Model card should be completed before evaluation.
+        severity: low
+        is_blocking: false
+        applies_to_stages: [model_evaluation]
+        waiver_eligible: true
+
+overlay_rules:
+  - overlay_id: strict_validation_mode
+    applies_when:
+      validation_mode: "true"
+    pack_id_overrides: []
+    severity_overrides:
+      POL_VAL_001: critical
+      POL_VAL_002: critical
+    blocking_overrides:
+      POL_FEAT_001: true
+
+  - overlay_id: dev_environment
+    applies_when:
+      environment: dev
+    pack_id_overrides:
+      - advisory
+    severity_overrides: {}
+    blocking_overrides:
+      POL_MODEL_001: false

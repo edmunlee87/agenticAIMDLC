@@ -1,0 +1,8 @@
+# Domain overlay for credit_risk generic domain.
+overlay:
+  domain: generic
+  description: "Generic credit risk domain overlay (minimal)."
+  ui_overrides: []
+  tool_additions: []
+  domain_stages: []
+  skill_hints: []

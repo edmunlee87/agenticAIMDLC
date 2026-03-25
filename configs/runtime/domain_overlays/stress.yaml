@@ -1,0 +1,108 @@
+# Stress Testing Model Domain Pack v1.0.0
+domain: stress
+description: "Stress testing / scenario analysis model development (PD/LGD/ECL under adverse scenarios)."
+model_class: stress_testing
+regulatory_scope: [DFAST, EBA_ST, IFRS9]
+schema_version: "1.0.0"
+
+stage_registry:
+  - stage_id: scenario_design
+    label: Scenario Design
+    stage_class: development
+    artifact_types: [scenario_pack]
+  - stage_id: scenario_review
+    label: Scenario Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record]
+    policy_pack_ids: [stress_pol_scenario_severity]
+  - stage_id: model_execution
+    label: Stress Model Execution
+    stage_class: development
+    artifact_types: [stress_results_pack]
+  - stage_id: results_review
+    label: Stress Results Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record, selected_model]
+    policy_pack_ids: [stress_pol_capital_adequacy]
+  - stage_id: deployment_readiness
+    label: Deployment Readiness
+    stage_class: governance
+    requires_hitl: true
+    governance_gate: true
+    is_terminal: false
+  - stage_id: deployed
+    label: Deployed
+    stage_class: terminal
+    is_terminal: true
+
+routing_rules:
+  - from_stage: scenario_design
+    to_stage: scenario_review
+    condition: on_success
+  - from_stage: scenario_review
+    to_stage: model_execution
+    condition: on_approval
+    failure_stage: scenario_design
+  - from_stage: model_execution
+    to_stage: results_review
+    condition: on_success
+  - from_stage: results_review
+    to_stage: deployment_readiness
+    condition: on_approval
+    failure_stage: model_execution
+  - from_stage: deployment_readiness
+    to_stage: deployed
+    condition: on_approval
+
+metrics_pack:
+  - metric_name: adverse_scenario_ecl_increase
+    display_name: Adverse ECL Increase (%)
+    higher_is_better: false
+    is_primary: true
+  - metric_name: capital_ratio_post_stress
+    display_name: Capital Ratio Post-Stress
+    higher_is_better: true
+    threshold_low: 0.08
+
+policy_pack:
+  - rule_id: stress_pol_scenario_severity
+    name: Scenario Severity Alignment
+    description: Adverse scenario must meet regulatory severity requirements.
+    severity: critical
+    applies_to_stages: [scenario_review]
+    requires_waiver: false
+  - rule_id: stress_pol_capital_adequacy
+    name: Post-Stress Capital Adequacy
+    description: Capital ratio must not breach minimum threshold under stress.
+    severity: critical
+    applies_to_stages: [results_review]
+    condition_expression: "metrics.capital_ratio_post_stress >= 0.08"
+    requires_waiver: false
+
+artifact_pack:
+  - artifact_type: scenario_pack
+    display_name: Stress Scenario Pack
+    produced_at_stage: scenario_design
+    is_audit_required: true
+  - artifact_type: stress_results_pack
+    display_name: Stress Results Pack
+    produced_at_stage: model_execution
+    is_audit_required: true
+
+review_templates:
+  - template_id: results_review_tmpl
+    stage_id: results_review
+    review_type: approval
+    panel_a_evidence_types: [stress_results_pack, scenario_pack]
+    required_roles: [model_developer, validator, model_risk, senior_management]
+
+skill_pack:
+  domain_skill: "skills.domains.stress.StressTestingDomainSkill"
+  stage_skills: {}
+
+test_pack:
+  required_test_ids: [test_stress_full_lifecycle]

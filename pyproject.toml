@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "agentic-mdlc-platform"
+version = "0.1.0"
+description = "Agentic AI Solution for Model Development Lifecycle - Platform Monorepo"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+pythonpath = [
+    ".",
+    "sdk/flowvizsdk/src",
+    "sdk/validationsdk/src",
+    "sdk/dq_sdk/src",
+    "sdk/evaluation_sdk/src",
+    "sdk/knowledge_sdk/src",
+    "sdk/rag_sdk/src",
+    "sdk/widgetsdk/src",
+    "sdk/dataset_sdk/src",
+    "sdk/scorecardsdk/src",
+    "sdk/dataprepsdk/src",
+    "sdk/canvassdk/src",
+    "sdk/token_sdk/src",
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true

@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "stage_transition.schema.json",
+  "title": "StageTransition",
+  "description": "Records a stage transition event with governance context and audit trail.",
+  "type": "object",
+  "required": ["transition_id", "from_stage", "to_stage", "run_id", "project_id", "actor", "timestamp", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "transition_id": { "type": "string" },
+    "from_stage": { "type": "string" },
+    "to_stage": { "type": "string" },
+    "transition_type": {
+      "type": "string",
+      "enum": ["on_success", "on_review_required", "on_pass", "on_fail", "on_approved", "on_rejected", "on_auto_continue", "on_remediation_required", "manual"]
+    },
+    "run_id": { "type": "string" },
+    "project_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "stage_name": { "type": "string" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "prerequisite_check_passed": { "type": "boolean" },
+    "missing_prerequisites": { "type": "array", "items": { "type": "string" } },
+    "audit_ref": { "type": "string" },
+    "event_ref": { "type": "string" }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" }
+      }
+    }
+  }
+}

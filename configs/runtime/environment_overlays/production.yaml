@@ -1,0 +1,13 @@
+# Overlay stub -- extend with environment-specific overrides.
+# Fields here are deep-merged over configs/runtime/environment.yaml.
+environment: production
+feature_flags:
+  enable_rag: true
+  enable_spark_dataprep: true
+  strict_policy_mode: true
+  dry_run: false
+storage:
+  artifact_store_uri: "s3://mdlc-prod/artifacts"
+  audit_store_uri: "s3://mdlc-prod/audit"
+  event_store_uri: "s3://mdlc-prod/events"
+  workflow_state_uri: "s3://mdlc-prod/workflow_state"

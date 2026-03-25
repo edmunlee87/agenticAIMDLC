@@ -1,0 +1,280 @@
+====================================================================
+FULL SDK LIST TO BE DEVELOPED
+ENTERPRISE AGENTIC AI MODEL LIFECYCLE PLATFORM
+====================================================================
+
+A. CORE WORKFLOW / CONTROL SDKS
+--------------------------------------------------------------------
+1. workflowsdk
+2. hitlsdk
+3. observabilitysdk
+4. auditsdk
+5. artifactsdk
+6. flowvizsdk
+7. policysdk
+8. widgetsdk
+
+B. SHARED PLATFORM / FOUNDATION SDKS
+--------------------------------------------------------------------
+9. config_sdk
+10. registry_sdk
+11. dataset_sdk
+12. knowledge_sdk
+13. rag_sdk
+
+C. SHARED ANALYTICAL / SUPPORT SDKS
+--------------------------------------------------------------------
+14. dq_sdk
+15. feature_sdk
+16. evaluation_sdk
+17. reporting_sdk
+
+D. DATA ENGINEERING / PREPARATION SDKS
+--------------------------------------------------------------------
+18. dataprepsdk
+19. monitoringsdk
+
+E. DOMAIN MODELING SDKS
+--------------------------------------------------------------------
+20. scorecardsdk
+21. timeseriessdk
+22. eclsdk
+23. lgdsdk
+24. pdsdk
+25. eadsdk
+26. sicr_sdk
+27. stresssdk
+
+F. VALIDATION SDK
+--------------------------------------------------------------------
+28. validationsdk
+
+G. INTEGRATION / BRIDGE LAYER SDKS
+--------------------------------------------------------------------
+29. agent_bridge
+30. api_bridge
+31. cli_bridge
+32. jupyter_bridge
+33. mcp_bridge
+
+====================================================================
+SDKS MOST IMPORTANT FOR PHASE 1
+====================================================================
+1. workflowsdk
+2. hitlsdk
+3. observabilitysdk
+4. auditsdk
+5. artifactsdk
+6. config_sdk
+7. registry_sdk
+8. dataset_sdk
+9. dq_sdk
+10. feature_sdk
+11. evaluation_sdk
+12. reporting_sdk
+13. dataprepsdk
+14. scorecardsdk
+15. jupyter_bridge
+16. agent_bridge
+
+====================================================================
+SDKS MOST IMPORTANT FOR PHASE 2
+====================================================================
+17. flowvizsdk
+18. policysdk
+19. widgetsdk
+20. validationsdk
+21. knowledge_sdk
+22. rag_sdk
+23. monitoringsdk
+24. api_bridge
+25. cli_bridge
+
+====================================================================
+SDKS MOST IMPORTANT FOR PHASE 3
+====================================================================
+26. timeseriessdk
+27. eclsdk
+28. lgdsdk
+29. pdsdk
+30. eadsdk
+31. sicr_sdk
+32. stresssdk
+33. mcp_bridge
+
+====================================================================
+ONE-LINE PURPOSE OF EACH SDK
+====================================================================
+
+workflowsdk
+- workflow state, routing, checkpoints, resume, recovery, stage control
+
+hitlsdk
+- human-in-the-loop review, approval, override, escalation, decision capture
+
+observabilitysdk
+- structured event logging, replay, traceability, lineage reconstruction
+
+auditsdk
+- formal audit trail, approvals, exceptions, sign-off records
+
+artifactsdk
+- artifact registration, metadata, lineage, manifests, lookup
+
+flowvizsdk
+- convert logs and workflow actions into flow/timeline visualization
+
+policysdk
+- policy packs, threshold rules, breach detection, approval rules
+
+widgetsdk
+- reusable Jupyter widget shells for reviews, selection, flow, validation
+
+config_sdk
+- config loading, schema validation, versioning, overrides
+
+registry_sdk
+- lookup / registry for projects, runs, skills, configs, policies, models
+
+dataset_sdk
+- dataset snapshots, split references, lineage, dataset contracts
+
+knowledge_sdk
+- governed knowledge objects, promotion workflow, knowledge lifecycle
+
+rag_sdk
+- chunking, embeddings, retrieval, reranking, prompt context packaging
+
+dq_sdk
+- data profiling and preparation-stage / modeling-stage data quality checks
+
+feature_sdk
+- feature engineering, transformations, lagging, metadata, lineage
+
+evaluation_sdk
+- metrics, tests, diagnostics, comparisons, threshold evaluation
+
+reporting_sdk
+- technical reports, committee packs, summaries, narrative blocks
+
+dataprepsdk
+- Spark-first governed training-data preparation using standard templates
+
+monitoringsdk
+- post-validation monitoring snapshots, metrics, breaches, dashboard payloads
+
+scorecardsdk
+- scorecard-specific logic: binning, WoE, IV, scaling, score bands
+
+timeseriessdk
+- time-series logic: stationarity, lags, residual diagnostics, forecasting
+
+eclsdk
+- ECL workflow logic: staging, MEV, scenarios, overlays, ECL outputs
+
+lgdsdk
+- LGD logic: cure, severity, downturn and forward-looking adjustment
+
+pdsdk
+- PD logic: score/rating PD, calibration, term structure, monitoring
+
+eadsdk
+- EAD logic: exposure estimation, utilization, CCF-related preparation
+
+sicr_sdk
+- SICR logic: threshold comparison, migration, rule/model-based SICR
+
+stresssdk
+- stress testing logic: scenario application, stressed outputs, aggregation
+
+validationsdk
+- validation workflow, findings, model fitness, conclusions, remediation
+
+agent_bridge
+- bounded adapter between agent/skills and SDK calls
+
+api_bridge
+- expose SDK capabilities via API
+
+cli_bridge
+- expose SDK capabilities via CLI
+
+jupyter_bridge
+- connect JupyterLab widgets/workspaces/controllers to SDKs
+
+mcp_bridge
+- future MCP-compatible tool exposure layer
+
+====================================================================
+END OF FULL SDK LIST
+====================================================================
+
+| SDK | Category | Priority | Phase | Key Purpose | Depends On |
+|---|---|---:|---|---|---|
+| workflowsdk | Core workflow / control | Critical | Phase 1 | Workflow state, routing, checkpoints, resume, recovery, stage control | config_sdk, registry_sdk, observabilitysdk, auditsdk, artifactsdk |
+| hitlsdk | Core workflow / control | Critical | Phase 1 | Human-in-the-loop review, approval, override, escalation, decision capture | workflowsdk, observabilitysdk, auditsdk, widgetsdk, policysdk |
+| observabilitysdk | Core workflow / control | Critical | Phase 1 | Structured event logging, replay, traceability, lineage reconstruction | config_sdk, registry_sdk |
+| auditsdk | Core workflow / control | Critical | Phase 1 | Formal audit trail, approvals, exceptions, sign-off records | observabilitysdk, artifactsdk, registry_sdk |
+| artifactsdk | Core workflow / control | Critical | Phase 1 | Artifact registration, metadata, lineage, manifests, lookup | config_sdk, registry_sdk |
+| flowvizsdk | Core workflow / control | High | Phase 2 | Convert logs and workflow actions into flow and timeline visualization | observabilitysdk, auditsdk, artifactsdk, registry_sdk |
+| policysdk | Core workflow / control | High | Phase 2 | Policy packs, threshold rules, breach detection, approval rules | config_sdk, registry_sdk, observabilitysdk, auditsdk |
+| widgetsdk | Core workflow / control | High | Phase 2 | Reusable Jupyter widget shells for reviews, selection, flow, validation | jupyter_bridge, workflowsdk, hitlsdk, flowvizsdk |
+| config_sdk | Shared platform / foundation | Critical | Phase 1 | Config loading, schema validation, versioning, overrides | None |
+| registry_sdk | Shared platform / foundation | Critical | Phase 1 | Lookup and registry for projects, runs, skills, configs, policies, models | config_sdk |
+| dataset_sdk | Shared platform / foundation | Critical | Phase 1 | Dataset snapshots, split references, lineage, dataset contracts | config_sdk, registry_sdk, artifactsdk |
+| knowledge_sdk | Shared platform / foundation | High | Phase 2 | Governed knowledge objects, promotion workflow, knowledge lifecycle | config_sdk, registry_sdk, artifactsdk, observabilitysdk |
+| rag_sdk | Shared platform / foundation | High | Phase 2 | Chunking, embeddings, retrieval, reranking, prompt context packaging | knowledge_sdk, config_sdk, registry_sdk |
+| dq_sdk | Shared analytical / support | Critical | Phase 1 | Data profiling and preparation-stage / modeling-stage data quality checks | config_sdk, registry_sdk, artifactsdk, observabilitysdk |
+| feature_sdk | Shared analytical / support | Critical | Phase 1 | Feature engineering, transformations, lagging, metadata, lineage | config_sdk, registry_sdk, artifactsdk, observabilitysdk |
+| evaluation_sdk | Shared analytical / support | Critical | Phase 1 | Metrics, tests, diagnostics, comparisons, threshold evaluation | config_sdk, registry_sdk, artifactsdk, observabilitysdk |
+| reporting_sdk | Shared analytical / support | Critical | Phase 1 | Technical reports, committee packs, summaries, narrative blocks | config_sdk, registry_sdk, artifactsdk, auditsdk, flowvizsdk |
+| dataprepsdk | Data engineering / preparation | Critical | Phase 1 | Spark-first governed training-data preparation using standard templates | config_sdk, registry_sdk, dataset_sdk, artifactsdk, observabilitysdk, dq_sdk |
+| monitoringsdk | Data engineering / preparation | High | Phase 2 | Post-validation monitoring snapshots, metrics, breaches, dashboard payloads | config_sdk, registry_sdk, artifactsdk, observabilitysdk, auditsdk, evaluation_sdk, reporting_sdk, validationsdk |
+| scorecardsdk | Domain modeling | Critical | Phase 1 | Scorecard-specific logic: binning, WoE, IV, scaling, score bands | dataprepsdk, feature_sdk, evaluation_sdk, artifactsdk, observabilitysdk |
+| timeseriessdk | Domain modeling | Medium | Phase 3 | Time-series logic: stationarity, lags, residual diagnostics, forecasting | dataprepsdk, feature_sdk, evaluation_sdk, artifactsdk, observabilitysdk |
+| eclsdk | Domain modeling | Medium | Phase 3 | ECL workflow logic: staging, MEV, scenarios, overlays, ECL outputs | dataprepsdk, feature_sdk, evaluation_sdk, artifactsdk, observabilitysdk, pdsdk, lgdsdk, eadsdk |
+| lgdsdk | Domain modeling | Medium | Phase 3 | LGD logic: cure, severity, downturn and forward-looking adjustment | dataprepsdk, feature_sdk, evaluation_sdk, artifactsdk, observabilitysdk |
+| pdsdk | Domain modeling | Medium | Phase 3 | PD logic: score/rating PD, calibration, term structure, monitoring | dataprepsdk, feature_sdk, evaluation_sdk, artifactsdk, observabilitysdk |
+| eadsdk | Domain modeling | Medium | Phase 3 | EAD logic: exposure estimation, utilization, CCF-related preparation | dataprepsdk, feature_sdk, evaluation_sdk, artifactsdk, observabilitysdk |
+| sicr_sdk | Domain modeling | Medium | Phase 3 | SICR logic: threshold comparison, migration, rule/model-based SICR | dataprepsdk, feature_sdk, evaluation_sdk, artifactsdk, observabilitysdk |
+| stresssdk | Domain modeling | Medium | Phase 3 | Stress testing logic: scenario application, stressed outputs, aggregation | dataprepsdk, feature_sdk, evaluation_sdk, artifactsdk, observabilitysdk |
+| validationsdk | Validation | High | Phase 2 | Validation workflow, findings, model fitness, conclusions, remediation | workflowsdk, hitlsdk, observabilitysdk, auditsdk, artifactsdk, policysdk, evaluation_sdk, reporting_sdk |
+| agent_bridge | Integration / bridge | Critical | Phase 1 | Bounded adapter between agent and skill layer and SDK calls | workflowsdk, hitlsdk, observabilitysdk, auditsdk, artifactsdk, registry_sdk |
+| api_bridge | Integration / bridge | High | Phase 2 | Expose SDK capabilities via API | registry_sdk, config_sdk, workflowsdk, agent_bridge |
+| cli_bridge | Integration / bridge | High | Phase 2 | Expose SDK capabilities via CLI | registry_sdk, config_sdk, workflowsdk, agent_bridge |
+| jupyter_bridge | Integration / bridge | Critical | Phase 1 | Connect JupyterLab widgets, workspaces, and controllers to SDKs | workflowsdk, hitlsdk, artifactsdk, observabilitysdk, widgetsdk |
+| mcp_bridge | Integration / bridge | Medium | Phase 3 | Future MCP-compatible tool exposure layer | registry_sdk, config_sdk, agent_bridge, api_bridge |
+
+1. config_sdk
+2. registry_sdk
+3. observabilitysdk
+4. artifactsdk
+5. auditsdk
+6. workflowsdk
+7. hitlsdk
+8. dataset_sdk
+9. dq_sdk
+10. feature_sdk
+11. evaluation_sdk
+12. reporting_sdk
+13. dataprepsdk
+14. agent_bridge
+15. jupyter_bridge
+16. scorecardsdk
+17. policysdk
+18. widgetsdk
+19. validationsdk
+20. knowledge_sdk
+21. rag_sdk
+22. flowvizsdk
+23. monitoringsdk
+24. api_bridge
+25. cli_bridge
+26. timeseriessdk
+27. lgdsdk
+28. pdsdk
+29. eadsdk
+30. sicr_sdk
+31. eclsdk
+32. stresssdk
+33. mcp_bridge

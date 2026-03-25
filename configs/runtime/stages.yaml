@@ -1,0 +1,287 @@
+# Stage configuration.
+# Defines every MDLC workflow stage: entry/exit conditions, skill stacks,
+# governance gates, and access modes.
+# Loaded and validated against StagesConfig (Pydantic).
+
+version: "1.0.0"
+
+stages:
+  project_bootstrap:
+    stage_id: project_bootstrap
+    display_name: Project Bootstrap
+    description: Initialise project record, governance metadata, and workflow state.
+    phase: development
+    stage_group: setup
+    entry_conditions: []
+    exit_conditions: []
+    access_mode: BUILD_ONLY
+    produces_candidate_versions: false
+    requires_selection: false
+    is_terminal: false
+    skill_stack:
+      - skill_id: platform_bootstrap_skill
+        required: true
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - workflow_tools
+    governance_gates:
+      - gate_id: bootstrap_review
+        requires_review: true
+        review_type: initial_scoping
+        requires_approval: false
+        mandatory_evidence:
+          - project_definition
+        policy_rule_refs: []
+        allow_waiver: false
+
+  data_preparation:
+    stage_id: data_preparation
+    display_name: Data Preparation
+    description: Extract, transform, and snapshot datasets with full data lineage.
+    phase: development
+    stage_group: data
+    entry_conditions:
+      - project_bootstrap
+    exit_conditions:
+      - project_bootstrap
+    access_mode: BUILD_ONLY
+    produces_candidate_versions: false
+    requires_selection: false
+    is_terminal: false
+    timeout_minutes: 240
+    skill_stack:
+      - skill_id: data_preparation_skill
+        required: true
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - dataprep_tools
+    governance_gates:
+      - gate_id: data_selection_review
+        requires_review: true
+        review_type: data_selection
+        requires_approval: false
+        mandatory_evidence:
+          - dataset_snapshot
+          - data_quality_report
+        policy_rule_refs:
+          - POL_DATA_001
+          - POL_DATA_002
+        allow_waiver: true
+
+  feature_engineering:
+    stage_id: feature_engineering
+    display_name: Feature Engineering
+    description: Compute, select, and register feature sets.
+    phase: development
+    stage_group: data
+    entry_conditions:
+      - data_preparation
+    exit_conditions:
+      - data_preparation
+    access_mode: BUILD_ONLY
+    produces_candidate_versions: true
+    requires_selection: true
+    is_terminal: false
+    skill_stack:
+      - skill_id: feature_engineering_skill
+        required: true
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - domain_scorecard
+    governance_gates:
+      - gate_id: feature_selection_review
+        requires_review: true
+        review_type: feature_selection
+        requires_approval: false
+        mandatory_evidence:
+          - feature_importance_report
+        policy_rule_refs:
+          - POL_FEAT_001
+        allow_waiver: true
+
+  model_training:
+    stage_id: model_training
+    display_name: Model Training
+    description: Train candidate models and register versioned artifacts.
+    phase: development
+    stage_group: modelling
+    entry_conditions:
+      - feature_engineering
+    exit_conditions:
+      - feature_engineering
+    access_mode: BUILD_ONLY
+    produces_candidate_versions: true
+    requires_selection: true
+    is_terminal: false
+    timeout_minutes: 480
+    skill_stack:
+      - skill_id: model_training_skill
+        required: true
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - domain_scorecard
+    governance_gates:
+      - gate_id: model_selection_review
+        requires_review: true
+        review_type: model_selection
+        requires_approval: false
+        mandatory_evidence:
+          - model_binary
+          - training_metrics_report
+        policy_rule_refs:
+          - POL_MODEL_001
+          - POL_MODEL_002
+        allow_waiver: true
+
+  model_evaluation:
+    stage_id: model_evaluation
+    display_name: Model Evaluation
+    description: Evaluate selected model against holdout, benchmarks, and regulatory tests.
+    phase: development
+    stage_group: modelling
+    entry_conditions:
+      - model_training
+    exit_conditions:
+      - model_training
+    access_mode: BUILD_ONLY
+    produces_candidate_versions: false
+    requires_selection: false
+    is_terminal: false
+    skill_stack:
+      - skill_id: model_evaluation_skill
+        required: true
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - domain_scorecard
+        - viz_analytics_tools
+    governance_gates: []
+
+  model_validation:
+    stage_id: model_validation
+    display_name: Model Validation
+    description: Independent validation review and sign-off.
+    phase: validation
+    stage_group: governance
+    entry_conditions:
+      - model_evaluation
+    exit_conditions:
+      - model_evaluation
+    access_mode: REVIEW_REQUIRED
+    produces_candidate_versions: false
+    requires_selection: false
+    is_terminal: false
+    skill_stack:
+      - skill_id: validation_skill
+        required: true
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - hitl_tools
+        - governance_tools
+        - viz_analytics_tools
+    governance_gates:
+      - gate_id: validation_signoff
+        requires_review: true
+        review_type: validation_sign_off
+        requires_approval: true
+        approval_role: model_validator
+        mandatory_evidence:
+          - validation_report
+          - policy_findings
+        policy_rule_refs:
+          - POL_VAL_001
+          - POL_VAL_002
+          - POL_VAL_003
+        allow_waiver: true
+
+  final_approval:
+    stage_id: final_approval
+    display_name: Final Approval
+    description: Model owner and risk manager sign-off for production deployment.
+    phase: governance
+    stage_group: governance
+    entry_conditions:
+      - model_validation
+    exit_conditions:
+      - model_validation
+    access_mode: FINALIZATION_GATED
+    produces_candidate_versions: false
+    requires_selection: false
+    is_terminal: false
+    skill_stack:
+      - skill_id: approval_skill
+        required: true
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - hitl_tools
+        - governance_tools
+    governance_gates:
+      - gate_id: final_approval_gate
+        requires_review: true
+        review_type: final_approval
+        requires_approval: true
+        approval_role: model_owner
+        mandatory_evidence:
+          - validation_report
+          - final_decision_record
+        policy_rule_refs:
+          - POL_GOV_001
+          - POL_GOV_002
+        allow_waiver: false
+
+  production_deployment:
+    stage_id: production_deployment
+    display_name: Production Deployment
+    description: Deploy approved model to production systems.
+    phase: deployment
+    stage_group: deployment
+    entry_conditions:
+      - final_approval
+    exit_conditions:
+      - final_approval
+    access_mode: FINALIZATION_GATED
+    produces_candidate_versions: false
+    requires_selection: false
+    is_terminal: false
+    skill_stack:
+      - skill_id: deployment_skill
+        required: false
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+    governance_gates: []
+
+  monitoring:
+    stage_id: monitoring
+    display_name: Monitoring
+    description: Ongoing performance monitoring with drift detection.
+    phase: monitoring
+    stage_group: operations
+    entry_conditions:
+      - production_deployment
+    exit_conditions: []
+    access_mode: MONITORING_OPERATIONAL
+    produces_candidate_versions: false
+    requires_selection: false
+    is_terminal: true
+    skill_stack:
+      - skill_id: monitoring_skill
+        required: false
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+    governance_gates:
+      - gate_id: monitoring_review
+        requires_review: true
+        review_type: monitoring_review
+        requires_approval: false
+        mandatory_evidence:
+          - monitoring_dashboard
+        policy_rule_refs: []
+        allow_waiver: false

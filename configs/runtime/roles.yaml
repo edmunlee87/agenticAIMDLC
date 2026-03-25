@@ -1,0 +1,168 @@
+# Role configurations.
+# Defines capabilities, tool access, and governance authority per role.
+# Loaded and validated against RolesConfig (Pydantic).
+
+version: "1.0.0"
+
+roles:
+  model_developer:
+    role_id: model_developer
+    display_name: Model Developer
+    description: Builds models, features, and data pipelines. May not approve own work.
+    can_delegate: false
+    max_delegation_depth: 1
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - workflow_tools
+        - domain_scorecard
+        - dataprep_tools
+        - knowledge_tools
+      exclude_groups: []
+      explicit_allow: []
+      explicit_block:
+        - policysdk
+    stage_capabilities:
+      - stage_name: project_bootstrap
+        can_execute: true
+        can_review: false
+        can_approve: false
+        access_mode: BUILD_ONLY
+      - stage_name: data_preparation
+        can_execute: true
+        can_review: false
+        can_approve: false
+        access_mode: BUILD_ONLY
+      - stage_name: feature_engineering
+        can_execute: true
+        can_review: false
+        can_approve: false
+        access_mode: BUILD_ONLY
+      - stage_name: model_training
+        can_execute: true
+        can_review: false
+        can_approve: false
+        access_mode: BUILD_ONLY
+      - stage_name: model_evaluation
+        can_execute: true
+        can_review: false
+        can_approve: false
+        access_mode: BUILD_ONLY
+      - stage_name: final_approval
+        can_execute: false
+        can_review: false
+        can_approve: false
+        access_mode: READ_ONLY
+    default_approval_authority:
+      minimum_role: model_owner
+      allow_self_approval: false
+
+  model_validator:
+    role_id: model_validator
+    display_name: Model Validator
+    description: Independent validator. Reviews methodology, evidence, and risk findings.
+    can_delegate: true
+    max_delegation_depth: 2
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - hitl_tools
+        - governance_tools
+        - viz_analytics_tools
+        - knowledge_tools
+      exclude_groups: []
+      explicit_allow: []
+      explicit_block: []
+    stage_capabilities:
+      - stage_name: model_validation
+        can_execute: true
+        can_review: true
+        can_approve: false
+        access_mode: REVIEW_REQUIRED
+      - stage_name: final_approval
+        can_execute: false
+        can_review: true
+        can_approve: false
+        access_mode: REVIEW_REQUIRED
+    default_approval_authority:
+      minimum_role: model_owner
+      allow_self_approval: false
+
+  model_owner:
+    role_id: model_owner
+    display_name: Model Owner
+    description: Business accountable for the model. Approves governance gates.
+    can_delegate: true
+    max_delegation_depth: 2
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - hitl_tools
+        - governance_tools
+        - viz_analytics_tools
+      exclude_groups: []
+      explicit_allow: []
+      explicit_block: []
+    stage_capabilities:
+      - stage_name: final_approval
+        can_execute: false
+        can_review: true
+        can_approve: true
+        can_override: false
+        access_mode: FINALIZATION_GATED
+    default_approval_authority:
+      minimum_role: model_owner
+      allow_self_approval: false
+      escalation_role: risk_manager
+
+  risk_manager:
+    role_id: risk_manager
+    display_name: Risk Manager
+    description: Oversees model risk. Can waive policy findings and override gates.
+    can_delegate: true
+    max_delegation_depth: 3
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - hitl_tools
+        - governance_tools
+        - viz_analytics_tools
+        - knowledge_tools
+      exclude_groups: []
+      explicit_allow: []
+      explicit_block: []
+    stage_capabilities:
+      - stage_name: model_validation
+        can_execute: false
+        can_review: true
+        can_approve: true
+        can_override: true
+        can_waive: true
+        access_mode: REVIEW_REQUIRED
+      - stage_name: final_approval
+        can_execute: false
+        can_review: true
+        can_approve: true
+        can_override: true
+        can_waive: true
+        access_mode: FINALIZATION_GATED
+    default_approval_authority:
+      minimum_role: risk_manager
+      allow_self_approval: false
+
+  system:
+    role_id: system
+    display_name: System
+    description: Internal system actor. Used for automated steps only.
+    can_delegate: false
+    max_delegation_depth: 0
+    tool_allowlist:
+      include_groups:
+        - core_utilities
+        - workflow_tools
+        - governance_tools
+      exclude_groups: []
+      explicit_allow: []
+      explicit_block:
+        - hitlsdk
+        - widgetsdk

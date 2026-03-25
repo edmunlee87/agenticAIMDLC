@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "standard_response_envelope.schema.json",
+  "title": "StandardResponseEnvelope",
+  "description": "Standard response returned by all controllers to UI/agent. Contains governance, audit, and observability links alongside workflow and content fields.",
+  "type": "object",
+  "required": ["status", "project_id", "run_id", "session_id", "stage_name", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "project_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "stage_name": { "type": "string" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "success_with_warning",
+        "blocked",
+        "failed",
+        "pending_human_review",
+        "preview_ready",
+        "rerun_requested",
+        "escalated",
+        "finalized",
+        "invalid_needs_review"
+      ]
+    },
+    "message": { "type": "string" },
+    "current_stage": { "type": "string" },
+    "next_stage": { "type": "string" },
+    "required_human_action": { "type": "string" },
+    "interaction_state": {
+      "type": "string",
+      "enum": ["idle", "review_open", "awaiting_selection", "awaiting_recovery", "blocked", "finalized"]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "severity": { "type": "string", "enum": ["info", "warning", "high"] }
+        }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "artifacts_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "artifact_id": { "type": "string" },
+          "artifact_type": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "candidate_versions_created": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "selected_candidate_version_id": { "type": "string" },
+    "updated_metrics": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "review_created": { "type": "boolean", "default": false },
+    "review_id": { "type": "string" },
+    "validation_updates": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "workflow_state_patch": {
+      "type": "object",
+      "description": "Partial workflow state update to apply after this response.",
+      "additionalProperties": true
+    },
+    "audit_ref": {
+      "type": "string",
+      "description": "audit_id of the audit record written as part of this response."
+    },
+    "event_ref": {
+      "type": "string",
+      "description": "event_id of the observability event written as part of this response."
+    },
+    "governance_summary": {
+      "type": "object",
+      "description": "Summary of governance checks performed.",
+      "properties": {
+        "policy_check_result": { "type": "string", "enum": ["pass", "warn", "breach", "blocked"] },
+        "open_violations": { "type": "integer" },
+        "blocking_reasons": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "token_usage_hint": {
+      "type": "object",
+      "properties": {
+        "prompt_tokens": { "type": "integer" },
+        "completion_tokens": { "type": "integer" },
+        "total_tokens": { "type": "integer" },
+        "recommended_token_mode": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" },
+        "active_policy_pack_id": { "type": "string" }
+      }
+    }
+  }
+}

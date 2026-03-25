@@ -1,0 +1,12 @@
+# Overlay stub -- extend with environment-specific overrides.
+# Fields here are deep-merged over configs/runtime/environment.yaml.
+environment: test
+feature_flags:
+  enable_rag: false
+  strict_policy_mode: true
+  dry_run: false
+storage:
+  artifact_store_uri: "file://./artifacts/test"
+  audit_store_uri: "file://./audit/test"
+  event_store_uri: "file://./events/test"
+  workflow_state_uri: "file://./workflow_state/test"

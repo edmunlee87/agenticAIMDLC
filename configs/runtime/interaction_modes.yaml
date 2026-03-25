@@ -1,0 +1,71 @@
+# Interaction Mode Definitions
+# Defines each interaction pattern with its allowed actions and requirements.
+
+modes:
+  edit_and_finalize:
+    mode: edit_and_finalize
+    description: "User edits proposed output and finalizes. Structured edits required."
+    allowed_actions:
+      - approve_with_changes
+      - approve
+      - reject
+      - request_more_analysis
+    requires_structured_input: true
+    default_for_stage_classes:
+      - review
+
+  review_and_conclude:
+    mode: review_and_conclude
+    description: "User reviews evidence and provides a conclusion. Structured conclusion required."
+    allowed_actions:
+      - approve
+      - approve_with_changes
+      - reject
+      - request_more_analysis
+      - escalate
+    requires_structured_input: true
+    default_for_stage_classes:
+      - validation
+
+  triage_and_disposition:
+    mode: triage_and_disposition
+    description: "User triages issues and assigns disposition. Used for findings triage."
+    allowed_actions:
+      - approve
+      - reject
+      - escalate
+      - request_more_analysis
+    requires_structured_input: false
+    default_for_stage_classes:
+      - monitoring
+
+  review_and_approve:
+    mode: review_and_approve
+    description: "User reviews and issues formal approval with authority check."
+    allowed_actions:
+      - approve
+      - approve_with_conditions
+      - reject
+      - escalate
+      - rerun_with_parameters
+    requires_structured_input: true
+    default_for_stage_classes:
+      - approval
+
+  recovery_decision:
+    mode: recovery_decision
+    description: "User selects recovery path after workflow failure."
+    allowed_actions:
+      - apply_recovery
+      - escalate
+    requires_structured_input: false
+    default_for_stage_classes:
+      - recovery
+
+  read_only:
+    mode: read_only
+    description: "No user input permitted. Informational display only."
+    allowed_actions: []
+    requires_structured_input: false
+    default_for_stage_classes:
+      - build

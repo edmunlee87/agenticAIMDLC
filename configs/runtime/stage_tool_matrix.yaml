@@ -1,0 +1,207 @@
+# Stage Tool Matrix
+# Per-stage allowed/blocked tool groups. Merged with role capabilities at runtime.
+
+matrix:
+  session_bootstrap:
+    stage_name: session_bootstrap
+    allowed_groups: [group_a_workflow, group_f_config, group_g_registry]
+    blocked_groups: [group_d_audit, group_b_hitl]
+    required_groups: [group_a_workflow]
+
+  intake:
+    stage_name: intake
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config, group_g_registry]
+    blocked_groups: []
+    required_groups: [group_a_workflow, group_c_observability]
+
+  data_readiness:
+    stage_name: data_readiness
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config, group_g_registry]
+    blocked_groups: []
+    required_groups: []
+
+  dq_review:
+    stage_name: dq_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_f_config, group_g_registry, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  eda:
+    stage_name: eda
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config, group_g_registry]
+    blocked_groups: []
+    required_groups: []
+
+  feature_engineering:
+    stage_name: feature_engineering
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config, group_g_registry]
+    blocked_groups: []
+    required_groups: []
+
+  feature_screening:
+    stage_name: feature_screening
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config, group_g_registry]
+    blocked_groups: []
+    required_groups: []
+
+  segmentation_review:
+    stage_name: segmentation_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  fine_classing:
+    stage_name: fine_classing
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config]
+    blocked_groups: []
+    required_groups: []
+
+  coarse_classing:
+    stage_name: coarse_classing
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config]
+    blocked_groups: []
+    required_groups: []
+
+  coarse_classing_review:
+    stage_name: coarse_classing_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  binning_candidate_generation:
+    stage_name: binning_candidate_generation
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config]
+    blocked_groups: []
+    required_groups: []
+
+  binning_version_selection_review:
+    stage_name: binning_version_selection_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl, group_a_workflow]
+
+  selected_binning_finalization:
+    stage_name: selected_binning_finalization
+    allowed_groups: [group_a_workflow, group_c_observability, group_d_audit, group_e_artifacts]
+    blocked_groups: []
+    required_groups: [group_d_audit]
+
+  woe_iv_review:
+    stage_name: woe_iv_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  policy_variable_review:
+    stage_name: policy_variable_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  model_fitting:
+    stage_name: model_fitting
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config]
+    blocked_groups: []
+    required_groups: []
+
+  scaling_and_calibration:
+    stage_name: scaling_and_calibration
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts]
+    blocked_groups: []
+    required_groups: []
+
+  reject_inference_review:
+    stage_name: reject_inference_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  champion_challenger_review:
+    stage_name: champion_challenger_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  model_review:
+    stage_name: model_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  validation_pack:
+    stage_name: validation_pack
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_f_config, group_g_registry, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  committee_pack:
+    stage_name: committee_pack
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_d_audit, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl, group_d_audit]
+
+  deployment_readiness:
+    stage_name: deployment_readiness
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_d_audit, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl, group_d_audit]
+
+  deployment_approval:
+    stage_name: deployment_approval
+    allowed_groups: [group_b_hitl, group_c_observability, group_d_audit, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl, group_d_audit]
+
+  monitoring_pack:
+    stage_name: monitoring_pack
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config]
+    blocked_groups: []
+    required_groups: []
+
+  monitoring_snapshot:
+    stage_name: monitoring_snapshot
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: []
+
+  monitoring_breach_review:
+    stage_name: monitoring_breach_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  annual_review:
+    stage_name: annual_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_d_audit, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  remediation_planning:
+    stage_name: remediation_planning
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config]
+    blocked_groups: []
+    required_groups: []
+
+  remediation_review:
+    stage_name: remediation_review
+    allowed_groups: [group_a_workflow, group_b_hitl, group_c_observability, group_d_audit, group_e_artifacts, group_h_policy]
+    blocked_groups: []
+    required_groups: [group_b_hitl]
+
+  recovery:
+    stage_name: recovery
+    allowed_groups: [group_a_workflow, group_c_observability, group_d_audit, group_f_config]
+    blocked_groups: []
+    required_groups: [group_d_audit]
+
+  documentation_pack:
+    stage_name: documentation_pack
+    allowed_groups: [group_a_workflow, group_c_observability, group_e_artifacts, group_f_config]
+    blocked_groups: []
+    required_groups: []
+
+  closed:
+    stage_name: closed
+    allowed_groups: [group_c_observability, group_f_config]
+    blocked_groups: [group_a_workflow, group_b_hitl, group_d_audit, group_e_artifacts]
+    required_groups: []

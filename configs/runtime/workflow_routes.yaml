@@ -1,0 +1,155 @@
+# Workflow Routes
+# Stage routing: what stage follows on each outcome type.
+
+routes:
+  session_bootstrap:
+    stage_name: session_bootstrap
+    on_success: intake
+
+  intake:
+    stage_name: intake
+    on_success: data_readiness
+
+  data_readiness:
+    stage_name: data_readiness
+    on_success: dq_review
+    on_fail: recovery
+
+  dq_review:
+    stage_name: dq_review
+    on_approved: eda
+    on_rejected: data_readiness
+    on_review_required: dq_review
+
+  eda:
+    stage_name: eda
+    on_success: feature_engineering
+
+  feature_engineering:
+    stage_name: feature_engineering
+    on_success: feature_screening
+
+  feature_screening:
+    stage_name: feature_screening
+    on_success: model_fitting
+
+  fine_classing:
+    stage_name: fine_classing
+    on_success: coarse_classing
+
+  coarse_classing:
+    stage_name: coarse_classing
+    on_success: coarse_classing_review
+    on_fail: recovery
+
+  coarse_classing_review:
+    stage_name: coarse_classing_review
+    on_approved: binning_candidate_generation
+    on_rejected: coarse_classing
+    on_review_required: coarse_classing_review
+
+  binning_candidate_generation:
+    stage_name: binning_candidate_generation
+    on_success: binning_version_selection_review
+
+  binning_version_selection_review:
+    stage_name: binning_version_selection_review
+    on_approved: selected_binning_finalization
+    on_rejected: binning_candidate_generation
+    on_review_required: binning_version_selection_review
+
+  selected_binning_finalization:
+    stage_name: selected_binning_finalization
+    on_success: woe_iv_review
+
+  woe_iv_review:
+    stage_name: woe_iv_review
+    on_approved: policy_variable_review
+    on_rejected: coarse_classing
+    on_review_required: woe_iv_review
+
+  policy_variable_review:
+    stage_name: policy_variable_review
+    on_approved: model_fitting
+    on_rejected: feature_screening
+    on_review_required: policy_variable_review
+
+  model_fitting:
+    stage_name: model_fitting
+    on_success: scaling_and_calibration
+    on_fail: recovery
+
+  scaling_and_calibration:
+    stage_name: scaling_and_calibration
+    on_success: model_review
+
+  model_review:
+    stage_name: model_review
+    on_approved: validation_pack
+    on_rejected: model_fitting
+    on_review_required: model_review
+
+  validation_pack:
+    stage_name: validation_pack
+    on_approved: committee_pack
+    on_rejected: model_review
+    on_review_required: validation_pack
+    on_remediation_required: remediation_planning
+
+  committee_pack:
+    stage_name: committee_pack
+    on_approved: deployment_readiness
+    on_rejected: validation_pack
+    on_review_required: committee_pack
+
+  deployment_readiness:
+    stage_name: deployment_readiness
+    on_approved: deployment_approval
+    on_rejected: model_review
+    on_review_required: deployment_readiness
+
+  deployment_approval:
+    stage_name: deployment_approval
+    on_approved: monitoring_pack
+    on_rejected: deployment_readiness
+    on_review_required: deployment_approval
+
+  monitoring_pack:
+    stage_name: monitoring_pack
+    on_success: monitoring_snapshot
+
+  monitoring_snapshot:
+    stage_name: monitoring_snapshot
+    on_success: monitoring_snapshot
+    on_review_required: monitoring_breach_review
+
+  monitoring_breach_review:
+    stage_name: monitoring_breach_review
+    on_approved: monitoring_snapshot
+    on_rejected: remediation_planning
+
+  annual_review:
+    stage_name: annual_review
+    on_approved: monitoring_snapshot
+    on_review_required: annual_review
+    on_remediation_required: remediation_planning
+
+  remediation_planning:
+    stage_name: remediation_planning
+    on_success: remediation_review
+
+  remediation_review:
+    stage_name: remediation_review
+    on_approved: model_fitting
+    on_rejected: remediation_planning
+
+  recovery:
+    stage_name: recovery
+    on_success: intake
+
+  documentation_pack:
+    stage_name: documentation_pack
+    on_success: closed
+
+  closed:
+    stage_name: closed

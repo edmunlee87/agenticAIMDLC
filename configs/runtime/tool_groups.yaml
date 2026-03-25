@@ -1,0 +1,87 @@
+# Tool group definitions.
+# Groups A-H correspond to the platform Tool Calling spec.
+# Loaded and validated against ToolGroupsConfig (Pydantic).
+
+groups:
+  group_a_workflow:
+    group_name: group_a_workflow
+    description: "Group A: Workflow lifecycle SDKs (state, session, routing, recovery, project bootstrap)."
+    tools:
+      - workflowsdk
+      - session_manager
+      - stage_router
+      - candidate_registry
+
+  group_b_hitl:
+    group_name: group_b_hitl
+    description: "Group B: Human-in-the-loop review, decision capture, and widget SDKs."
+    tools:
+      - hitlsdk
+      - widgetsdk
+
+  group_c_observability:
+    group_name: group_c_observability
+    description: "Group C: Observability and skill-event emission SDK."
+    tools:
+      - observabilitysdk
+
+  group_d_audit:
+    group_name: group_d_audit
+    description: "Group D: Audit record write SDK (append-only, governance-gated)."
+    tools:
+      - auditsdk
+
+  group_e_artifacts:
+    group_name: group_e_artifacts
+    description: "Group E: Artifact registry read/write SDKs."
+    tools:
+      - artifactsdk
+
+  group_f_config:
+    group_name: group_f_config
+    description: "Group F: Runtime config and resolver SDK."
+    tools:
+      - config_sdk
+
+  group_g_registry:
+    group_name: group_g_registry
+    description: "Group G: Platform registry SDK (tool registry, schema registry)."
+    tools:
+      - registry_sdk
+
+  group_h_policy:
+    group_name: group_h_policy
+    description: "Group H: Policy evaluation and governance overlay SDK."
+    tools:
+      - policysdk
+
+  group_viz_analytics:
+    group_name: group_viz_analytics
+    description: "Flow visualization and validation analytics SDKs."
+    tools:
+      - flowvizsdk
+      - validationsdk
+
+  group_knowledge:
+    group_name: group_knowledge
+    description: "Knowledge management and RAG retrieval SDKs."
+    tools:
+      - knowledge_sdk
+      - rag_sdk
+
+  group_domain_scorecard:
+    group_name: group_domain_scorecard
+    description: "Credit scorecard domain SDK pack."
+    tools:
+      - scorecardsdk
+      - evaluation_sdk
+      - feature_sdk
+      - dataset_sdk
+      - dq_sdk
+      - reporting_sdk
+
+  group_dataprep:
+    group_name: group_dataprep
+    description: "Data preparation SDK (Spark-backed)."
+    tools:
+      - dataprepsdk

@@ -1,0 +1,2418 @@
+====================================================================
+TECHNICAL DESIGN SPECIFICATION
+CONFIG_SDK
+AGENTIC AI MDLC / ECL PLATFORM
+VALIDATION-GRADE, HUMAN-TRACEABLE, FUTURE-PROOF
+====================================================================
+
+STATUS
+--------------------------------------------------------------------
+Draft v3.0
+
+PURPOSE
+--------------------------------------------------------------------
+config_sdk is the central configuration and configuration-governance
+foundation for the agentic AI MDLC platform.
+
+It is responsible not only for loading, validating, merging, and
+resolving configuration, but also for ensuring that every material
+configuration state, change proposal, review, challenge, response,
+and decision can be:
+
+- understood by humans later
+- validated independently from workflow runtime
+- exported as evidence
+- linked to exact config versions and hashes
+- traced across time, actors, and approval stages
+- defended in model validation, audit, and governance review
+
+This SDK must therefore support both:
+1. machine execution and config resolution
+2. human governance and validation traceability
+
+====================================================================
+1. DESIGN INTENT
+====================================================================
+
+config_sdk must serve as:
+
+1. The single source of truth for effective configuration
+2. The config contract layer for all downstream SDKs
+3. The config provenance engine
+4. The config governance engine
+5. The config traceability engine
+6. The config evidence assembly layer
+7. The config audit snapshot producer
+
+This means config_sdk is no longer only a parser / resolver.
+It becomes a governed configuration backbone for the platform.
+
+====================================================================
+2. PRIMARY DESIGN OBJECTIVES
+====================================================================
+
+OBJECTIVE A: DETERMINISTIC CONFIGURATION
+--------------------------------------------------------------------
+Provide deterministic, reproducible config resolution across all SDKs.
+
+OBJECTIVE B: EXPLAINABLE CONFIGURATION
+--------------------------------------------------------------------
+Allow every effective value to be traced back to:
+- source layer
+- source file
+- override chain
+- applicable scope
+- effective hash
+
+OBJECTIVE C: GOVERNED CONFIGURATION CHANGE
+--------------------------------------------------------------------
+Allow material config actions to be proposed, reviewed, responded to,
+approved, rejected, or superseded in a structured way.
+
+OBJECTIVE D: HUMAN VALIDATION TRACEABILITY
+--------------------------------------------------------------------
+Allow validators, auditors, and reviewers to reconstruct:
+- what changed
+- why it changed
+- who proposed it
+- who challenged it
+- who approved it
+- under what evidence and assumptions
+- for which exact config version/hash
+
+OBJECTIVE E: INDEPENDENT QUERYABILITY
+--------------------------------------------------------------------
+Reasoning, review, decision, and trace records must be queryable
+independently from workflow state.
+
+OBJECTIVE F: EXPORTABLE EVIDENCE
+--------------------------------------------------------------------
+Support immutable audit snapshots and evidence bundles suitable for:
+- model validation packs
+- audit trail review
+- committee review
+- issue investigation
+- release approval evidence
+
+OBJECTIVE G: FUTURE-PROOF AGENTIC COMPATIBILITY
+--------------------------------------------------------------------
+Support agent-driven config recommendations while preserving human
+control, challenge, and evidence traceability.
+
+====================================================================
+3. SCOPE
+====================================================================
+
+IN SCOPE
+--------------------------------------------------------------------
+- config source loading
+- config parsing
+- schema validation
+- overlay merging
+- placeholder/reference resolution
+- effective config production
+- config hashing/fingerprinting
+- provenance capture
+- config diffing
+- structured reasoning capture
+- structured review request and response lifecycle
+- independent decision recording
+- explicit change set capture
+- actor identity and authority capture
+- trace bundle generation
+- decision trail generation
+- audit snapshot generation
+- human-readable governance reconstruction
+- export-ready evidence contracts
+- agent output decomposition
+- independent query services for governance records
+
+OUT OF SCOPE
+--------------------------------------------------------------------
+- full external secrets system implementation
+- direct database implementation mandate
+- UI implementation
+- workflow orchestration itself
+- downstream business-rule evaluation
+- release pipeline automation itself
+- external approval system implementation
+- full document generation engine
+- registry persistence implementation details
+
+====================================================================
+4. WHY THIS VERSION IS VALIDATION-GRADE
+====================================================================
+
+A normal config engine answers:
+- what is the effective config?
+
+A validation-grade config engine must also answer:
+- why is this the config?
+- what changed from previous state?
+- who proposed the change?
+- what assumptions were made?
+- what evidence supported it?
+- who reviewed or challenged it?
+- how was the issue resolved?
+- who approved or rejected it?
+- what exact config version/hash was in force?
+- what was the final traceable state at the time?
+
+This SDK is designed specifically to answer those questions later.
+
+====================================================================
+5. ARCHITECTURAL POSITION
+====================================================================
+
+config_sdk sits at the bottom of the platform dependency graph.
+
+All downstream SDKs depend on it for config consumption and governed
+config evidence.
+
+config_sdk itself should remain minimal in external dependency and
+must not depend on:
+- workflow_sdk
+- registry_sdk
+- artifact_sdk
+- domain SDKs
+- bridge SDKs
+
+To preserve bottom-layer purity, it should expose pluggable repository
+interfaces for persistence rather than hard-coding infrastructure
+dependencies.
+
+====================================================================
+6. KEY DESIGN PRINCIPLES
+====================================================================
+
+PRINCIPLE 1: CONFIG IS A GOVERNED ASSET
+--------------------------------------------------------------------
+Configuration is not just runtime input. It is a governed artefact.
+
+PRINCIPLE 2: EFFECTIVE CONFIG MUST BE REPRODUCIBLE
+--------------------------------------------------------------------
+The same inputs must produce the same effective config and same hash.
+
+PRINCIPLE 3: EVERY MATERIAL CHANGE MUST BE TRACEABLE
+--------------------------------------------------------------------
+Material changes must carry reasoning, review, and decision context.
+
+PRINCIPLE 4: HUMAN TRACEABILITY IS A FIRST-CLASS REQUIREMENT
+--------------------------------------------------------------------
+Data structures must support later human understanding without forcing
+reviewers to reconstruct history manually.
+
+PRINCIPLE 5: WORKFLOW STATE IS NOT THE SYSTEM OF RECORD
+--------------------------------------------------------------------
+Workflow may reference governance, but governance records must remain
+independently queryable.
+
+PRINCIPLE 6: CONFIG CHANGE MUST HAVE BEFORE/AFTER SEMANTICS
+--------------------------------------------------------------------
+A human reviewer must see precisely what changed.
+
+PRINCIPLE 7: ACTORS MUST BE EXPLICIT
+--------------------------------------------------------------------
+Human, agent, and system roles must be distinguishable.
+
+PRINCIPLE 8: EVIDENCE MUST BE STRUCTURED
+--------------------------------------------------------------------
+Evidence references must be explicit and linkable.
+
+PRINCIPLE 9: TIMELINE RECONSTRUCTION MUST BE POSSIBLE
+--------------------------------------------------------------------
+The SDK must support ordered narrative reconstruction of config events.
+
+PRINCIPLE 10: SNAPSHOT EVIDENCE MUST BE EXPORTABLE
+--------------------------------------------------------------------
+A point-in-time audit package must be producible.
+
+====================================================================
+7. CORE CAPABILITIES
+====================================================================
+
+7.1 CONFIG LOADING
+--------------------------------------------------------------------
+Support loading from:
+- YAML
+- JSON
+- TOML
+- in-memory dict
+- runtime override dict
+
+7.2 CONFIG VALIDATION
+--------------------------------------------------------------------
+Support:
+- schema validation
+- enum validation
+- type validation
+- cross-field validation
+- bundle-level validation
+- strict and lenient modes
+
+7.3 CONFIG MERGING
+--------------------------------------------------------------------
+Support deterministic layering:
+1. base
+2. domain
+3. role
+4. environment
+5. project
+6. runtime override
+
+7.4 PLACEHOLDER / REFERENCE RESOLUTION
+--------------------------------------------------------------------
+Support patterns such as:
+- ${env:KEY}
+- ${secret:NAME}
+- ${registry:REF}
+- ${artifact:ID}
+
+7.5 CONFIG HASHING
+--------------------------------------------------------------------
+Produce deterministic canonical config hash for traceability.
+
+7.6 PROVENANCE EXPLAINABILITY
+--------------------------------------------------------------------
+Every effective key should be explainable back to origin.
+
+7.7 REASONING CAPTURE
+--------------------------------------------------------------------
+Allow recording why a config recommendation or change was proposed.
+
+7.8 REVIEW LIFECYCLE
+--------------------------------------------------------------------
+Allow structured review request, challenge, clarification, response,
+and resolution.
+
+7.9 DECISION RECORDING
+--------------------------------------------------------------------
+Allow formal decision capture independent of workflow.
+
+7.10 CHANGE SET CAPTURE
+--------------------------------------------------------------------
+Support explicit before/after representation of config changes.
+
+7.11 ACTOR TRACEABILITY
+--------------------------------------------------------------------
+Capture actor identity, role, authority, and human/agent/system type.
+
+7.12 TRACE BUNDLE GENERATION
+--------------------------------------------------------------------
+Assemble a complete config governance trail for validation.
+
+7.13 AUDIT SNAPSHOT GENERATION
+--------------------------------------------------------------------
+Export point-in-time immutable snapshots for evidence.
+
+====================================================================
+8. VALIDATION-READY TRACEABILITY REQUIREMENTS
+====================================================================
+
+For a config action to be validation-sufficient, the SDK must allow
+reconstruction of all of the below:
+
+A. CONTEXT
+--------------------------------------------------------------------
+- project
+- domain
+- role
+- environment
+- bundle
+- effective config id
+- config hash
+- timestamp
+
+B. SUBJECT
+--------------------------------------------------------------------
+- which config object
+- which key path(s)
+- which config version/hash
+- which bundle or scope
+
+C. CHANGE
+--------------------------------------------------------------------
+- before value
+- after value
+- change type
+- materiality
+- impact summary
+
+D. PROPOSAL
+--------------------------------------------------------------------
+- proposed action
+- rationale
+- assumptions
+- evidence refs
+- confidence
+
+E. ACTORS
+--------------------------------------------------------------------
+- proposer
+- reviewer
+- responder
+- approver
+- actor type
+- role
+- authority level
+- org unit
+
+F. REVIEW
+--------------------------------------------------------------------
+- review request
+- challenge points
+- responses
+- review outcome
+- unresolved issues
+
+G. DECISION
+--------------------------------------------------------------------
+- decision type
+- decision status
+- decided by
+- basis of decision
+- linked reasoning and review refs
+- supersession chain
+
+H. EVIDENCE BUNDLE
+--------------------------------------------------------------------
+- provenance map
+- config hash
+- effective config
+- related reasoning
+- related reviews
+- related decisions
+- timeline
+
+====================================================================
+9. ENHANCED PACKAGE STRUCTURE
+====================================================================
+
+config_sdk/
+  pyproject.toml
+  README.md
+
+  src/config_sdk/
+    __init__.py
+    version.py
+
+    contracts/
+      enums.py
+      source_models.py
+      layer_models.py
+      bundle_models.py
+      request_models.py
+      response_models.py
+      metadata_models.py
+
+      agent_models.py
+      actor_models.py
+      change_models.py
+      reasoning_models.py
+      review_models.py
+      decision_models.py
+      trace_models.py
+      snapshot_models.py
+      evidence_models.py
+
+    models/
+      base_models.py
+      common_models.py
+      runtime_models.py
+      domain_models.py
+      workflow_models.py
+      monitoring_models.py
+      policy_models.py
+      ui_models.py
+      schema_catalog.py
+
+    loaders/
+      base_loader.py
+      yaml_loader.py
+      json_loader.py
+      toml_loader.py
+      dict_loader.py
+      loader_factory.py
+
+    mergers/
+      merge_engine.py
+      merge_strategies.py
+      overlay_resolver.py
+
+    resolvers/
+      config_stack_resolver.py
+      placeholder_resolver.py
+      inheritance_resolver.py
+      reference_resolver.py
+      effective_config_renderer.py
+
+    validators/
+      schema_validator.py
+      cross_field_validator.py
+      bundle_validator.py
+      reference_validator.py
+      governance_validator.py
+      trace_validator.py
+
+    hashing/
+      config_hashing.py
+      fingerprinting.py
+
+    provenance/
+      provenance_tracker.py
+      origin_explainer.py
+      config_diff.py
+
+    governance/
+      reasoning_repository.py
+      review_repository.py
+      decision_repository.py
+      trace_repository.py
+      snapshot_repository.py
+      governance_service.py
+      review_orchestrator.py
+      decision_orchestrator.py
+      trace_service.py
+      snapshot_service.py
+      evidence_service.py
+      query_service.py
+
+    services/
+      config_service.py
+      public_service.py
+
+    exceptions/
+      errors.py
+
+    utils/
+      normalize.py
+      deep_merge.py
+      dict_tools.py
+      ids.py
+      time_utils.py
+      serialization.py
+      path_utils.py
+
+  tests/
+    unit/
+    integration/
+    contract/
+    governance/
+    validation/
+    fixtures/
+
+====================================================================
+10. LOGICAL SUBSYSTEMS
+====================================================================
+
+SUBSYSTEM A: CONFIG RESOLUTION
+--------------------------------------------------------------------
+Purpose:
+- load
+- validate
+- merge
+- resolve
+- hash
+- render
+
+SUBSYSTEM B: CONFIG PROVENANCE
+--------------------------------------------------------------------
+Purpose:
+- track origin of each effective value
+- explain override chain
+- support diff
+
+SUBSYSTEM C: CONFIG GOVERNANCE
+--------------------------------------------------------------------
+Purpose:
+- capture reasoning
+- route reviews
+- record decisions
+- track resolution lifecycle
+
+SUBSYSTEM D: CONFIG TRACEABILITY
+--------------------------------------------------------------------
+Purpose:
+- assemble human-readable config history
+- produce trace bundles
+- support validation review
+
+SUBSYSTEM E: CONFIG SNAPSHOT / EVIDENCE
+--------------------------------------------------------------------
+Purpose:
+- create immutable point-in-time evidence packages
+- support archival and later review
+
+====================================================================
+11. GOVERNANCE MODEL
+====================================================================
+
+The governance model separates 5 layers:
+
+1. PROPOSAL LAYER
+--------------------------------------------------------------------
+Captures suggested action and rationale.
+
+2. CHANGE LAYER
+--------------------------------------------------------------------
+Captures exact before/after change set.
+
+3. REVIEW LAYER
+--------------------------------------------------------------------
+Captures challenge, response, clarification, conditions, unresolved items.
+
+4. DECISION LAYER
+--------------------------------------------------------------------
+Captures formal outcome and authority.
+
+5. SNAPSHOT LAYER
+--------------------------------------------------------------------
+Captures immutable evidence at point in time.
+
+This separation is important because later validation may need to
+inspect one layer without replaying all workflow state.
+
+====================================================================
+12. MAIN DOMAIN CONCEPTS
+====================================================================
+
+12.1 CONFIG SOURCE
+--------------------------------------------------------------------
+A raw source reference for config content.
+
+12.2 CONFIG LAYER
+--------------------------------------------------------------------
+A single overlay in the merge stack.
+
+12.3 CONFIG BUNDLE
+--------------------------------------------------------------------
+A selected set of layers grouped for resolution.
+
+12.4 EFFECTIVE CONFIG
+--------------------------------------------------------------------
+The resolved configuration object.
+
+12.5 CONFIG ACTOR
+--------------------------------------------------------------------
+The human, agent, or system participating in config events.
+
+12.6 CONFIG CHANGE SET
+--------------------------------------------------------------------
+A list of explicit config change items.
+
+12.7 CONFIG REASONING RECORD
+--------------------------------------------------------------------
+The rationale and proposal behind a config recommendation or action.
+
+12.8 CONFIG REVIEW REQUEST / RESPONSE
+--------------------------------------------------------------------
+The formal review exchange structure.
+
+12.9 CONFIG DECISION RECORD
+--------------------------------------------------------------------
+The formal governance outcome.
+
+12.10 CONFIG DECISION TRAIL
+--------------------------------------------------------------------
+The ordered chain of reasoning, review, response, and decision.
+
+12.11 CONFIG TRACE BUNDLE
+--------------------------------------------------------------------
+The assembled human-readable governance package for a subject config.
+
+12.12 CONFIG AUDIT SNAPSHOT
+--------------------------------------------------------------------
+The immutable exportable point-in-time evidence package.
+
+====================================================================
+13. ACTOR MODEL
+====================================================================
+
+Human validation later depends heavily on actor clarity.
+
+Therefore every governance-related record should support a structured
+actor reference.
+
+REQUIRED ACTOR ATTRIBUTES
+--------------------------------------------------------------------
+- actor_id
+- actor_name
+- actor_type
+- actor_role
+- actor_org_unit
+- authority_level
+- is_human
+- metadata
+
+ACTOR TYPES
+--------------------------------------------------------------------
+- human
+- agent
+- system
+
+ACTOR ROLES
+--------------------------------------------------------------------
+Examples:
+- model_developer
+- config_owner
+- validator
+- reviewer
+- approver
+- release_manager
+- platform_admin
+- agent_executor
+- system_scheduler
+
+AUTHORITY LEVEL
+--------------------------------------------------------------------
+Examples:
+- draft
+- review
+- approve
+- override
+- emergency_override
+
+RATIONALE
+--------------------------------------------------------------------
+A validator later should never need to guess whether a decision came
+from an agent suggestion, a developer amendment, a validator challenge,
+or an official approver.
+
+====================================================================
+14. CHANGE MODEL
+====================================================================
+
+For validation-grade governance, every material config action should
+be represented as explicit change items.
+
+CONFIG CHANGE ITEM SHOULD SUPPORT
+--------------------------------------------------------------------
+- change_id
+- key_path
+- before_value
+- after_value
+- change_type
+- source_layer_before
+- source_layer_after
+- materiality_flag
+- impact_summary
+- validation_impact
+- downstream_sdk_refs
+- metadata
+
+CHANGE TYPES
+--------------------------------------------------------------------
+- add
+- update
+- remove
+- replace
+- override
+- exception
+- placeholder_resolution_override
+
+MATERIALITY FLAG
+--------------------------------------------------------------------
+Examples:
+- informational
+- non_material
+- material
+- critical
+
+RATIONALE
+--------------------------------------------------------------------
+Later validation is much easier if a reviewer sees precise before/after
+change rather than vague narrative text.
+
+====================================================================
+15. AGENT OUTPUT STANDARD
+====================================================================
+
+Every agent-generated proposal must be decomposed into:
+
+- proposed_action
+- rationale
+- assumptions
+- evidence_refs
+- confidence
+
+This structure must remain mandatory for agent-originated reasoning.
+
+Additionally, agent outputs should support:
+- risk_flags
+- alternative_options
+- limitations
+- unresolved_questions
+
+This makes agent suggestions easier for humans to review later.
+
+====================================================================
+16. REVIEW MODEL
+====================================================================
+
+The review lifecycle should support not only request/response, but also
+formal challenge semantics.
+
+REVIEW REQUEST SHOULD SUPPORT
+--------------------------------------------------------------------
+- review_id
+- subject_type
+- subject_id
+- project_name
+- bundle_id
+- effective_config_id
+- config_hash
+- requested_by_actor
+- review_type
+- title
+- description
+- linked_reasoning_refs
+- linked_change_set_refs
+- evidence_refs
+- due_at
+- priority
+- status
+
+REVIEW RESPONSE SHOULD SUPPORT
+--------------------------------------------------------------------
+- review_response_id
+- review_id
+- responded_by_actor
+- response_type
+- response_text
+- challenge_points
+- requested_changes
+- conditions
+- evidence_refs
+- open_issue_refs
+- resolution_status
+
+RESPONSE TYPES
+--------------------------------------------------------------------
+- concur
+- challenge
+- request_clarification
+- conditional_accept
+- reject
+- note
+
+RATIONALE
+--------------------------------------------------------------------
+Validation later often focuses on unresolved objections and how they
+were addressed. That must be explicit.
+
+====================================================================
+17. DECISION MODEL
+====================================================================
+
+The decision record must be formal and self-contained.
+
+CONFIG DECISION RECORD SHOULD SUPPORT
+--------------------------------------------------------------------
+- decision_id
+- subject_type
+- subject_id
+- project_name
+- bundle_id
+- effective_config_id
+- config_hash
+- decision_type
+- decision_status
+- decision_basis_type
+- title
+- rationale
+- assumptions
+- decided_by_actor
+- decision_authority
+- linked_reasoning_refs
+- linked_review_refs
+- linked_change_set_refs
+- evidence_refs
+- open_issue_refs
+- conditions_of_approval
+- supersedes_decision_id
+- superseded_by_decision_id
+- effective_from
+- effective_to
+- created_at
+
+DECISION BASIS TYPES
+--------------------------------------------------------------------
+- policy_based
+- expert_judgment
+- exception_handling
+- compatibility
+- operational_constraint
+- release_gate
+- temporary_override
+- risk_mitigation
+
+RATIONALE
+--------------------------------------------------------------------
+Later challenge is easier when reviewers know whether the decision was
+policy-driven, judgment-driven, exception-based, or temporary.
+
+====================================================================
+18. TRACE MODEL
+====================================================================
+
+A validator later should not need to manually join reasoning, review,
+response, decision, and config state.
+
+Therefore the SDK must support trace assembly.
+
+CONFIG DECISION TRAIL
+--------------------------------------------------------------------
+A structured view of the governance journey for one subject.
+
+Should contain:
+- subject metadata
+- actor summary
+- change summary
+- ordered events
+- linked reasoning
+- linked review requests
+- linked review responses
+- linked decisions
+- current governing state
+- unresolved issues
+- supersession lineage
+
+CONFIG TRACE BUNDLE
+--------------------------------------------------------------------
+A broader assembled package for validation and audit.
+
+Should contain:
+- bundle metadata
+- effective config metadata
+- config hash
+- provenance summary
+- change sets
+- reasoning records
+- reviews
+- decisions
+- event timeline
+- current status
+- evidence refs
+- export metadata
+
+RATIONALE
+--------------------------------------------------------------------
+This is the key upgrade that makes the SDK human-validation-ready.
+
+====================================================================
+19. SNAPSHOT MODEL
+====================================================================
+
+A point-in-time snapshot must be immutable and archival.
+
+CONFIG AUDIT SNAPSHOT SHOULD SUPPORT
+--------------------------------------------------------------------
+- snapshot_id
+- snapshot_type
+- project_name
+- bundle_id
+- effective_config_id
+- config_hash
+- exported_at
+- exported_by_actor
+- freeze_reason
+- effective_config
+- provenance_map
+- change_sets
+- reasoning_records
+- review_records
+- decision_records
+- trace_bundle
+- evidence_refs
+- integrity_hash
+- metadata
+
+SNAPSHOT TYPES
+--------------------------------------------------------------------
+- validation_pack
+- audit_pack
+- release_pack
+- issue_investigation_pack
+- governance_checkpoint
+
+RATIONALE
+--------------------------------------------------------------------
+This allows exact point-in-time evidence to be archived and revisited.
+
+====================================================================
+20. EVIDENCE MODEL
+====================================================================
+
+Evidence should not remain only as free-text references.
+
+The evidence layer should support structured references such as:
+- source config file
+- policy document
+- review note
+- meeting note
+- artifact
+- registry object
+- issue tracker item
+- release ticket
+
+EVIDENCE ATTRIBUTES
+--------------------------------------------------------------------
+- evidence_id
+- evidence_type
+- ref
+- title
+- description
+- source_system
+- created_at
+- created_by
+- integrity_hash
+- metadata
+
+====================================================================
+21. RESULT CONTRACT REQUIREMENTS
+====================================================================
+
+Every major response contract must support:
+- reasoning_refs
+- review_refs
+- decision_refs
+- trace_bundle_ref
+- snapshot_ref where relevant
+
+This applies to at least:
+- ConfigResolutionResponse
+- ConfigValidationResponse
+- ConfigDiffResponse
+- EffectiveConfig wrapper responses
+- governance response envelopes
+
+====================================================================
+22. STANDARD RESPONSE ENVELOPE
+====================================================================
+
+All major service methods should return a standard envelope with:
+
+- status
+- message
+- data
+- warnings
+- errors
+- references
+- workflow_hint
+- agent_hint
+- audit_hint
+- observability_hint
+- reasoning_refs
+- review_refs
+- decision_refs
+- trace_bundle_ref
+- snapshot_ref
+
+====================================================================
+23. PUBLIC SERVICE SURFACE
+====================================================================
+
+MAIN SERVICE
+--------------------------------------------------------------------
+ConfigService
+
+CORE CONFIG METHODS
+--------------------------------------------------------------------
+- load_config_source(...)
+- load_bundle(...)
+- validate_layer(...)
+- validate_bundle(...)
+- resolve_config_stack(...)
+- render_effective_config(...)
+- explain_config_origin(...)
+- diff_config_bundles(...)
+- hash_config(...)
+- export_effective_config(...)
+
+GOVERNANCE METHODS
+--------------------------------------------------------------------
+- append_reasoning_note(...)
+- create_change_set(...)
+- request_review(...)
+- respond_review(...)
+- record_decision(...)
+- supersede_decision(...)
+- close_review(...)
+- attach_evidence(...)
+
+QUERY METHODS
+--------------------------------------------------------------------
+- query_reasoning_records(...)
+- query_review_records(...)
+- query_decision_records(...)
+- query_change_sets(...)
+- query_trace_bundles(...)
+- query_snapshots(...)
+
+TRACEABILITY METHODS
+--------------------------------------------------------------------
+- build_decision_trail(...)
+- build_trace_bundle(...)
+- render_trace_bundle(...)
+- summarize_governance_history(...)
+
+SNAPSHOT METHODS
+--------------------------------------------------------------------
+- create_audit_snapshot(...)
+- validate_snapshot_integrity(...)
+- export_snapshot(...)
+
+====================================================================
+24. REPOSITORY / STORE DESIGN
+====================================================================
+
+To preserve bottom-layer dependency rules, persistence must be abstracted.
+
+REPOSITORY INTERFACES
+--------------------------------------------------------------------
+- ReasoningRepository
+- ReviewRepository
+- DecisionRepository
+- ChangeSetRepository
+- TraceRepository
+- SnapshotRepository
+- EvidenceRepository
+
+INITIAL IMPLEMENTATION
+--------------------------------------------------------------------
+- in-memory repositories for MVP
+- file-backed JSONL / Parquet later
+- registry/DB-backed adapters later
+
+RATIONALE
+--------------------------------------------------------------------
+This keeps config_sdk infrastructure-neutral and still future-proof.
+
+====================================================================
+25. GOVERNANCE ORCHESTRATION RULES
+====================================================================
+
+The SDK should support configurable governance triggers such as:
+
+- material change requires review
+- critical key path requires approval
+- runtime override requires reason note
+- schema exception requires decision
+- environment=prod requires higher authority
+- validator challenge cannot be silently bypassed
+- superseded decisions must remain queryable
+
+These rules should be config-driven where possible.
+
+====================================================================
+26. PROVENANCE REQUIREMENTS
+====================================================================
+
+Every effective key should support origin explanation with:
+- key_path
+- effective_value
+- source_layer
+- source_name
+- source_path
+- overridden_layers
+- notes
+- resolution_details if placeholder/ref involved
+
+Additionally, trace bundle summaries should show:
+- the most material key paths changed
+- their origin chain
+- whether governance was triggered
+
+====================================================================
+27. HASHING AND VERSIONING
+====================================================================
+
+Every effective config must carry:
+- config_hash
+- hash_algorithm
+- normalized_size
+- short_hash
+
+Every material governance record should carry:
+- subject_config_hash
+- subject_effective_config_id
+- subject_bundle_id
+
+RATIONALE
+--------------------------------------------------------------------
+A validator later should always know which exact config state was
+being discussed.
+
+====================================================================
+28. HUMAN-READABLE TIMELINE REQUIREMENT
+====================================================================
+
+The SDK must support assembling ordered timeline entries like:
+
+- config bundle created
+- effective config resolved
+- reasoning note appended
+- change set created
+- review requested
+- review challenged
+- response submitted
+- decision approved
+- decision superseded
+- snapshot exported
+
+Every timeline event should include:
+- event_id
+- event_type
+- event_time
+- actor
+- subject
+- summary
+- linked refs
+
+RATIONALE
+--------------------------------------------------------------------
+This is one of the most important features for later human review.
+
+====================================================================
+29. HUMAN VALIDATION USE CASES
+====================================================================
+
+USE CASE 1: MODEL VALIDATION CHALLENGE
+--------------------------------------------------------------------
+Validator asks:
+Why was prod review gating enabled for this project?
+
+Expected answer path:
+- reasoning note
+- change set
+- review request
+- response
+- approval decision
+- effective config hash
+- provenance of key
+
+USE CASE 2: AUDIT INVESTIGATION
+--------------------------------------------------------------------
+Audit asks:
+Who approved the schema exception and under what basis?
+
+Expected answer path:
+- decision record
+- basis type
+- decided_by_actor
+- linked evidence
+- linked review
+- snapshot pack
+
+USE CASE 3: RELEASE RECONSTRUCTION
+--------------------------------------------------------------------
+Reviewer asks:
+Which config was live at release and what approvals existed?
+
+Expected answer path:
+- effective config hash
+- decision records effective at release
+- release snapshot
+
+USE CASE 4: OVERRIDE DEFENSIBILITY
+--------------------------------------------------------------------
+Stakeholder asks:
+Why did runtime override replace project value?
+
+Expected answer path:
+- reasoning
+- materiality
+- authority level
+- review/decision trail
+
+====================================================================
+30. ENHANCED ENUM DESIGN
+====================================================================
+
+Additional enums recommended:
+
+ActorTypeEnum
+- HUMAN
+- AGENT
+- SYSTEM
+
+AuthorityLevelEnum
+- DRAFT
+- REVIEW
+- APPROVE
+- OVERRIDE
+- EMERGENCY_OVERRIDE
+
+ChangeTypeEnum
+- ADD
+- UPDATE
+- REMOVE
+- REPLACE
+- OVERRIDE
+- EXCEPTION
+
+MaterialityEnum
+- INFORMATIONAL
+- NON_MATERIAL
+- MATERIAL
+- CRITICAL
+
+ReviewResponseTypeEnum
+- CONCUR
+- CHALLENGE
+- REQUEST_CLARIFICATION
+- CONDITIONAL_ACCEPT
+- REJECT
+- NOTE
+
+ResolutionStatusEnum
+- OPEN
+- PARTIALLY_RESOLVED
+- RESOLVED
+- REJECTED
+- SUPERSEDED
+
+DecisionBasisTypeEnum
+- POLICY_BASED
+- EXPERT_JUDGMENT
+- EXCEPTION_HANDLING
+- COMPATIBILITY
+- OPERATIONAL_CONSTRAINT
+- RELEASE_GATE
+- TEMPORARY_OVERRIDE
+- RISK_MITIGATION
+
+TimelineEventTypeEnum
+- BUNDLE_CREATED
+- CONFIG_RESOLVED
+- REASONING_ADDED
+- CHANGE_SET_CREATED
+- REVIEW_REQUESTED
+- REVIEW_RESPONDED
+- DECISION_RECORDED
+- DECISION_SUPERSEDED
+- SNAPSHOT_CREATED
+- SNAPSHOT_EXPORTED
+
+====================================================================
+31. SECURITY / INTEGRITY PRINCIPLES
+====================================================================
+
+- records should be append-oriented where possible
+- superseded decisions must not be deleted
+- snapshots must carry integrity hash
+- edits to historical governance records should be restricted
+- exported evidence should remain reproducible
+
+====================================================================
+32. PERFORMANCE CONSIDERATIONS
+====================================================================
+
+- effective config resolution should remain lightweight
+- trace assembly may be more expensive and can be lazy/on-demand
+- snapshot creation may be async-capable later, but design should
+  support current synchronous usage
+- large provenance maps may require summarization views
+
+====================================================================
+33. TESTING STRATEGY
+====================================================================
+
+Must include:
+
+A. CONFIG TESTS
+--------------------------------------------------------------------
+- source loading
+- merge precedence
+- placeholder resolution
+- validation strictness
+- hashing determinism
+
+B. PROVENANCE TESTS
+--------------------------------------------------------------------
+- origin explanation
+- override chain correctness
+- diff correctness
+
+C. GOVERNANCE TESTS
+--------------------------------------------------------------------
+- reasoning append/query
+- review request/response lifecycle
+- decision recording/query
+- decision supersession
+
+D. TRACEABILITY TESTS
+--------------------------------------------------------------------
+- timeline assembly
+- trace bundle construction
+- trace completeness
+- actor resolution
+- change set correctness
+
+E. SNAPSHOT TESTS
+--------------------------------------------------------------------
+- audit snapshot completeness
+- integrity hash stability
+- export reproducibility
+
+F. VALIDATION SUFFICIENCY TESTS
+--------------------------------------------------------------------
+Given a snapshot, an independent reviewer should be able to reconstruct:
+- what changed
+- who changed it
+- why
+- what evidence supported it
+- how it was reviewed
+- what was decided
+
+====================================================================
+34. ACCEPTANCE CRITERIA
+====================================================================
+
+config_sdk is acceptable only if all the following are true:
+
+1. It resolves configuration deterministically.
+2. It validates config reliably.
+3. It explains origin of effective values.
+4. It captures structured reasoning records.
+5. It captures explicit change sets with before/after values.
+6. It captures structured review requests and responses.
+7. It captures formal decision records with authority and basis.
+8. It keeps decisions queryable outside workflow state.
+9. It supports structured actor identity and role.
+10. It supports ordered timeline reconstruction.
+11. It can assemble a human-readable trace bundle.
+12. It can create immutable audit snapshots.
+13. It links governance records to exact config hash/version.
+14. It supports later human validation without requiring manual table joins.
+15. It remains bottom-layer safe and future-proof.
+
+====================================================================
+35. IMPLEMENTATION PHASING
+====================================================================
+
+PHASE 1: CONFIG FOUNDATION
+--------------------------------------------------------------------
+- core contracts
+- loaders
+- validators
+- merge engine
+- effective config
+- hashing
+- provenance
+
+PHASE 2: GOVERNANCE FOUNDATION
+--------------------------------------------------------------------
+- reasoning models
+- review models
+- decision models
+- actor models
+- change models
+- governance repositories
+- governance service
+
+PHASE 3: VALIDATION TRACEABILITY
+--------------------------------------------------------------------
+- trace models
+- timeline events
+- trace service
+- decision trail assembly
+- human-readable summaries
+
+PHASE 4: SNAPSHOT / EVIDENCE
+--------------------------------------------------------------------
+- snapshot models
+- evidence models
+- snapshot service
+- integrity validation
+- export contracts
+
+PHASE 5: HARDENING
+--------------------------------------------------------------------
+- governance rules
+- supersession rules
+- retention logic
+- compatibility tools
+- UI/API bridge support
+
+====================================================================
+36. FUTURE-PROOFING FEATURES
+====================================================================
+
+Recommended future-proof extensions:
+- config migration engine
+- config deprecation registry
+- policy-based auto review triggers
+- authority matrix by environment/domain
+- digital sign-off integration
+- registry-backed governance repositories
+- diff summarization for committee decks
+- lineage graph for config dependencies
+- redaction rules for sensitive config exports
+- validator annotation overlays on trace bundles
+
+====================================================================
+37. FINAL DESIGN SUMMARY
+====================================================================
+
+This enhanced config_sdk is designed to ensure that configuration is:
+
+- deterministic for execution
+- explainable for developers
+- governable for reviewers
+- defensible for validators
+- reconstructable for auditors
+- exportable for evidence
+- future-proof for agentic AI workflows
+
+The most important enhancement versus a normal config SDK is this:
+
+The SDK does not merely return an effective config.
+It also preserves the full human-understandable story of how and why
+that config came to be.
+
+====================================================================
+END OF TECHNICAL DESIGN
+====================================================================
+
+====================================================================
+PUBLIC API SURFACE
+CONFIG_SDK
+VALIDATION-GRADE, HUMAN-TRACEABLE, FUTURE-PROOF
+====================================================================
+
+DESIGN INTENT
+--------------------------------------------------------------------
+The public API surface of config_sdk must remain:
+
+- small
+- stable
+- strongly typed
+- deterministic
+- easy for downstream SDKs to consume
+- rich enough for governed configuration traceability
+- backward-compatible in spirit with the initial config_sdk design
+
+The public API must preserve the original core responsibilities:
+- loading config
+- validating config
+- resolving config stacks
+- rendering effective config
+- explaining provenance
+- diffing config
+- hashing config
+- exporting effective config
+
+It must also extend the surface for:
+- reasoning capture
+- change set capture
+- review lifecycle
+- decision recording
+- trace bundle generation
+- audit snapshot generation
+- independent governance querying
+
+This means config_sdk public API is divided into 5 layers:
+
+1. Core resolution API
+2. Validation API
+3. Governance API
+4. Traceability API
+5. Snapshot / evidence API
+
+The main user-facing service remains:
+- ConfigService
+
+An optional compatibility alias may remain:
+- PublicService
+
+====================================================================
+1. PUBLIC IMPORTS
+====================================================================
+
+Recommended exports from `src/config_sdk/__init__.py`
+
+CORE SERVICE EXPORTS
+--------------------------------------------------------------------
+- ConfigService
+
+CORE REQUEST / RESPONSE EXPORTS
+--------------------------------------------------------------------
+- ConfigResolutionRequest
+- ConfigResolutionResponse
+- ConfigValidationRequest
+- ConfigValidationResponse
+- ConfigDiffRequest
+- ConfigDiffResponse
+
+CORE CONFIG CONTRACT EXPORTS
+--------------------------------------------------------------------
+- ConfigSourceRef
+- SourceMetadata
+- ConfigLayer
+- LayerSelectionCriteria
+- ConfigBundle
+- EffectiveConfig
+- ConfigProvenanceEntry
+- ConfigHashInfo
+- EffectiveConfigMetadata
+
+GOVERNANCE CONTRACT EXPORTS
+--------------------------------------------------------------------
+- ConfigActorRef
+- ConfigActionProposal
+- ConfigAgentOutput
+- ConfigChangeItem
+- ConfigChangeSet
+- ConfigReasoningRecord
+- ConfigReasoningQuery
+- ConfigReviewRequest
+- ConfigReviewResponseRecord
+- ConfigReviewQuery
+- ConfigDecisionRecord
+- ConfigDecisionQuery
+
+TRACEABILITY / SNAPSHOT EXPORTS
+--------------------------------------------------------------------
+- ConfigTimelineEvent
+- ConfigDecisionTrail
+- ConfigTraceBundle
+- ConfigAuditSnapshot
+- ConfigSnapshotQuery
+- ConfigEvidenceRef
+
+ENUM EXPORTS
+--------------------------------------------------------------------
+- ConfigSourceTypeEnum
+- ConfigLayerNameEnum
+- MergeStrategyEnum
+- ValidationModeEnum
+- PlaceholderTypeEnum
+- ConfigFormatEnum
+- ConfigStatusEnum
+- ActorTypeEnum
+- AuthorityLevelEnum
+- ChangeTypeEnum
+- MaterialityEnum
+- ReviewStatusEnum
+- ReviewResponseTypeEnum
+- ResolutionStatusEnum
+- DecisionStatusEnum
+- DecisionTypeEnum
+- DecisionBasisTypeEnum
+- TimelineEventTypeEnum
+
+EXCEPTION EXPORTS
+--------------------------------------------------------------------
+- ConfigSdkError
+- ConfigLoadError
+- ConfigParseError
+- ConfigValidationError
+- ConfigSchemaError
+- ConfigMergeError
+- ConfigReferenceResolutionError
+- ConfigPlaceholderResolutionError
+- ConfigBundleError
+- ConfigDiffError
+- ConfigGovernanceError
+- ConfigReviewError
+- ConfigDecisionError
+- ConfigTraceError
+- ConfigSnapshotError
+
+RATIONALE
+--------------------------------------------------------------------
+This preserves the original “small, stable, strongly typed” public
+surface while making the governance/traceability contracts explicitly
+available to downstream SDKs. :contentReference[oaicite:2]{index=2} :contentReference[oaicite:3]{index=3}
+
+====================================================================
+2. PRIMARY PUBLIC CLASS
+====================================================================
+
+ConfigService
+
+PURPOSE
+--------------------------------------------------------------------
+ConfigService remains the main user-facing façade for downstream SDKs,
+bridges, orchestrators, and governance tools.
+
+It should be sufficient for most use cases without requiring callers to
+interact directly with loaders, mergers, validators, repositories, or
+trace assembly internals.
+
+DESIGN RULES
+--------------------------------------------------------------------
+- all public methods should be strongly typed
+- request/response contracts should be explicit
+- response envelopes should remain stable
+- governance records must be queryable through this service
+- lower-level internal helpers should not leak into downstream usage
+- method names from the initial design should be preserved wherever
+  possible for continuity and ease of adoption
+
+OPTIONAL SECONDARY PUBLIC CLASS
+--------------------------------------------------------------------
+PublicService
+
+PURPOSE
+- optional alias / compatibility façade for ConfigService
+- future location for compatibility wrappers if API evolves
+
+====================================================================
+3. PUBLIC API LAYERS
+====================================================================
+
+3.1 CORE RESOLUTION API
+--------------------------------------------------------------------
+These methods preserve the original config_sdk API expectations.
+
+PUBLIC METHODS
+--------------------------------------------------------------------
+1. load_config_source(...)
+2. load_bundle(...)
+3. validate_layer(...)
+4. validate_bundle(...)
+5. validate_config(...)
+6. resolve_config_stack(...)
+7. render_effective_config(...)
+8. explain_config_origin(...)
+9. get_config_value(...)
+10. diff_config_bundles(...)
+11. hash_config(...)
+12. export_effective_config(...)
+
+3.2 GOVERNANCE API
+--------------------------------------------------------------------
+These methods extend the public API to support governed config changes.
+
+PUBLIC METHODS
+--------------------------------------------------------------------
+13. append_reasoning_note(...)
+14. create_change_set(...)
+15. request_review(...)
+16. respond_review(...)
+17. close_review(...)
+18. record_decision(...)
+19. supersede_decision(...)
+20. attach_evidence(...)
+
+3.3 QUERY API
+--------------------------------------------------------------------
+These methods make governance records independently queryable.
+
+PUBLIC METHODS
+--------------------------------------------------------------------
+21. query_reasoning_records(...)
+22. query_review_records(...)
+23. query_decision_records(...)
+24. query_change_sets(...)
+25. query_trace_bundles(...)
+26. query_snapshots(...)
+27. query_timeline(...)
+
+3.4 TRACEABILITY API
+--------------------------------------------------------------------
+These methods make human validation reconstruction possible.
+
+PUBLIC METHODS
+--------------------------------------------------------------------
+28. build_decision_trail(...)
+29. build_trace_bundle(...)
+30. render_trace_bundle(...)
+31. summarize_governance_history(...)
+32. explain_change_impact(...)
+
+3.5 SNAPSHOT / EVIDENCE API
+--------------------------------------------------------------------
+These methods support immutable validation and audit evidence.
+
+PUBLIC METHODS
+--------------------------------------------------------------------
+33. create_audit_snapshot(...)
+34. validate_snapshot_integrity(...)
+35. export_snapshot(...)
+
+====================================================================
+4. DETAILED PUBLIC METHOD SIGNATURES
+====================================================================
+
+--------------------------------------------------------------------
+4.1 load_config_source
+--------------------------------------------------------------------
+PURPOSE
+- Load one source into a ConfigLayer.
+
+SIGNATURE
+- load_config_source(
+      self,
+      source_ref: ConfigSourceRef,
+  ) -> ConfigLayer
+
+INPUTS
+- source_ref
+
+RETURNS
+- ConfigLayer
+
+FAILURE MODES
+- invalid source type
+- unsupported file format
+- file missing
+- parse error
+
+--------------------------------------------------------------------
+4.2 load_bundle
+--------------------------------------------------------------------
+PURPOSE
+- Load multiple sources into a ConfigBundle.
+
+SIGNATURE
+- load_bundle(
+      self,
+      sources: list[ConfigSourceRef],
+      bundle_name: str,
+      domain_name: str | None = None,
+      role_name: str | None = None,
+      environment_name: str | None = None,
+      project_name: str | None = None,
+      metadata: dict[str, Any] | None = None,
+  ) -> ConfigBundle
+
+INPUTS
+- sources
+- bundle_name
+- optional scope identifiers
+- metadata
+
+RETURNS
+- ConfigBundle
+
+NOTES
+- preserves original initial design
+- must sort layers deterministically by priority
+
+--------------------------------------------------------------------
+4.3 validate_layer
+--------------------------------------------------------------------
+PURPOSE
+- Validate one loaded layer against optional schema.
+
+SIGNATURE
+- validate_layer(
+      self,
+      layer: ConfigLayer,
+      schema_name: str | None = None,
+      validation_mode: ValidationModeEnum = ValidationModeEnum.STRICT,
+  ) -> ConfigValidationResponse
+
+RETURNS
+- ConfigValidationResponse
+
+--------------------------------------------------------------------
+4.4 validate_bundle
+--------------------------------------------------------------------
+PURPOSE
+- Validate bundle integrity and optionally each layer.
+
+SIGNATURE
+- validate_bundle(
+      self,
+      bundle: ConfigBundle,
+      schema_name: str | None = None,
+      validation_mode: ValidationModeEnum = ValidationModeEnum.STRICT,
+  ) -> ConfigValidationResponse
+
+RETURNS
+- ConfigValidationResponse
+
+--------------------------------------------------------------------
+4.5 validate_config
+--------------------------------------------------------------------
+PURPOSE
+- Preserve the original high-level public API method from the design.
+- Validate raw config dict or source ref without forcing caller to
+  manually build a layer first.
+
+SIGNATURE
+- validate_config(
+      self,
+      request: ConfigValidationRequest,
+  ) -> ConfigValidationResponse
+
+RETURNS
+- ConfigValidationResponse
+
+RATIONALE
+- This method should exist explicitly because it was part of the
+  original recommended public API surface. :contentReference[oaicite:4]{index=4}
+
+--------------------------------------------------------------------
+4.6 resolve_config_stack
+--------------------------------------------------------------------
+PURPOSE
+- Resolve the full stack from sources and runtime override.
+
+SIGNATURE
+- resolve_config_stack(
+      self,
+      request: ConfigResolutionRequest,
+  ) -> ConfigResolutionResponse
+
+RETURNS
+- ConfigResolutionResponse
+
+KEY BEHAVIOR
+- build/load bundle
+- inject runtime override layer if present
+- validate bundle
+- resolve layer order
+- merge
+- resolve placeholders/references
+- validate effective config
+- hash config
+- build provenance map
+- construct EffectiveConfig
+- return stable response envelope
+
+--------------------------------------------------------------------
+4.7 render_effective_config
+--------------------------------------------------------------------
+PURPOSE
+- Render effective config as dict/json/yaml.
+
+SIGNATURE
+- render_effective_config(
+      self,
+      effective_config: EffectiveConfig,
+      fmt: str = "dict",
+  ) -> dict[str, Any] | str
+
+SUPPORTED FORMATS
+- dict
+- json
+- yaml
+- future extension: toml
+
+--------------------------------------------------------------------
+4.8 explain_config_origin
+--------------------------------------------------------------------
+PURPOSE
+- Explain provenance for a key path.
+
+SIGNATURE
+- explain_config_origin(
+      self,
+      effective_config: EffectiveConfig,
+      key_path: str,
+  ) -> ConfigProvenanceEntry | dict[str, Any] | None
+
+RETURNS
+- provenance entry or structured empty result
+
+--------------------------------------------------------------------
+4.9 get_config_value
+--------------------------------------------------------------------
+PURPOSE
+- Preserve the original API expectation for direct config lookup.
+- Downstream SDKs often need one key or subtree, not the whole dict.
+
+SIGNATURE
+- get_config_value(
+      self,
+      effective_config: EffectiveConfig,
+      key_path: str,
+      default: Any | None = None,
+  ) -> Any
+
+RETURNS
+- resolved value or default
+
+RATIONALE
+- This was listed in the original public API recommendations and should
+  remain explicit in the enhanced version. :contentReference[oaicite:5]{index=5}
+
+--------------------------------------------------------------------
+4.10 diff_config_bundles
+--------------------------------------------------------------------
+PURPOSE
+- Compare two effective configs or bundle outputs.
+
+SIGNATURE
+- diff_config_bundles(
+      self,
+      request: ConfigDiffRequest,
+  ) -> ConfigDiffResponse
+
+RETURNS
+- ConfigDiffResponse
+
+--------------------------------------------------------------------
+4.11 hash_config
+--------------------------------------------------------------------
+PURPOSE
+- Compute deterministic config hash.
+
+SIGNATURE
+- hash_config(
+      self,
+      config_dict: dict[str, Any],
+  ) -> ConfigHashInfo
+
+RETURNS
+- ConfigHashInfo
+
+--------------------------------------------------------------------
+4.12 export_effective_config
+--------------------------------------------------------------------
+PURPOSE
+- Export effective config to file.
+
+SIGNATURE
+- export_effective_config(
+      self,
+      effective_config: EffectiveConfig,
+      path: str,
+      fmt: str = "yaml",
+  ) -> dict[str, Any]
+
+RETURNS
+- reference metadata dict
+
+RATIONALE
+- This preserves the original export helper requirement. 
+
+====================================================================
+5. GOVERNANCE PUBLIC METHODS
+====================================================================
+
+--------------------------------------------------------------------
+5.1 append_reasoning_note
+--------------------------------------------------------------------
+PURPOSE
+- Record reasoning behind a config recommendation or action.
+
+SIGNATURE
+- append_reasoning_note(
+      self,
+      record: ConfigReasoningRecord,
+  ) -> ConfigReasoningRecord
+
+RETURNS
+- persisted reasoning record
+
+--------------------------------------------------------------------
+5.2 create_change_set
+--------------------------------------------------------------------
+PURPOSE
+- Create explicit before/after config change representation.
+
+SIGNATURE
+- create_change_set(
+      self,
+      change_set: ConfigChangeSet,
+  ) -> ConfigChangeSet
+
+RETURNS
+- persisted change set
+
+--------------------------------------------------------------------
+5.3 request_review
+--------------------------------------------------------------------
+PURPOSE
+- Create formal review request.
+
+SIGNATURE
+- request_review(
+      self,
+      record: ConfigReviewRequest,
+  ) -> ConfigReviewRequest
+
+RETURNS
+- persisted review request
+
+--------------------------------------------------------------------
+5.4 respond_review
+--------------------------------------------------------------------
+PURPOSE
+- Respond to review with challenge, clarification, condition, or note.
+
+SIGNATURE
+- respond_review(
+      self,
+      record: ConfigReviewResponseRecord,
+  ) -> ConfigReviewResponseRecord
+
+RETURNS
+- persisted review response
+
+--------------------------------------------------------------------
+5.5 close_review
+--------------------------------------------------------------------
+PURPOSE
+- Mark review lifecycle closed when resolved.
+
+SIGNATURE
+- close_review(
+      self,
+      review_id: str,
+      closed_by: ConfigActorRef,
+      resolution_status: ResolutionStatusEnum,
+      notes: str | None = None,
+  ) -> dict[str, Any]
+
+RETURNS
+- structured close result
+
+--------------------------------------------------------------------
+5.6 record_decision
+--------------------------------------------------------------------
+PURPOSE
+- Record formal governance decision.
+
+SIGNATURE
+- record_decision(
+      self,
+      record: ConfigDecisionRecord,
+  ) -> ConfigDecisionRecord
+
+RETURNS
+- persisted decision record
+
+--------------------------------------------------------------------
+5.7 supersede_decision
+--------------------------------------------------------------------
+PURPOSE
+- Preserve formal decision lineage when one decision replaces another.
+
+SIGNATURE
+- supersede_decision(
+      self,
+      old_decision_id: str,
+      new_decision: ConfigDecisionRecord,
+  ) -> ConfigDecisionRecord
+
+RETURNS
+- persisted replacement decision with lineage update
+
+--------------------------------------------------------------------
+5.8 attach_evidence
+--------------------------------------------------------------------
+PURPOSE
+- Attach structured evidence references to a governance subject.
+
+SIGNATURE
+- attach_evidence(
+      self,
+      subject_type: str,
+      subject_id: str,
+      evidence_refs: list[ConfigEvidenceRef],
+  ) -> dict[str, Any]
+
+RETURNS
+- structured attachment result
+
+====================================================================
+6. QUERY PUBLIC METHODS
+====================================================================
+
+These methods ensure governance is independently queryable and not
+trapped in workflow state.
+
+--------------------------------------------------------------------
+6.1 query_reasoning_records
+--------------------------------------------------------------------
+- query_reasoning_records(
+      self,
+      query: ConfigReasoningQuery,
+  ) -> list[ConfigReasoningRecord]
+
+--------------------------------------------------------------------
+6.2 query_review_records
+--------------------------------------------------------------------
+- query_review_records(
+      self,
+      query: ConfigReviewQuery,
+  ) -> dict[str, list[Any]]
+
+--------------------------------------------------------------------
+6.3 query_decision_records
+--------------------------------------------------------------------
+- query_decision_records(
+      self,
+      query: ConfigDecisionQuery,
+  ) -> list[ConfigDecisionRecord]
+
+--------------------------------------------------------------------
+6.4 query_change_sets
+--------------------------------------------------------------------
+- query_change_sets(
+      self,
+      query: ConfigChangeSetQuery,
+  ) -> list[ConfigChangeSet]
+
+--------------------------------------------------------------------
+6.5 query_trace_bundles
+--------------------------------------------------------------------
+- query_trace_bundles(
+      self,
+      query: ConfigTraceBundleQuery,
+  ) -> list[ConfigTraceBundle]
+
+--------------------------------------------------------------------
+6.6 query_snapshots
+--------------------------------------------------------------------
+- query_snapshots(
+      self,
+      query: ConfigSnapshotQuery,
+  ) -> list[ConfigAuditSnapshot]
+
+--------------------------------------------------------------------
+6.7 query_timeline
+--------------------------------------------------------------------
+- query_timeline(
+      self,
+      subject_type: str,
+      subject_id: str,
+  ) -> list[ConfigTimelineEvent]
+
+====================================================================
+7. TRACEABILITY PUBLIC METHODS
+====================================================================
+
+--------------------------------------------------------------------
+7.1 build_decision_trail
+--------------------------------------------------------------------
+PURPOSE
+- Assemble structured governance journey for one subject.
+
+SIGNATURE
+- build_decision_trail(
+      self,
+      subject_type: str,
+      subject_id: str,
+  ) -> ConfigDecisionTrail
+
+--------------------------------------------------------------------
+7.2 build_trace_bundle
+--------------------------------------------------------------------
+PURPOSE
+- Build assembled human-readable validation package.
+
+SIGNATURE
+- build_trace_bundle(
+      self,
+      subject_type: str,
+      subject_id: str,
+      include_effective_config: bool = True,
+      include_provenance: bool = True,
+  ) -> ConfigTraceBundle
+
+--------------------------------------------------------------------
+7.3 render_trace_bundle
+--------------------------------------------------------------------
+PURPOSE
+- Render trace bundle to dict/json/yaml/markdown-ready form.
+
+SIGNATURE
+- render_trace_bundle(
+      self,
+      trace_bundle: ConfigTraceBundle,
+      fmt: str = "dict",
+  ) -> dict[str, Any] | str
+
+--------------------------------------------------------------------
+7.4 summarize_governance_history
+--------------------------------------------------------------------
+PURPOSE
+- Return concise human-readable summary.
+
+SIGNATURE
+- summarize_governance_history(
+      self,
+      subject_type: str,
+      subject_id: str,
+  ) -> dict[str, Any]
+
+--------------------------------------------------------------------
+7.5 explain_change_impact
+--------------------------------------------------------------------
+PURPOSE
+- Explain downstream impact of config changes for reviewers.
+
+SIGNATURE
+- explain_change_impact(
+      self,
+      change_set_id: str,
+  ) -> dict[str, Any]
+
+====================================================================
+8. SNAPSHOT / EVIDENCE PUBLIC METHODS
+====================================================================
+
+--------------------------------------------------------------------
+8.1 create_audit_snapshot
+--------------------------------------------------------------------
+PURPOSE
+- Create immutable evidence package.
+
+SIGNATURE
+- create_audit_snapshot(
+      self,
+      subject_type: str,
+      subject_id: str,
+      snapshot_type: str,
+      exported_by: ConfigActorRef,
+      freeze_reason: str,
+  ) -> ConfigAuditSnapshot
+
+--------------------------------------------------------------------
+8.2 validate_snapshot_integrity
+--------------------------------------------------------------------
+PURPOSE
+- Verify snapshot integrity and consistency.
+
+SIGNATURE
+- validate_snapshot_integrity(
+      self,
+      snapshot: ConfigAuditSnapshot,
+  ) -> dict[str, Any]
+
+--------------------------------------------------------------------
+8.3 export_snapshot
+--------------------------------------------------------------------
+PURPOSE
+- Export snapshot for archival / validation pack use.
+
+SIGNATURE
+- export_snapshot(
+      self,
+      snapshot: ConfigAuditSnapshot,
+      path: str,
+      fmt: str = "json",
+  ) -> dict[str, Any]
+
+====================================================================
+9. STANDARD RESPONSE ENVELOPE REQUIREMENTS
+====================================================================
+
+All major public service responses should follow a stable shape.
+
+COMMON FIELDS
+--------------------------------------------------------------------
+- status
+- message
+- data
+- warnings
+- errors
+- references
+- workflow_hint
+- agent_hint
+- audit_hint
+- observability_hint
+- reasoning_refs
+- review_refs
+- decision_refs
+- trace_bundle_ref
+- snapshot_ref
+
+RATIONALE
+--------------------------------------------------------------------
+The initial design already emphasized a stable response envelope for
+public methods. The enhanced version must keep that discipline while
+adding governance references needed for human validation later. 
+
+====================================================================
+10. PUBLIC API STABILITY RULES
+====================================================================
+
+RULE 1
+--------------------------------------------------------------------
+ConfigService remains the primary entry point.
+
+RULE 2
+--------------------------------------------------------------------
+Original core methods must not be silently dropped:
+- load_config_source
+- validate_config
+- resolve_config_stack
+- render_effective_config
+- explain_config_origin
+- diff_config_bundles
+- hash_config
+- get_config_value
+- validate_bundle
+- export_effective_config
+
+RULE 3
+--------------------------------------------------------------------
+Governance and traceability methods extend the API; they do not replace
+the original config resolution contract.
+
+RULE 4
+--------------------------------------------------------------------
+Public methods should accept/return contract objects, not internal
+implementation classes.
+
+RULE 5
+--------------------------------------------------------------------
+Public response envelopes should be stable across releases.
+
+RULE 6
+--------------------------------------------------------------------
+Backward-compatible aliases may be added, but existing public method
+semantics should not drift casually.
+
+====================================================================
+11. RECOMMENDED USAGE PATTERNS
+====================================================================
+
+PATTERN A: SIMPLE SDK CONSUMER
+--------------------------------------------------------------------
+- resolve_config_stack
+- get_config_value
+- render_effective_config
+
+PATTERN B: VALIDATION / GOVERNANCE CONSUMER
+--------------------------------------------------------------------
+- resolve_config_stack
+- append_reasoning_note
+- create_change_set
+- request_review
+- record_decision
+- build_trace_bundle
+- create_audit_snapshot
+
+PATTERN C: AUDIT / INVESTIGATION CONSUMER
+--------------------------------------------------------------------
+- query_decision_records
+- build_decision_trail
+- build_trace_bundle
+- validate_snapshot_integrity
+
+PATTERN D: TOOL / BRIDGE CONSUMER
+--------------------------------------------------------------------
+- validate_config
+- resolve_config_stack
+- export_effective_config
+- summarize_governance_history
+
+====================================================================
+12. FINAL PUBLIC API SUMMARY
+====================================================================
+
+The enhanced public API surface for config_sdk should be understood as:
+
+A. The original stable config resolution API is preserved
+B. Governance APIs are added as first-class public methods
+C. Traceability and snapshot APIs are added for human validation later
+D. ConfigService remains the single main façade
+E. Public contracts remain strongly typed and explicit
+
+This ensures the enhanced design does not lose any of the original
+config_sdk public-service intent while making it sufficient for later
+human validation and governance reconstruction.
+
+====================================================================
+END OF PUBLIC API SURFACE SECTION
+====================================================================

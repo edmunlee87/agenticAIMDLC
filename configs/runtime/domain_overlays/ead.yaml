@@ -1,0 +1,95 @@
+# EAD (Exposure at Default) Model Domain Pack v1.0.0
+domain: ead
+description: "EAD/CCF model development for off-balance sheet exposures under IFRS9/Basel."
+model_class: exposure_at_default
+regulatory_scope: [IFRS9, Basel_III]
+schema_version: "1.0.0"
+
+stage_registry:
+  - stage_id: data_preparation
+    label: Data Preparation
+    stage_class: development
+    artifact_types: [dataset_snapshot, dq_report]
+  - stage_id: ccf_segmentation
+    label: CCF Segmentation Analysis
+    stage_class: development
+    artifact_types: [ccf_segmentation_report]
+  - stage_id: model_development
+    label: EAD/CCF Model Development
+    stage_class: development
+    artifact_types: [model_candidate_set, evaluation_pack]
+  - stage_id: model_review
+    label: EAD Model Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record, selected_model]
+    policy_pack_ids: [ead_pol_ccf_floor]
+  - stage_id: deployment_readiness
+    label: Deployment Readiness
+    stage_class: governance
+    requires_hitl: true
+    governance_gate: true
+    is_terminal: false
+  - stage_id: deployed
+    label: Deployed
+    stage_class: terminal
+    is_terminal: true
+
+routing_rules:
+  - from_stage: data_preparation
+    to_stage: ccf_segmentation
+    condition: on_success
+  - from_stage: ccf_segmentation
+    to_stage: model_development
+    condition: on_success
+  - from_stage: model_development
+    to_stage: model_review
+    condition: on_success
+  - from_stage: model_review
+    to_stage: deployment_readiness
+    condition: on_approval
+    failure_stage: model_development
+  - from_stage: deployment_readiness
+    to_stage: deployed
+    condition: on_approval
+
+metrics_pack:
+  - metric_name: mean_absolute_error
+    display_name: MAE on CCF
+    higher_is_better: false
+    threshold_high: 0.10
+    is_primary: true
+  - metric_name: ccf_floor_compliance
+    display_name: CCF Floor Compliance Rate
+    higher_is_better: true
+    threshold_low: 1.0
+
+policy_pack:
+  - rule_id: ead_pol_ccf_floor
+    name: CCF Floor Compliance
+    description: Estimated CCF must not be below regulatory floor.
+    severity: critical
+    applies_to_stages: [model_review]
+    condition_expression: "metrics.ccf_floor_compliance >= 1.0"
+    requires_waiver: false
+
+artifact_pack:
+  - artifact_type: ccf_segmentation_report
+    display_name: CCF Segmentation Report
+    produced_at_stage: ccf_segmentation
+    is_audit_required: true
+
+review_templates:
+  - template_id: model_review_tmpl
+    stage_id: model_review
+    review_type: selection
+    panel_a_evidence_types: [model_candidate_set, evaluation_pack, ccf_segmentation_report]
+    required_roles: [model_developer, validator]
+
+skill_pack:
+  domain_skill: "skills.domains.ead.EADDomainSkill"
+  stage_skills: {}
+
+test_pack:
+  required_test_ids: [test_ead_full_lifecycle]

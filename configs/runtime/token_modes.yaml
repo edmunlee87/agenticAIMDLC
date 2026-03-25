@@ -1,0 +1,35 @@
+# Token Mode Definitions
+# Controls LLM token budgets per interaction context.
+
+modes:
+  full:
+    mode: full
+    description: "Full token budget. For complex reasoning tasks."
+    max_prompt_tokens: 8192
+    max_completion_tokens: 2048
+    enable_compression: false
+    retrieval_top_k: 10
+
+  compact:
+    mode: compact
+    description: "Compact token budget. For standard review/build tasks."
+    max_prompt_tokens: 4096
+    max_completion_tokens: 1024
+    enable_compression: true
+    retrieval_top_k: 5
+
+  minimal:
+    mode: minimal
+    description: "Minimal token budget. For monitoring and simple routing."
+    max_prompt_tokens: 2048
+    max_completion_tokens: 512
+    enable_compression: true
+    retrieval_top_k: 3
+
+  routing_only:
+    mode: routing_only
+    description: "Routing-only mode. Absolute minimum tokens for decision routing."
+    max_prompt_tokens: 1024
+    max_completion_tokens: 256
+    enable_compression: true
+    retrieval_top_k: 2

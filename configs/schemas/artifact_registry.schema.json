@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "artifact_registry.schema.json",
+  "title": "ArtifactRegistry",
+  "description": "Registry entry for every material artifact produced by the platform. Immutable once registered; lineage tracked via lineage_parent_ids.",
+  "type": "object",
+  "required": ["artifact_id", "artifact_type", "artifact_name", "stage_name", "producer_actor", "project_id", "run_id", "timestamp", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "artifact_id": { "type": "string" },
+    "artifact_type": { "type": "string" },
+    "artifact_name": { "type": "string" },
+    "stage_name": { "type": "string" },
+    "producer_stage": { "type": "string" },
+    "producer_actor": { "$ref": "#/definitions/ActorRecord" },
+    "version": { "type": "string" },
+    "uri_or_path": { "type": "string" },
+    "checksum": {
+      "type": "object",
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "type": "string", "default": "SHA-256" },
+        "value": { "type": "string" }
+      }
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "created_timestamp": { "type": "string", "format": "date-time" },
+    "project_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "source_candidate_version_id": { "type": "string" },
+    "lineage_parent_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "storage_backend": {
+      "type": "string",
+      "enum": ["local", "s3", "cml", "gcs", "azure_blob"]
+    },
+    "retention_policy": { "type": "string" },
+    "access_control_ref": { "type": "string" },
+    "metadata": {
+      "type": "object",
+      "description": "Domain-extensible metadata dictionary.",
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" },
+        "active_policy_pack_id": { "type": "string" }
+      }
+    }
+  }
+}

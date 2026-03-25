@@ -1,0 +1,435 @@
+# Scorecard Domain Pack -- Full Contract v1.0.0
+# Conforms to configs/schemas/domain_pack_contract.yaml
+
+domain: scorecard
+description: "Credit scorecard development lifecycle -- logistic regression-based application scorecard using WoE/IV methodology."
+model_class: credit_scorecard
+regulatory_scope:
+  - IFRS9
+  - Basel_III
+  - SR_11_7
+schema_version: "1.0.0"
+
+# ------------------------------------------------------------------
+# Stage Registry
+# ------------------------------------------------------------------
+stage_registry:
+  - stage_id: data_preparation
+    label: Data Preparation
+    stage_class: development
+    requires_hitl: false
+    governance_gate: false
+    tool_groups: [data_tools, dq_tools]
+    artifact_types: [dataset_snapshot, dq_report]
+    policy_pack_ids: [sc_pol_data_quality]
+
+  - stage_id: fine_classing
+    label: Fine Classing
+    stage_class: development
+    requires_hitl: false
+    governance_gate: false
+    tool_groups: [scorecard_tools, data_tools]
+    artifact_types: [fine_classing_report]
+
+  - stage_id: coarse_classing
+    label: Coarse Classing
+    stage_class: development
+    requires_hitl: false
+    governance_gate: false
+    tool_groups: [scorecard_tools]
+    artifact_types: [coarse_classing_table, binning_candidate_set]
+
+  - stage_id: coarse_classing_review
+    label: Coarse Classing Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    tool_groups: [review_tools]
+    artifact_types: [review_record]
+    policy_pack_ids: [sc_pol_binning_review]
+
+  - stage_id: woe_iv_calculation
+    label: WoE / IV Calculation
+    stage_class: development
+    requires_hitl: false
+    governance_gate: false
+    tool_groups: [scorecard_tools]
+    artifact_types: [woe_iv_table]
+
+  - stage_id: woe_iv_review
+    label: WoE / IV Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    tool_groups: [review_tools]
+    artifact_types: [review_record]
+    policy_pack_ids: [sc_pol_woe_review]
+
+  - stage_id: feature_shortlist
+    label: Feature Shortlisting
+    stage_class: development
+    requires_hitl: false
+    governance_gate: false
+    tool_groups: [scorecard_tools, data_tools]
+    artifact_types: [feature_shortlist_report]
+
+  - stage_id: feature_shortlist_review
+    label: Feature Shortlist Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    tool_groups: [review_tools]
+    artifact_types: [review_record]
+    policy_pack_ids: [sc_pol_feature_review]
+
+  - stage_id: model_development
+    label: Model Development
+    stage_class: development
+    requires_hitl: false
+    governance_gate: false
+    tool_groups: [scorecard_tools, eval_tools]
+    artifact_types: [model_candidate_set, evaluation_pack]
+
+  - stage_id: model_review
+    label: Model Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    tool_groups: [review_tools, eval_tools]
+    artifact_types: [review_record, selected_model]
+    policy_pack_ids: [sc_pol_model_performance, sc_pol_model_documentation]
+
+  - stage_id: score_scaling
+    label: Score Scaling & Calibration
+    stage_class: development
+    requires_hitl: false
+    governance_gate: false
+    tool_groups: [scorecard_tools]
+    artifact_types: [score_scaling_table, calibration_report]
+
+  - stage_id: deployment_readiness
+    label: Deployment Readiness Review
+    stage_class: governance
+    requires_hitl: true
+    governance_gate: true
+    is_terminal: false
+    tool_groups: [review_tools]
+    artifact_types: [deployment_approval]
+    policy_pack_ids: [sc_pol_model_performance, sc_pol_model_documentation, sc_pol_deployment]
+
+  - stage_id: deployed
+    label: Deployed
+    stage_class: terminal
+    is_terminal: true
+    requires_hitl: false
+    governance_gate: false
+    artifact_types: [deployment_record]
+
+# ------------------------------------------------------------------
+# Routing Rules
+# ------------------------------------------------------------------
+routing_rules:
+  - from_stage: data_preparation
+    to_stage: fine_classing
+    condition: on_success
+
+  - from_stage: fine_classing
+    to_stage: coarse_classing
+    condition: on_success
+
+  - from_stage: coarse_classing
+    to_stage: coarse_classing_review
+    condition: on_success
+
+  - from_stage: coarse_classing_review
+    to_stage: woe_iv_calculation
+    condition: on_approval
+    failure_stage: coarse_classing
+
+  - from_stage: woe_iv_calculation
+    to_stage: woe_iv_review
+    condition: on_success
+
+  - from_stage: woe_iv_review
+    to_stage: feature_shortlist
+    condition: on_approval
+    failure_stage: woe_iv_calculation
+
+  - from_stage: feature_shortlist
+    to_stage: feature_shortlist_review
+    condition: on_success
+
+  - from_stage: feature_shortlist_review
+    to_stage: model_development
+    condition: on_approval
+    failure_stage: feature_shortlist
+
+  - from_stage: model_development
+    to_stage: model_review
+    condition: on_success
+
+  - from_stage: model_review
+    to_stage: score_scaling
+    condition: on_approval
+    failure_stage: model_development
+
+  - from_stage: score_scaling
+    to_stage: deployment_readiness
+    condition: on_success
+
+  - from_stage: deployment_readiness
+    to_stage: deployed
+    condition: on_approval
+    failure_stage: model_review
+
+# ------------------------------------------------------------------
+# Metrics Pack
+# ------------------------------------------------------------------
+metrics_pack:
+  - metric_name: gini
+    display_name: Gini Coefficient
+    description: "2 * AUC - 1. Primary discrimination metric."
+    higher_is_better: true
+    threshold_low: 0.40
+    warn_threshold_low: 0.45
+    dataset_splits: [test, oot]
+    is_primary: true
+
+  - metric_name: ks_statistic
+    display_name: KS Statistic
+    description: "Kolmogorov-Smirnov statistic. Maximum separation between cumulative good/bad distributions."
+    higher_is_better: true
+    threshold_low: 0.25
+    dataset_splits: [test, oot]
+
+  - metric_name: auc_roc
+    display_name: AUC-ROC
+    description: "Area Under the ROC Curve."
+    higher_is_better: true
+    threshold_low: 0.70
+    dataset_splits: [test, oot]
+
+  - metric_name: psi
+    display_name: Population Stability Index
+    description: "Measures score distribution shift between development and OOT periods."
+    higher_is_better: false
+    threshold_high: 0.20
+    warn_threshold_low: 0.10
+    dataset_splits: [oot]
+
+  - metric_name: gini_oot_degradation
+    display_name: Gini OOT Degradation
+    description: "Allowed Gini drop from test to OOT (absolute)."
+    higher_is_better: false
+    threshold_high: 0.05
+    dataset_splits: [oot]
+
+  - metric_name: iv_total
+    display_name: Total Information Value
+    description: "Sum of IV across selected features. Must exceed minimum threshold."
+    higher_is_better: true
+    threshold_low: 0.30
+    dataset_splits: [development]
+
+# ------------------------------------------------------------------
+# Policy Pack
+# ------------------------------------------------------------------
+policy_pack:
+  - rule_id: sc_pol_data_quality
+    name: Data Quality Gate
+    description: "Dataset must pass all blocking DQ checks before modelling proceeds."
+    severity: critical
+    applies_to_stages: [data_preparation]
+    condition_expression: "dq_report.blocking_failures == []"
+    requires_waiver: false
+
+  - rule_id: sc_pol_binning_review
+    name: Binning Review Approval Required
+    description: "Coarse classing binning must be reviewed and approved by a senior validator."
+    severity: high
+    applies_to_stages: [coarse_classing_review]
+    condition_expression: "review_record.action == 'approve'"
+    requires_waiver: false
+
+  - rule_id: sc_pol_woe_review
+    name: WoE/IV Review Approval Required
+    description: "WoE/IV table must be reviewed. No monotonicity violations allowed without waiver."
+    severity: high
+    applies_to_stages: [woe_iv_review]
+    condition_expression: "review_record.action == 'approve'"
+    requires_waiver: true
+
+  - rule_id: sc_pol_feature_review
+    name: Feature Shortlist Review Approval Required
+    description: "Feature shortlist must not include protected attributes without waiver."
+    severity: critical
+    applies_to_stages: [feature_shortlist_review]
+    condition_expression: "feature_shortlist.protected_features == []"
+    requires_waiver: true
+
+  - rule_id: sc_pol_model_performance
+    name: Model Performance Threshold
+    description: "Gini >= 0.40 on test and OOT. KS >= 0.25. PSI <= 0.20."
+    severity: critical
+    applies_to_stages: [model_review, deployment_readiness]
+    condition_expression: "metrics.gini >= 0.40 AND metrics.ks_statistic >= 0.25 AND metrics.psi <= 0.20"
+    requires_waiver: false
+
+  - rule_id: sc_pol_model_documentation
+    name: Model Documentation Completeness
+    description: "Model card must be complete with all required sections before deployment approval."
+    severity: high
+    applies_to_stages: [model_review, deployment_readiness]
+    condition_expression: "model_card.completeness_score >= 0.90"
+    requires_waiver: false
+
+  - rule_id: sc_pol_deployment
+    name: Deployment Approval Required
+    description: "Deployment must be approved by model risk and IT change management."
+    severity: critical
+    applies_to_stages: [deployment_readiness]
+    condition_expression: "review_record.action == 'approve' AND review_record.approver_roles includes 'model_risk'"
+    requires_waiver: false
+
+# ------------------------------------------------------------------
+# Artifact Pack
+# ------------------------------------------------------------------
+artifact_pack:
+  - artifact_type: dataset_snapshot
+    display_name: Dataset Snapshot
+    produced_at_stage: data_preparation
+    is_audit_required: true
+
+  - artifact_type: dq_report
+    display_name: Data Quality Report
+    produced_at_stage: data_preparation
+    is_audit_required: true
+
+  - artifact_type: fine_classing_report
+    display_name: Fine Classing Report
+    produced_at_stage: fine_classing
+    is_audit_required: true
+
+  - artifact_type: coarse_classing_table
+    display_name: Coarse Classing Table
+    produced_at_stage: coarse_classing
+    is_audit_required: true
+
+  - artifact_type: binning_candidate_set
+    display_name: Binning Candidate Set
+    produced_at_stage: coarse_classing
+
+  - artifact_type: woe_iv_table
+    display_name: WoE / IV Table
+    produced_at_stage: woe_iv_calculation
+    is_audit_required: true
+
+  - artifact_type: feature_shortlist_report
+    display_name: Feature Shortlist Report
+    produced_at_stage: feature_shortlist
+    is_audit_required: true
+
+  - artifact_type: model_candidate_set
+    display_name: Model Candidate Set
+    produced_at_stage: model_development
+    is_audit_required: true
+
+  - artifact_type: evaluation_pack
+    display_name: Evaluation Pack
+    produced_at_stage: model_development
+    is_audit_required: true
+
+  - artifact_type: selected_model
+    display_name: Selected Model
+    produced_at_stage: model_review
+    is_audit_required: true
+
+  - artifact_type: score_scaling_table
+    display_name: Score Scaling Table
+    produced_at_stage: score_scaling
+    is_audit_required: true
+
+  - artifact_type: calibration_report
+    display_name: Calibration Report
+    produced_at_stage: score_scaling
+
+  - artifact_type: deployment_approval
+    display_name: Deployment Approval Record
+    produced_at_stage: deployment_readiness
+    is_audit_required: true
+
+  - artifact_type: deployment_record
+    display_name: Deployment Record
+    produced_at_stage: deployed
+    is_audit_required: true
+
+  - artifact_type: review_record
+    display_name: Review Record
+    is_audit_required: true
+
+# ------------------------------------------------------------------
+# Review Templates
+# ------------------------------------------------------------------
+review_templates:
+  - template_id: coarse_classing_review_tmpl
+    stage_id: coarse_classing_review
+    review_type: approval
+    panel_a_evidence_types: [coarse_classing_table, binning_candidate_set, dq_report]
+    required_form_fields: [rationale, conditions, policy_acknowledged]
+    action_types: [approve, reject, request_more_info]
+    required_roles: [model_developer, validator]
+
+  - template_id: woe_iv_review_tmpl
+    stage_id: woe_iv_review
+    review_type: approval
+    panel_a_evidence_types: [woe_iv_table, fine_classing_report]
+    required_form_fields: [rationale, conditions, policy_acknowledged]
+    action_types: [approve, reject, request_more_info]
+    required_roles: [model_developer, validator]
+
+  - template_id: feature_shortlist_review_tmpl
+    stage_id: feature_shortlist_review
+    review_type: approval
+    panel_a_evidence_types: [feature_shortlist_report, woe_iv_table]
+    required_form_fields: [rationale, conditions, policy_acknowledged]
+    action_types: [approve, reject, request_more_info]
+    required_roles: [model_developer, validator, compliance]
+
+  - template_id: model_review_tmpl
+    stage_id: model_review
+    review_type: selection
+    panel_a_evidence_types: [model_candidate_set, evaluation_pack, feature_shortlist_report]
+    required_form_fields: [rationale, conditions, policy_acknowledged]
+    action_types: [select, reject_all, request_more_info]
+    required_roles: [model_developer, validator, model_risk]
+
+  - template_id: deployment_readiness_tmpl
+    stage_id: deployment_readiness
+    review_type: approval
+    panel_a_evidence_types: [selected_model, evaluation_pack, score_scaling_table, deployment_approval]
+    required_form_fields: [rationale, conditions, policy_acknowledged]
+    action_types: [approve, reject, escalate]
+    required_roles: [model_risk, it_change_management, senior_management]
+
+# ------------------------------------------------------------------
+# Skill Pack
+# ------------------------------------------------------------------
+skill_pack:
+  domain_skill: "skills.domains.scorecard.ScorecardDomainSkill"
+  stage_skills:
+    coarse_classing_review: "skills.stages.coarse_classing_review.CoarseClassingReviewSkill"
+    woe_iv_review: "skills.stages.woe_iv_review.WoeIvReviewSkill"
+    feature_shortlist_review: "skills.stages.feature_shortlist_review.FeatureShortlistReviewSkill"
+    model_review: "skills.stages.model_review.ModelReviewSkill"
+    deployment_readiness: "skills.stages.deployment_readiness.DeploymentReadinessSkill"
+
+# ------------------------------------------------------------------
+# Test Pack
+# ------------------------------------------------------------------
+test_pack:
+  test_module: "tests.domains.test_scorecard_domain"
+  required_test_ids:
+    - test_scorecard_full_lifecycle
+    - test_scorecard_policy_enforcement
+    - test_scorecard_review_templates
+    - test_scorecard_routing_rules

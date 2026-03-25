@@ -1,0 +1,35 @@
+# Retry Policies
+# Platform-wide defaults and per-tool retry overrides.
+
+retry_policies:
+  defaults:
+    retry_mode: none
+    max_retries: 0
+    initial_delay_ms: 1000
+    max_delay_ms: 30000
+    jitter: true
+
+  tool_rules:
+    - tool_name: write_event
+      retry_mode: exponential_backoff
+      max_retries: 3
+      retryable_errors: [transient_io_error, timeout]
+      non_retryable_errors: [validation_error, auth_error]
+
+    - tool_name: register_artifact
+      retry_mode: fixed
+      max_retries: 2
+      retryable_errors: [storage_unavailable, timeout]
+      non_retryable_errors: [checksum_mismatch, validation_error]
+
+    - tool_name: write_audit_record
+      retry_mode: fixed
+      max_retries: 3
+      retryable_errors: [db_transient_error, timeout]
+      non_retryable_errors: [validation_error, duplicate_key]
+
+    - tool_name: load_config
+      retry_mode: fixed
+      max_retries: 1
+      retryable_errors: [file_not_found, io_error]
+      non_retryable_errors: [validation_error, schema_mismatch]

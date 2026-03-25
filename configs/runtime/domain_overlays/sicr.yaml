@@ -1,0 +1,96 @@
+# SICR (Significant Increase in Credit Risk) Model Domain Pack v1.0.0
+domain: sicr
+description: "SICR/Stage migration model for IFRS9 staging determination."
+model_class: sicr_staging
+regulatory_scope: [IFRS9]
+schema_version: "1.0.0"
+
+stage_registry:
+  - stage_id: data_preparation
+    label: Data Preparation
+    stage_class: development
+    artifact_types: [dataset_snapshot, dq_report]
+  - stage_id: threshold_calibration
+    label: SICR Threshold Calibration
+    stage_class: development
+    artifact_types: [threshold_calibration_report]
+  - stage_id: threshold_review
+    label: SICR Threshold Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record]
+    policy_pack_ids: [sicr_pol_threshold_justification]
+  - stage_id: model_review
+    label: SICR Model Review
+    stage_class: review
+    requires_hitl: true
+    governance_gate: true
+    artifact_types: [review_record, selected_model]
+  - stage_id: deployment_readiness
+    label: Deployment Readiness
+    stage_class: governance
+    requires_hitl: true
+    governance_gate: true
+    is_terminal: false
+  - stage_id: deployed
+    label: Deployed
+    stage_class: terminal
+    is_terminal: true
+
+routing_rules:
+  - from_stage: data_preparation
+    to_stage: threshold_calibration
+    condition: on_success
+  - from_stage: threshold_calibration
+    to_stage: threshold_review
+    condition: on_success
+  - from_stage: threshold_review
+    to_stage: model_review
+    condition: on_approval
+    failure_stage: threshold_calibration
+  - from_stage: model_review
+    to_stage: deployment_readiness
+    condition: on_approval
+  - from_stage: deployment_readiness
+    to_stage: deployed
+    condition: on_approval
+
+metrics_pack:
+  - metric_name: stage_2_capture_rate
+    display_name: Stage 2 Capture Rate
+    higher_is_better: true
+    threshold_low: 0.70
+    is_primary: true
+  - metric_name: false_positive_rate
+    display_name: False Positive Rate
+    higher_is_better: false
+    threshold_high: 0.30
+
+policy_pack:
+  - rule_id: sicr_pol_threshold_justification
+    name: SICR Threshold Business Justification
+    description: Each SICR trigger must have documented business and statistical justification.
+    severity: high
+    applies_to_stages: [threshold_review]
+    requires_waiver: false
+
+artifact_pack:
+  - artifact_type: threshold_calibration_report
+    display_name: SICR Threshold Calibration Report
+    produced_at_stage: threshold_calibration
+    is_audit_required: true
+
+review_templates:
+  - template_id: threshold_review_tmpl
+    stage_id: threshold_review
+    review_type: approval
+    panel_a_evidence_types: [threshold_calibration_report]
+    required_roles: [model_developer, validator, finance]
+
+skill_pack:
+  domain_skill: "skills.domains.sicr.SICRDomainSkill"
+  stage_skills: {}
+
+test_pack:
+  required_test_ids: [test_sicr_full_lifecycle]

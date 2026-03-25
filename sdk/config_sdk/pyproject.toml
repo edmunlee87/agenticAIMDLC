@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mdl-config-sdk"
+version = "0.1.0"
+description = "Config loading, validation, versioning, and override tracking for the MDLC framework"
+requires-python = ">=3.11"
+dependencies = [
+    "mdl-platform-contracts",
+    "mdl-platform-core",
+    "pyyaml>=6.0",
+    "pydantic>=2.6",
+    "structlog>=24.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/config_sdk"]

@@ -1,0 +1,94 @@
+# Stage Preconditions
+# Conditions that must be satisfied before a stage can be entered.
+
+preconditions:
+  dq_review:
+    stage_name: dq_review
+    required_prior_stages: [data_readiness]
+    required_artifact_types: [data_readiness_report]
+
+  eda:
+    stage_name: eda
+    required_prior_stages: [data_readiness]
+
+  feature_engineering:
+    stage_name: feature_engineering
+    required_prior_stages: [eda]
+
+  feature_screening:
+    stage_name: feature_screening
+    required_prior_stages: [feature_engineering]
+    required_artifact_types: [feature_set]
+
+  coarse_classing:
+    stage_name: coarse_classing
+    required_prior_stages: [fine_classing]
+    required_artifact_types: [fine_classing_output]
+
+  coarse_classing_review:
+    stage_name: coarse_classing_review
+    required_prior_stages: [coarse_classing]
+    required_artifact_types: [coarse_classing_output]
+
+  binning_version_selection_review:
+    stage_name: binning_version_selection_review
+    required_prior_stages: [binning_candidate_generation]
+
+  selected_binning_finalization:
+    stage_name: selected_binning_finalization
+    required_prior_stages: [binning_version_selection_review]
+    required_selection_stages: [binning_version_selection_review]
+
+  woe_iv_review:
+    stage_name: woe_iv_review
+    required_prior_stages: [selected_binning_finalization]
+
+  model_fitting:
+    stage_name: model_fitting
+    required_prior_stages: [feature_screening]
+    required_artifact_types: [feature_set]
+
+  model_review:
+    stage_name: model_review
+    required_prior_stages: [model_fitting]
+    required_artifact_types: [model_object]
+
+  validation_pack:
+    stage_name: validation_pack
+    required_prior_stages: [model_review]
+    required_artifact_types: [model_performance_pack]
+
+  committee_pack:
+    stage_name: committee_pack
+    required_prior_stages: [validation_pack]
+    required_artifact_types: [validation_report]
+
+  deployment_readiness:
+    stage_name: deployment_readiness
+    required_prior_stages: [committee_pack]
+    required_artifact_types: [committee_pack]
+
+  deployment_approval:
+    stage_name: deployment_approval
+    required_prior_stages: [deployment_readiness]
+
+  monitoring_snapshot:
+    stage_name: monitoring_snapshot
+    required_prior_stages: [monitoring_pack]
+
+  monitoring_breach_review:
+    stage_name: monitoring_breach_review
+    required_prior_stages: [monitoring_snapshot]
+    required_flags: [monitoring_breach_detected]
+
+  annual_review:
+    stage_name: annual_review
+    required_prior_stages: [monitoring_pack]
+
+  remediation_review:
+    stage_name: remediation_review
+    required_prior_stages: [remediation_planning]
+
+  closed:
+    stage_name: closed
+    required_prior_stages: [deployment_approval]

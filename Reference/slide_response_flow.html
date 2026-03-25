@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1500">
+<title>MDLC Agentic AI – Response Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f4f1eb;
+  --ink:#0f1117;
+  --ink2:#3a3f52;
+  --ink3:#8a8fa8;
+  --rule:#d6d2c8;
+  --agent:#2d1b69;
+  --agent-bg:#ede9f8;
+  --sdk:#0a2f5c;
+  --sdk-bg:#e0ecf8;
+  --gate:#7c0f00;
+  --gate-bg:#fde8e4;
+  --hitl:#7a4500;
+  --hitl-bg:#fef3cd;
+  --flow:#1e5c30;
+  --flow-bg:#e2f5e8;
+  --store:#004d3a;
+  --store-bg:#ddf2ec;
+  --mcp:#4a0064;
+  --mcp-bg:#f3e4fc;
+}
+body{
+  background:var(--bg);
+  font-family:'Inter',sans-serif;
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:28px 32px 36px;
+}
+
+/* ── Header ── */
+.header{
+  width:100%;
+  max-width:1420px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  border-bottom:2px solid var(--ink);
+  padding-bottom:14px;
+  margin-bottom:24px;
+}
+.title-block .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.18em;
+  color:var(--ink3);
+  text-transform:uppercase;
+  margin-bottom:4px;
+}
+.title-block h1{
+  font-family:'Syne',sans-serif;
+  font-size:28px;
+  font-weight:800;
+  color:var(--ink);
+  line-height:1.05;
+}
+.title-block h1 em{
+  font-style:normal;
+  color:var(--gate);
+  border-bottom:3px solid var(--gate);
+}
+.subtitle{
+  font-size:12.5px;
+  color:var(--ink2);
+  margin-top:5px;
+  max-width:600px;
+  line-height:1.5;
+}
+
+/* ── Legend ── */
+.legend{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.leg{
+  display:flex;align-items:center;gap:5px;
+  font-size:10.5px;font-family:'IBM Plex Mono',monospace;
+  color:var(--ink2);
+}
+.leg-box{
+  width:12px;height:12px;border-radius:1px;border:1.5px solid transparent;
+}
+
+/* ── Flow diagram ── */
+.diagram{
+  width:100%;
+  max-width:1420px;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+
+/* Phase headers */
+.phase-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  padding:0 0 5px 4px;
+  border-bottom:1px solid var(--rule);
+  margin-bottom:8px;
+  margin-top:16px;
+}
+.phase-label:first-child{margin-top:0}
+
+/* Row of nodes in one phase */
+.flow-row{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  margin-bottom:6px;
+  flex-wrap:nowrap;
+}
+
+/* Arrow connector */
+.arrow{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--ink3);
+  font-size:16px;
+  margin-top:12px;
+  width:16px;
+}
+
+/* Nodes */
+.node{
+  flex:1;
+  border-radius:4px;
+  padding:9px 13px;
+  min-width:0;
+  position:relative;
+}
+.node-label{
+  font-family:'Syne',sans-serif;
+  font-size:12.5px;
+  font-weight:700;
+  line-height:1.2;
+  margin-bottom:2px;
+}
+.node-desc{
+  font-size:10.5px;
+  color:var(--ink2);
+  line-height:1.4;
+}
+.node-tag{
+  display:inline-block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:8.5px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  padding:1.5px 6px;
+  border-radius:2px;
+  margin-top:5px;
+}
+
+/* ── Node variants ── */
+.n-agent{
+  background:var(--agent-bg);
+  border:1.5px solid rgba(45,27,105,.2);
+  border-left:3px solid var(--agent);
+}
+.n-agent .node-label{color:var(--agent)}
+.n-agent .node-tag{background:rgba(45,27,105,.1);color:var(--agent)}
+
+.n-sdk{
+  background:var(--sdk-bg);
+  border:1.5px solid rgba(10,47,92,.2);
+  border-left:3px solid var(--sdk);
+}
+.n-sdk .node-label{color:var(--sdk)}
+.n-sdk .node-tag{background:rgba(10,47,92,.1);color:var(--sdk)}
+
+.n-gate{
+  background:var(--gate-bg);
+  border:2px solid var(--gate);
+  border-left:4px solid var(--gate);
+  position:relative;
+}
+.n-gate .node-label{color:var(--gate);font-size:13px}
+.n-gate .node-tag{background:var(--gate);color:#fff}
+.n-gate::before{
+  content:'⬥ GOV GATE';
+  position:absolute;top:-9px;right:10px;
+  background:var(--gate);color:#fff;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:7.5px;letter-spacing:0.15em;
+  padding:1.5px 6px;border-radius:1px;
+}
+
+.n-hitl{
+  background:var(--hitl-bg);
+  border:1.5px solid rgba(122,69,0,.25);
+  border-left:3px solid var(--hitl);
+}
+.n-hitl .node-label{color:var(--hitl)}
+.n-hitl .node-tag{background:rgba(122,69,0,.12);color:var(--hitl)}
+
+.n-store{
+  background:var(--store-bg);
+  border:1.5px solid rgba(0,77,58,.2);
+  border-left:3px solid var(--store);
+}
+.n-store .node-label{color:var(--store)}
+.n-store .node-tag{background:rgba(0,77,58,.1);color:var(--store)}
+
+.n-flow{
+  background:var(--flow-bg);
+  border:1.5px solid rgba(30,92,48,.2);
+  border-left:3px solid var(--flow);
+}
+.n-flow .node-label{color:var(--flow)}
+.n-flow .node-tag{background:rgba(30,92,48,.1);color:var(--flow)}
+
+.n-mcp{
+  background:var(--mcp-bg);
+  border:1.5px solid rgba(74,0,100,.2);
+  border-left:3px solid var(--mcp);
+}
+.n-mcp .node-label{color:var(--mcp)}
+.n-mcp .node-tag{background:rgba(74,0,100,.1);color:var(--mcp)}
+
+/* Special wide row for triad */
+.triad{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-bottom:6px;
+}
+.triad-header{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;
+  letter-spacing:0.15em;
+  color:var(--ink3);
+  text-transform:uppercase;
+  text-align:center;
+  padding-bottom:5px;
+  border-bottom:1px solid var(--rule);
+  margin-bottom:6px;
+  grid-column:1/-1;
+}
+
+/* vertical connector */
+.v-connector{
+  width:2px;
+  height:14px;
+  background:var(--rule);
+  margin:0 auto;
+  margin-bottom:6px;
+}
+.v-arrow{
+  text-align:center;
+  font-size:14px;
+  color:var(--ink3);
+  line-height:1;
+  margin-bottom:6px;
+}
+
+/* ── Section dividers ── */
+.section-divider{
+  border:none;
+  border-top:1px solid var(--rule);
+  margin:14px 0 14px;
+}
+
+/* animate */
+@keyframes fade-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.node{animation:fade-up .35s ease both}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="title-block">
+    <div class="eyebrow">MDLC Agentic AI Solution</div>
+    <h1>Response <em>Governance</em> Flow</h1>
+    <div class="subtitle">End-to-end model development lifecycle — showing agent reasoning, SDK execution, MCP tool calls, and governance checkpoints.</div>
+  </div>
+  <div class="legend">
+    <div class="leg"><div class="leg-box" style="background:var(--agent-bg);border-color:var(--agent)"></div>Agent / Skill</div>
+    <div class="leg"><div class="leg-box" style="background:var(--sdk-bg);border-color:var(--sdk)"></div>SDK Execution</div>
+    <div class="leg"><div class="leg-box" style="background:var(--mcp-bg);border-color:var(--mcp)"></div>MCP Tool</div>
+    <div class="leg"><div class="leg-box" style="background:var(--gate-bg);border-color:var(--gate)"></div>Gov Gate</div>
+    <div class="leg"><div class="leg-box" style="background:var(--hitl-bg);border-color:var(--hitl)"></div>HITL Review</div>
+    <div class="leg"><div class="leg-box" style="background:var(--store-bg);border-color:var(--store)"></div>Persist / Store</div>
+    <div class="leg"><div class="leg-box" style="background:var(--flow-bg);border-color:var(--flow)"></div>Workflow State</div>
+  </div>
+</div>
+
+<div class="diagram">
+
+  <!-- PHASE 1 -->
+  <div class="phase-label">Phase 1 — Intake &amp; Planning</div>
+  <div class="flow-row">
+    <div class="node n-agent">
+      <div class="node-label">User / Trigger</div>
+      <div class="node-desc">Model developer initiates ECL MDLC project via CLI, API, or UI adapter</div>
+      <span class="node-tag">Interaction Layer</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-agent">
+      <div class="node-label">Intake Agent</div>
+      <div class="node-desc">Captures project scope, model family, regulatory classification, ECL domain (PD / LGD / EAD / SICR)</div>
+      <span class="node-tag">ADK · Skill-guided</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-mcp">
+      <div class="node-label">MCP: Create Project &amp; Run</div>
+      <div class="node-desc">Registers project + run in registry, assigns workflow template, sets governance classification</div>
+      <span class="node-tag">registry_sdk · workflow_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-flow">
+      <div class="node-label">Workflow State: INITIALIZED</div>
+      <div class="node-desc">run_id, stage, candidate set, approval gates, checkpoints committed to durable state</div>
+      <span class="node-tag">Workflow Layer</span>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="v-connector"></div>
+  <div class="phase-label">Phase 2 — Data &amp; Features</div>
+  <div class="flow-row">
+    <div class="node n-agent">
+      <div class="node-label">Data Assessment Agent</div>
+      <div class="node-desc">Orchestrates dataset snapshot, cohort/panel creation, reporting-date alignment</div>
+      <span class="node-tag">ADK · ecl_data_prep_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-sdk">
+      <div class="node-label">DQ SDK Execution</div>
+      <div class="node-desc">Schema, temporal, business-rule, join integrity, leakage checks → DQ pack compiled</div>
+      <span class="node-tag">dq_sdk · deterministic</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-agent">
+      <div class="node-label">Feature Agent</div>
+      <div class="node-desc">Lags, WoE binning, macro prep, feature lineage tracked; skill interprets feature quality</div>
+      <span class="node-tag">feature_sdk · skill-guided</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-store">
+      <div class="node-label">Persist: Snapshots &amp; Features</div>
+      <div class="node-desc">Dataset snapshot_id, feature_set_id, DQ report artifact registered with lineage</div>
+      <span class="node-tag">Artifact Store · Registry</span>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="v-connector"></div>
+  <div class="phase-label">Phase 3 — Candidate Model Development</div>
+  <div class="flow-row">
+    <div class="node n-agent">
+      <div class="node-label">Modelling Agent</div>
+      <div class="node-desc">Orchestrates multi-candidate fitting across PD / LGD / EAD / SICR models</div>
+      <span class="node-tag">ADK · domain SDK</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-sdk">
+      <div class="node-label">Domain SDK Execution</div>
+      <div class="node-desc">pd_model_sdk / lgd_model_sdk / ead_model_sdk / sicr_sdk — deterministic fitting, outputs serialized</div>
+      <span class="node-tag">Deterministic Execution</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-sdk">
+      <div class="node-label">Evaluation SDK</div>
+      <div class="node-desc">Metric pack per candidate, candidate comparison, shortlist recommendation inputs</div>
+      <span class="node-tag">evaluation_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-store">
+      <div class="node-label">Persist: Candidates &amp; Metrics</div>
+      <div class="node-desc">candidate_id, model artifact, evaluation pack registered; candidates available for review</div>
+      <span class="node-tag">Model Registry · Artifact Store</span>
+    </div>
+  </div>
+
+  <!-- PHASE 4 — Triad section -->
+  <div class="v-connector"></div>
+  <div class="phase-label">Phase 4 — Agent Reasoning Layer (Skill + MCP + SDK Triad)</div>
+  <div class="triad">
+    <div class="triad-header">Every material agent response is composed of:</div>
+    <div class="node n-agent">
+      <div class="node-label">Skills (Reasoning)</div>
+      <div class="node-desc">PD review checklist · Candidate comparison guide · Threshold trade-off framework · Methodology note drafting style</div>
+      <span class="node-tag">Reusable reasoning pattern</span>
+    </div>
+    <div class="node n-mcp">
+      <div class="node-label">MCP Tools (Authoritative)</div>
+      <div class="node-desc">Fetch candidate metrics · Retrieve approved knowledge · Get validation pack · Fetch run memory · Policy note retrieval</div>
+      <span class="node-tag">Authoritative system read</span>
+    </div>
+    <div class="node n-sdk">
+      <div class="node-label">SDKs (Execute)</div>
+      <div class="node-desc">All material actions executed via deterministic, testable SDK functions — not by LLM free-form generation</div>
+      <span class="node-tag">Deterministic execution</span>
+    </div>
+  </div>
+
+  <!-- GOV GATE 1 -->
+  <div class="v-connector"></div>
+  <div class="phase-label">Governance Checkpoint 1 — Candidate Shortlist Review</div>
+  <div class="flow-row">
+    <div class="node n-gate" style="flex:1.5">
+      <div class="node-label">⬥ Governance Gate: Shortlist Approval</div>
+      <div class="node-desc">Workflow pauses. HITL review required. Reviewer evaluates candidate metric pack, shortlist recommendation, and trade-off narrative.</div>
+      <span class="node-tag">Approval Required</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-hitl">
+      <div class="node-label">HITL: Reviewer Decision</div>
+      <div class="node-desc">Approve / Reject / Return for Rework. Decision, rationale, and reviewer identity durably recorded.</div>
+      <span class="node-tag">Human-in-the-Loop</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-mcp">
+      <div class="node-label">MCP: Record Approval &amp; Resume</div>
+      <div class="node-desc">Approval decision committed via governance_sdk. Workflow resumes from checkpoint. Exception path routes back to modelling if rejected.</div>
+      <span class="node-tag">governance_sdk · workflow_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-flow">
+      <div class="node-label">Workflow State: APPROVED → VALIDATION</div>
+      <div class="node-desc">Shortlisted candidate frozen in registry. Stage transition recorded with full audit trail.</div>
+      <span class="node-tag">Workflow Layer</span>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="v-connector"></div>
+  <div class="phase-label">Phase 5 — Validation &amp; Documentation</div>
+  <div class="flow-row">
+    <div class="node n-agent">
+      <div class="node-label">Validation Agent</div>
+      <div class="node-desc">Validator-friendly testing, threshold checks, exception packaging, methodological challenge support</div>
+      <span class="node-tag">ADK · validation_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-sdk">
+      <div class="node-label">Reporting &amp; DocGen</div>
+      <div class="node-desc">Metrics, charts, summary tables; methodology note, validation response doc, committee deck generated</div>
+      <span class="node-tag">reporting_sdk · docgen_sdk · pptgen_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-store">
+      <div class="node-label">Persist: Validation &amp; Doc Pack</div>
+      <div class="node-desc">Validation pack, doc pack, presentation deck registered as artifacts linked to candidate_id</div>
+      <span class="node-tag">Artifact Store</span>
+    </div>
+  </div>
+
+  <!-- GOV GATE 2 -->
+  <div class="v-connector"></div>
+  <div class="phase-label">Governance Checkpoint 2 — Model Approval &amp; Packaging</div>
+  <div class="flow-row">
+    <div class="node n-gate" style="flex:1.5">
+      <div class="node-label">⬥ Governance Gate: Final Model Approval</div>
+      <div class="node-desc">Full evidence pack: validation pack, metric pack, documentation, governance sign-off. Senior reviewer approves for deployment.</div>
+      <span class="node-tag">Sign-off Required</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-hitl">
+      <div class="node-label">HITL: Senior Sign-Off</div>
+      <div class="node-desc">Approve / Reject / Escalate. Policy exceptions registered. All approver identities, timestamps, and decisions durably stored.</div>
+      <span class="node-tag">HITL · governance_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-sdk">
+      <div class="node-label">Manifest &amp; Packaging</div>
+      <div class="node-desc">manifest_sdk builds final model manifest + execution recipe. repro_sdk validates rerun. packaging_sdk publishes immutable product bundle.</div>
+      <span class="node-tag">manifest_sdk · repro_sdk · packaging_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-store">
+      <div class="node-label">Final Model Product</div>
+      <div class="node-desc">Manifest · Recipe · Config · Artifact Index · Governance Evidence · Reproducibility Report · Monitoring Baseline</div>
+      <span class="node-tag">Model Registry · Artifact Store</span>
+    </div>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="v-connector"></div>
+  <div class="phase-label">Phase 6 — Post-Approval: Monitoring &amp; Knowledge</div>
+  <div class="flow-row">
+    <div class="node n-agent">
+      <div class="node-label">Monitoring Agent</div>
+      <div class="node-desc">Periodic stability, drift, calibration, population shift reviews; governance-ready monitoring packs</div>
+      <span class="node-tag">ADK · monitoring_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-agent">
+      <div class="node-label">Memory Curator Agent</div>
+      <div class="node-desc">Curates run memory → project memory. Retires stale entries. Preserves reviewer decisions, exceptions, and rationale.</div>
+      <span class="node-tag">memory_sdk · scoped &amp; governed</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-store">
+      <div class="node-label">Institutional Knowledge</div>
+      <div class="node-desc">Approved knowledge versioned, authority-tagged, source-linked. Available for future runs via knowledge_retrieval_sdk.</div>
+      <span class="node-tag">Knowledge Store · memory_sdk</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node n-flow">
+      <div class="node-label">Workflow State: COMPLETE</div>
+      <div class="node-desc">Run closed. Full audit trail. Model product available for rerun validation from manifest at any future point.</div>
+      <span class="node-tag">Workflow Layer · Observability</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

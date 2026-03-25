@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "audit_event.schema.json",
+  "title": "AuditEvent",
+  "description": "Immutable, append-only audit record for decisions, approvals, exceptions, signoffs, and governance actions. Chained via preceding_audit_id.",
+  "type": "object",
+  "required": ["audit_id", "audit_type", "timestamp", "actor", "stage_name", "run_id", "project_id", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "audit_id": { "type": "string" },
+    "audit_type": {
+      "type": "string",
+      "enum": ["decision", "approval", "exception", "signoff", "override", "waiver", "escalation", "config_change"]
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "stage_name": { "type": "string" },
+    "run_id": { "type": "string" },
+    "project_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "preceding_audit_id": {
+      "type": "string",
+      "description": "Links this record to the prior audit record in the decision chain."
+    },
+    "decision_payload": {
+      "type": "object",
+      "description": "Decision-specific payload; structure varies by audit_type.",
+      "properties": {
+        "recommendation": { "type": "string" },
+        "rationale": { "type": "string" },
+        "evidence_refs": { "type": "array", "items": { "type": "string" } },
+        "reviewer_action": { "type": "string" },
+        "reviewer_comment": { "type": "string" },
+        "conditions": { "type": "array", "items": { "type": "string" } },
+        "selected_candidate_version_id": { "type": "string" },
+        "final_downstream_action": { "type": "string" }
+      }
+    },
+    "approval_payload": {
+      "type": "object",
+      "properties": {
+        "review_id": { "type": "string" },
+        "approver_id": { "type": "string" },
+        "conditions": { "type": "array", "items": { "type": "string" } },
+        "policy_rule_ref": { "type": "string" }
+      }
+    },
+    "exception_payload": {
+      "type": "object",
+      "properties": {
+        "deviation_description": { "type": "string" },
+        "justification": { "type": "string" },
+        "waiver_ref": { "type": "string" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "expiry": { "type": "string", "format": "date-time" }
+      }
+    },
+    "skill_version": { "type": "string" },
+    "tool_version": { "type": "string" },
+    "environment": { "type": "string" },
+    "immutable": { "type": "boolean", "default": true },
+    "checksum": {
+      "type": "object",
+      "properties": {
+        "algorithm": { "type": "string", "default": "SHA-256" },
+        "value": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" },
+        "active_policy_pack_id": { "type": "string" }
+      }
+    }
+  }
+}

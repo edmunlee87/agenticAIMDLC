@@ -1,0 +1,144 @@
+# Role Capabilities Configuration
+# Defines what each actor role can do: which tool groups, stages, and authority levels.
+
+roles:
+  developer:
+    role: developer
+    description: "Model developer. Builds models, runs stages, creates candidate versions."
+    allowed_tool_groups:
+      - group_a_workflow
+      - group_c_observability
+      - group_e_artifacts
+      - group_f_config
+      - group_g_registry
+    blocked_tool_groups:
+      - group_d_audit
+    can_approve: false
+    can_signoff: false
+    can_escalate: true
+    can_waive_policy: false
+
+  validator:
+    role: validator
+    description: "Independent validator. Reviews and challenges models; cannot approve own development work."
+    allowed_tool_groups:
+      - group_a_workflow
+      - group_b_hitl
+      - group_c_observability
+      - group_e_artifacts
+      - group_f_config
+      - group_g_registry
+      - group_h_policy
+    blocked_tool_groups: []
+    can_approve: false
+    can_signoff: false
+    can_escalate: true
+    can_waive_policy: false
+    allowed_stages:
+      - validation_pack
+      - committee_pack
+      - evidence_intake
+      - methodology_review
+      - model_fitness_review
+      - validation_conclusion
+
+  governance:
+    role: governance
+    description: "Governance officer. Evaluates policy compliance and can approve governance gates."
+    allowed_tool_groups:
+      - group_b_hitl
+      - group_c_observability
+      - group_d_audit
+      - group_e_artifacts
+      - group_f_config
+      - group_g_registry
+      - group_h_policy
+    blocked_tool_groups: []
+    can_approve: true
+    can_signoff: true
+    min_approval_authority: governance
+    can_escalate: true
+    can_waive_policy: true
+
+  approver:
+    role: approver
+    description: "Model approver. Issues formal approvals and final sign-offs."
+    allowed_tool_groups:
+      - group_b_hitl
+      - group_c_observability
+      - group_d_audit
+      - group_e_artifacts
+      - group_f_config
+      - group_g_registry
+      - group_h_policy
+    blocked_tool_groups: []
+    can_approve: true
+    can_signoff: true
+    min_approval_authority: approver
+    can_escalate: true
+    can_waive_policy: false
+
+  monitoring:
+    role: monitoring
+    description: "Monitoring engineer. Operates monitoring stages and raises breach alerts."
+    allowed_tool_groups:
+      - group_a_workflow
+      - group_c_observability
+      - group_e_artifacts
+      - group_f_config
+      - group_g_registry
+    blocked_tool_groups:
+      - group_d_audit
+    can_approve: false
+    can_signoff: false
+    can_escalate: true
+    can_waive_policy: false
+
+  remediation:
+    role: remediation
+    description: "Remediation specialist. Manages remediation workflows."
+    allowed_tool_groups:
+      - group_a_workflow
+      - group_b_hitl
+      - group_c_observability
+      - group_e_artifacts
+      - group_f_config
+      - group_g_registry
+    blocked_tool_groups: []
+    can_approve: false
+    can_signoff: false
+    can_escalate: true
+    can_waive_policy: false
+
+  system:
+    role: system
+    description: "System actor. Automated platform actions."
+    allowed_tool_groups:
+      - group_a_workflow
+      - group_c_observability
+      - group_d_audit
+      - group_e_artifacts
+      - group_f_config
+      - group_g_registry
+      - group_h_policy
+    blocked_tool_groups: []
+    can_approve: false
+    can_signoff: false
+    can_escalate: false
+    can_waive_policy: false
+
+  reviewer:
+    role: reviewer
+    description: "Senior reviewer. Reviews and recommends decisions without formal approval authority."
+    allowed_tool_groups:
+      - group_b_hitl
+      - group_c_observability
+      - group_e_artifacts
+      - group_f_config
+      - group_g_registry
+      - group_h_policy
+    blocked_tool_groups: []
+    can_approve: false
+    can_signoff: false
+    can_escalate: true
+    can_waive_policy: false

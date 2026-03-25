@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "hitl_review.schema.json",
+  "title": "HITLReview",
+  "description": "Human-in-the-loop review record with bounded actions, governance requirements, and SLA tracking.",
+  "type": "object",
+  "required": ["review_id", "review_type", "stage_name", "project_id", "run_id", "actor", "timestamp", "schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "review_id": { "type": "string" },
+    "review_type": { "type": "string" },
+    "stage_name": { "type": "string" },
+    "project_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "title": { "type": "string" },
+    "decision_required": { "type": "boolean" },
+    "business_summary": { "type": "string" },
+    "technical_summary": { "type": "string" },
+    "recommendation": { "type": "string" },
+    "alternatives": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "allowed_actions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "approve",
+          "approve_with_changes",
+          "reject",
+          "rerun_with_parameters",
+          "request_more_analysis",
+          "escalate",
+          "drop_variable",
+          "approve_version",
+          "approve_version_with_overrides",
+          "create_composite_version"
+        ]
+      }
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "category"],
+        "properties": {
+          "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+          "category": { "type": "string" },
+          "description": { "type": "string" },
+          "evidence_ref": { "type": "string" }
+        }
+      }
+    },
+    "policy_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["finding_id", "severity", "rule_ref"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+          "rule_ref": { "type": "string" },
+          "description": { "type": "string" },
+          "evidence_ref": { "type": "string" }
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["artifact_id"],
+        "properties": {
+          "artifact_id": { "type": "string" },
+          "artifact_type": { "type": "string" },
+          "uri": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "pending_review",
+        "approved",
+        "approved_with_changes",
+        "rejected",
+        "rerun_requested",
+        "escalated",
+        "cancelled"
+      ]
+    },
+    "reviewer_assignment": {
+      "type": "object",
+      "properties": {
+        "assigned_to": { "type": "string" },
+        "assigned_by": { "type": "string" },
+        "assigned_at": { "type": "string", "format": "date-time" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } },
+        "sla_due_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "escalation_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "escalated_at": { "type": "string", "format": "date-time" },
+          "escalated_by": { "type": "string" },
+          "escalated_to": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "prior_review_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "conditions_from_prior_approval": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "governance_requirements": {
+      "type": "object",
+      "properties": {
+        "required_evidence": { "type": "array", "items": { "type": "string" } },
+        "required_acknowledgments": { "type": "array", "items": { "type": "string" } },
+        "sla_deadline": { "type": "string", "format": "date-time" },
+        "min_approval_authority": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" },
+        "active_policy_pack_id": { "type": "string" }
+      }
+    }
+  }
+}

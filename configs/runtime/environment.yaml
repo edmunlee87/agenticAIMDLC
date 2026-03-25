@@ -1,0 +1,21 @@
+# Environment configuration -- base (dev default).
+# Override via environment_overlays/ for test, uat, production.
+# Loaded and validated against EnvironmentConfig (Pydantic).
+
+environment: dev
+
+storage:
+  artifact_store_uri: "file://./artifacts"
+  audit_store_uri: "file://./audit"
+  event_store_uri: "file://./events"
+  workflow_state_uri: "file://./workflow_state"
+  config_store_uri: "file://./configs"
+
+feature_flags:
+  enable_rag: false
+  enable_spark_dataprep: false
+  enable_mcp_bridge: false
+  strict_policy_mode: false
+  dry_run: false
+
+extra: {}

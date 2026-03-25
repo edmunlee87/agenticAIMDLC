@@ -1,0 +1,44 @@
+# Failure Routes
+# How to route on stage failure. recovery_action: retry|rerun|rollback|escalate|resume|skip|manual
+
+routes:
+  model_fitting:
+    - stage_name: model_fitting
+      error_type: convergence_failure
+      recovery_action: rerun
+      target_stage: model_fitting
+      requires_human_decision: true
+      audit_required: true
+    - stage_name: model_fitting
+      error_type: "*"
+      recovery_action: manual
+      requires_human_decision: true
+      audit_required: true
+
+  coarse_classing:
+    - stage_name: coarse_classing
+      error_type: "*"
+      recovery_action: retry
+      target_stage: coarse_classing
+      requires_human_decision: false
+      audit_required: true
+
+  validation_pack:
+    - stage_name: validation_pack
+      error_type: "*"
+      recovery_action: escalate
+      requires_human_decision: true
+      audit_required: true
+
+  data_readiness:
+    - stage_name: data_readiness
+      error_type: data_unavailable
+      recovery_action: manual
+      requires_human_decision: true
+      audit_required: true
+    - stage_name: data_readiness
+      error_type: "*"
+      recovery_action: retry
+      target_stage: data_readiness
+      requires_human_decision: false
+      audit_required: true

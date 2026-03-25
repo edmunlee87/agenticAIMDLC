@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mdl-doc-sdk"
+version = "0.1.0"
+description = "Word document and markdown generation for model submission and regulatory reporting"
+requires-python = ">=3.11"
+dependencies = [
+    "mdl-platform-contracts",
+    "mdl-artifact-sdk",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/docsdk"]

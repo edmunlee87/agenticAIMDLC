@@ -1,0 +1,3578 @@
+# Agentic workflow design  
+  
+====================================================================  
+USER REQUIREMENT DOCUMENT (URD)  
+ENTERPRISE AGENTIC AI WORKFLOW PLATFORM FOR CREDIT SCORING  
+AND REUSABLE MODEL LIFECYCLE ORCHESTRATION  
+WITH UNIFIED SDK ARCHITECTURE  
+====================================================================  
+  
+Project Name : Credit Scoring Skills Orchestration Framework  
+Version      : 2.1  
+Date         : 2026-03-15  
+Prepared For : Model Development, Validation, Governance, Audit,  
+               Technology, Portfolio Analytics, Risk Methodology  
+  
+====================================================================  
+1. INTRODUCTION  
+====================================================================  
+  
+1.1 Purpose  
+--------------------------------------------------------------------  
+This document defines the requirements for an enterprise-grade  
+agentic AI workflow platform to support governed credit scoring model  
+development and to establish a reusable foundation for other model  
+families such as time series, ECL, LGD, PD, EAD, SICR, stress testing,  
+monitoring, annual review, remediation, and redevelopment workflows.  
+  
+The platform shall combine deterministic SDK execution, skills-based  
+orchestration, human-in-the-loop (HITL) decision control, workflow  
+state persistence, session continuity, observability logging, audit  
+traceability, artifact lineage, candidate version management, and  
+visual flow summarization.  
+  
+This document also defines a proposed unified SDK architecture to cover  
+current and future workflow automation scope through a modular yet  
+integrated design.  
+  
+1.2 Objective  
+--------------------------------------------------------------------  
+The objective is to create a governed, extensible, and reusable  
+workflow platform that can:  
+  
+- orchestrate end-to-end model lifecycle steps through structured  
+  skills  
+- integrate deterministic SDKs, tools, APIs, and future MCP servers  
+- manage multiple candidate versions and explicit final selection  
+- support bounded human review for judgement-heavy steps  
+- preserve version lineage, approvals, and evidence  
+- resume from prior sessions, failures, and pending reviews  
+- generate observability logs and summarized flow visualizations  
+- standardize the workflow shell across multiple model families  
+- provide a unified SDK operating model for workflow automation  
+  
+1.3 Background  
+--------------------------------------------------------------------  
+Model development workflows contain both deterministic and judgement-  
+driven stages. Deterministic stages include data profiling, data  
+quality checks, feature generation, binning execution, model fitting,  
+metric calculation, diagnostic testing, documentation generation, and  
+artifact registration.  
+  
+Judgement-heavy stages include coarse classing approval, variable  
+acceptance, binning version selection, model selection, overlay  
+approval, deployment readiness, exception waivers, and annual review  
+disposition.  
+  
+A common workflow framework and SDK ecosystem are required to:  
+- reduce duplication across projects  
+- improve governance  
+- increase reproducibility  
+- enable future agentic AI expansion  
+- provide reusable control patterns across model families  
+- unify development patterns for workflow automation  
+  
+====================================================================  
+2. VISION AND TARGET OPERATING MODEL  
+====================================================================  
+  
+2.1 Vision  
+--------------------------------------------------------------------  
+The platform shall become a reusable Model Lifecycle Agentic Operating  
+System that standardizes governance, workflow control, observability,  
+review, lineage, evidence handling, and SDK interaction across all  
+model development projects.  
+  
+2.2 Target Operating Model  
+--------------------------------------------------------------------  
+The operating model shall be based on:  
+  
+- deterministic tools and SDKs perform calculations and transformations  
+- skills orchestrate workflow, reasoning, and task routing  
+- humans remain accountable for governed decisions  
+- logs form the system of record  
+- flow summaries provide visual interpretation  
+- domain packs specialize the workflow for each model family  
+- unified SDK contracts provide common access to reusable capabilities  
+  
+2.3 Strategic Design Principle  
+--------------------------------------------------------------------  
+The platform shall not standardize the mathematics of all model  
+families. It shall standardize the workflow, controls, state, reviews,  
+logs, artifacts, interfaces, and SDK operating model around those  
+model families.  
+  
+====================================================================  
+3. BUSINESS GOALS  
+====================================================================  
+  
+The platform shall achieve the following goals:  
+  
+1. Reduce turnaround time for model development lifecycle execution.  
+2. Standardize workflow control across project types.  
+3. Improve governance, transparency, and reproducibility.  
+4. Support controlled AI-assisted execution with HITL safeguards.  
+5. Preserve session continuity and recovery from failure.  
+6. Improve validation, audit, and committee readiness.  
+7. Reuse shared workflow components across domains.  
+8. Provide a foundation for future enterprise-wide orchestration.  
+9. Establish a unified SDK design covering current and future scope.  
+10. Reduce duplication in package development and workflow automation.  
+  
+====================================================================  
+4. SCOPE  
+====================================================================  
+  
+4.1 In Scope  
+--------------------------------------------------------------------  
+The platform shall cover:  
+  
+- project bootstrap  
+- workflow orchestration  
+- workflow state persistence  
+- deterministic tool / SDK invocation  
+- stage routing  
+- rerun management  
+- candidate version management  
+- version selection  
+- HITL reviews  
+- observability event logging  
+- audit trail  
+- artifact registry  
+- session continuity  
+- resume and recovery  
+- flow summarization and visualization  
+- Jupyter widget integration  
+- domain pack architecture  
+- cross-project standardization model  
+- unified SDK architecture and modular breakdown  
+  
+4.2 Initial Domain Scope  
+--------------------------------------------------------------------  
+Initial detailed implementation focus shall be on credit scoring,  
+including:  
+  
+- data readiness  
+- DQ review  
+- EDA  
+- segmentation review  
+- fine classing  
+- coarse classing  
+- coarse classing review  
+- binning candidate generation  
+- binning version selection review  
+- selected binning finalization  
+- WoE and IV review  
+- feature engineering  
+- feature screening  
+- policy variable review  
+- model fitting  
+- scaling and calibration  
+- champion challenger review  
+- model review  
+- validation pack  
+- committee pack  
+- deployment readiness  
+- monitoring pack  
+- annual review  
+  
+4.3 Future Domain Scope  
+--------------------------------------------------------------------  
+The standard shall be extensible to:  
+  
+- time series modeling  
+- ECL models  
+- LGD models  
+- PD models  
+- EAD models  
+- SICR workflows  
+- stress testing models  
+- monitoring and annual review  
+- remediation and redevelopment programs  
+- portfolio-wide governance and review dashboards  
+  
+4.4 Out of Scope for First Phase  
+--------------------------------------------------------------------  
+The following are out of scope unless explicitly approved:  
+  
+- autonomous production deployment without human approval  
+- self-modifying policy packs without governance  
+- replacement of enterprise workflow engines  
+- fully automated regulator-facing sign-off  
+- unrestricted generative model decisions without review  
+  
+====================================================================  
+5. SHARED ENTITY MODEL AND CANONICAL META-MODEL  
+====================================================================  
+  
+5.1 Purpose  
+--------------------------------------------------------------------  
+The platform shall define a canonical enterprise meta-model to  
+standardize workflow orchestration, human review, observability,  
+auditability, artifact management, rerun control, candidate version  
+selection, and lifecycle governance across all model families.  
+  
+The meta-model shall serve as the common language shared by:  
+  
+- scorecard projects  
+- time series projects  
+- ECL projects  
+- LGD projects  
+- PD projects  
+- EAD projects  
+- SICR projects  
+- stress testing projects  
+- monitoring and annual review workflows  
+- redevelopment and remediation programs  
+  
+The meta-model shall not standardize the mathematical methods of all  
+model families. It shall standardize the control plane, workflow  
+plane, review plane, observability plane, evidence plane, and lineage  
+plane.  
+  
+5.2 Design Principles  
+--------------------------------------------------------------------  
+The shared entity model shall follow these principles:  
+  
+1. Common across model families  
+   Core entities shall be reusable across all project types.  
+  
+2. Domain-extensible  
+   Domain packs may extend the shared entities with additional fields,  
+   but shall not break the core contract.  
+  
+3. State-driven  
+   Workflow progress shall be represented through structured state.  
+  
+4. Replayable  
+   A run shall be reconstructable from shared entities and relations.  
+  
+5. Auditable  
+   Material actions and decisions shall be attributable to entities.  
+  
+6. Versioned  
+   Logic, configuration, artifacts, and approvals shall be versioned  
+   where appropriate.  
+  
+7. Explicit selection  
+   When multiple candidate outputs exist, the selected version shall  
+   be recorded explicitly and never inferred silently.  
+  
+8. Linked  
+   The platform shall maintain explicit relationships between  
+   projects, runs, stages, candidate versions, reviews, artifacts,  
+   events, and decisions.  
+  
+5.3 Meta-Model Layers  
+--------------------------------------------------------------------  
+The canonical meta-model shall be structured into the following  
+logical layers:  
+  
+A. Portfolio / Program Layer  
+- Program  
+- Project  
+- UseCase  
+- DomainPack  
+- PolicyPack  
+  
+B. Execution Layer  
+- Workflow  
+- Run  
+- Session  
+- StageExecution  
+- CandidateVersion  
+- VersionSelection  
+- Rerun  
+- RecoveryAction  
+  
+C. Review and Decision Layer  
+- Review  
+- Approval  
+- Decision  
+- Exception  
+- Override  
+  
+D. Evidence and Output Layer  
+- Artifact  
+- Metric  
+- TestResult  
+- Recommendation  
+- PolicyFinding  
+  
+E. Observability and Visualization Layer  
+- Event  
+- FlowNode  
+- FlowEdge  
+- TimelineEntry  
+  
+F. Identity and Access Layer  
+- User  
+- Role  
+- ReviewerAssignment  
+  
+5.4 Core Shared Entities  
+--------------------------------------------------------------------  
+  
+5.4.1 Program  
+Definition:  
+A Program represents a higher-level initiative grouping multiple  
+related projects.  
+  
+Purpose:  
+Used when several projects are coordinated together.  
+  
+Mandatory fields:  
+- program_id  
+- program_name  
+- program_type  
+- description  
+- owner  
+- status  
+- start_date  
+- target_end_date  
+- created_timestamp  
+- updated_timestamp  
+  
+Relationships:  
+- one Program may contain many Projects  
+  
+5.4.2 Project  
+Definition:  
+A Project is the primary business and governance container for a  
+specific model, use case, or lifecycle initiative.  
+  
+Purpose:  
+Defines business scope, model family, portfolio, market, methodology  
+context, and ownership boundary.  
+  
+Mandatory fields:  
+- project_id  
+- project_name  
+- project_type  
+- model_family  
+- domain_type  
+- portfolio_name  
+- market  
+- business_objective  
+- owner  
+- status  
+- lifecycle_phase  
+- created_timestamp  
+- updated_timestamp  
+  
+Optional fields:  
+- program_id  
+- model_name  
+- target_definition  
+- segment_name  
+- approver_group  
+- validation_group  
+- deployment_target  
+- tags  
+  
+Relationships:  
+- one Project may belong to one Program  
+- one Project may have many Runs  
+- one Project may have many Artifacts  
+- one Project may have many Reviews  
+- one Project may reference one DomainPack  
+- one Project may reference one or more PolicyPacks  
+  
+5.4.3 UseCase  
+Definition:  
+A UseCase identifies the specific business problem or modeling  
+objective addressed by the project.  
+  
+Mandatory fields:  
+- usecase_id  
+- usecase_name  
+- usecase_category  
+- description  
+  
+Relationships:  
+- one Project shall map to one primary UseCase  
+  
+5.4.4 DomainPack  
+Definition:  
+A DomainPack is a reusable domain-specific configuration package that  
+defines stages, skills, metrics, tests, policies, review templates,  
+and artifact expectations for a model family.  
+  
+Mandatory fields:  
+- domain_pack_id  
+- domain_pack_name  
+- domain_type  
+- version  
+- stage_registry_reference  
+- skill_registry_reference  
+- metrics_pack_reference  
+- test_pack_reference  
+- artifact_pack_reference  
+- review_template_reference  
+  
+Relationships:  
+- one Project shall reference one active DomainPack  
+  
+5.4.5 PolicyPack  
+Definition:  
+A PolicyPack contains governance rules, thresholds, approval gates,  
+waiver rules, and control requirements.  
+  
+Mandatory fields:  
+- policy_pack_id  
+- policy_pack_name  
+- version  
+- policy_scope  
+- effective_date  
+- approval_rules_reference  
+- exception_rules_reference  
+- threshold_rules_reference  
+  
+Relationships:  
+- one Project may have one or more PolicyPacks  
+  
+5.5 Execution Entities  
+--------------------------------------------------------------------  
+  
+5.5.1 Workflow  
+Definition:  
+A Workflow is the formal stage graph used to execute a lifecycle  
+process for a Project.  
+  
+Mandatory fields:  
+- workflow_id  
+- workflow_name  
+- workflow_template  
+- domain_type  
+- version  
+- stage_registry_reference  
+- routing_rules_reference  
+  
+Relationships:  
+- one Project shall use one active Workflow template  
+  
+5.5.2 Run  
+Definition:  
+A Run is a single execution instance of a workflow for a Project.  
+  
+Purpose:  
+Captures one attempt or one governed execution path.  
+  
+Mandatory fields:  
+- run_id  
+- project_id  
+- workflow_id  
+- run_type  
+- trigger_source  
+- started_by  
+- start_timestamp  
+- status  
+- current_stage  
+- trace_id  
+  
+Optional fields:  
+- parent_run_id  
+- branch_reason  
+- recovery_mode  
+- end_timestamp  
+- final_outcome  
+- summary  
+  
+Relationships:  
+- one Run belongs to one Project  
+- one Run may contain many Sessions  
+- one Run may contain many StageExecutions  
+- one Run may contain many CandidateVersions  
+- one Run may contain many Reviews  
+- one Run may contain many Artifacts  
+- one Run may contain many Events  
+  
+5.5.3 Session  
+Definition:  
+A Session is a user interaction context or execution context within a  
+Run.  
+  
+Mandatory fields:  
+- session_id  
+- run_id  
+- project_id  
+- session_type  
+- started_by  
+- start_timestamp  
+- status  
+  
+Optional fields:  
+- parent_session_id  
+- resume_source_session_id  
+- resume_mode  
+- resume_reason  
+- end_timestamp  
+- last_error_summary  
+  
+Relationships:  
+- one Session belongs to one Run  
+  
+5.5.4 StageExecution  
+Definition:  
+A StageExecution represents the execution state and outcome of one  
+specific stage within a Run.  
+  
+Mandatory fields:  
+- stage_execution_id  
+- run_id  
+- stage_name  
+- stage_class  
+- status  
+- start_timestamp  
+- end_timestamp  
+- triggered_by  
+- skill_name  
+- skill_version  
+  
+Optional fields:  
+- prerequisite_status  
+- retry_count  
+- blocked_reason  
+- error_summary  
+- output_summary  
+- next_recommended_stage  
+  
+Relationships:  
+- one Run has many StageExecutions  
+- one StageExecution may produce many Artifacts  
+- one StageExecution may trigger zero or more Reviews  
+- one StageExecution may produce zero or more CandidateVersions  
+  
+5.5.5 CandidateVersion  
+Definition:  
+A CandidateVersion represents one generated candidate output from a  
+stage that may produce multiple alternatives before a final governed  
+selection is made.  
+  
+Purpose:  
+Supports branching, comparison, and explicit final choice.  
+  
+Examples:  
+- multiple binning packages before model fitting  
+- multiple feature shortlist versions  
+- multiple challenger model configurations  
+- multiple overlay options  
+  
+Mandatory fields:  
+- candidate_version_id  
+- run_id  
+- project_id  
+- source_stage  
+- candidate_type  
+- candidate_name  
+- version_label  
+- created_timestamp  
+- status  
+  
+Optional fields:  
+- parent_candidate_version_id  
+- generation_strategy  
+- parameter_config_reference  
+- summary_metrics  
+- artifact_refs  
+- notes  
+- created_by  
+- manual_override_flag  
+  
+Relationships:  
+- one CandidateVersion belongs to one Run  
+- one CandidateVersion may be derived from another  
+- one CandidateVersion may have many Artifacts  
+- one CandidateVersion may be compared in one or more Reviews  
+- one CandidateVersion may later be selected by VersionSelection  
+  
+5.5.6 VersionSelection  
+Definition:  
+A VersionSelection records the final selected candidate version or  
+composite selection to be used downstream.  
+  
+Purpose:  
+Ensures downstream steps never guess which version is final.  
+  
+Mandatory fields:  
+- version_selection_id  
+- run_id  
+- selection_scope  
+- selected_candidate_version_id  
+- selection_type  
+- selection_status  
+- selected_by  
+- selection_timestamp  
+  
+Optional fields:  
+- review_id  
+- comment  
+- composite_definition_reference  
+- downstream_stage_name  
+- superseded_selection_id  
+  
+Selection types may include:  
+- direct  
+- composite  
+- manual  
+- auto_with_policy  
+- auto_without_policy_not_allowed  
+  
+Relationships:  
+- one VersionSelection belongs to one Run  
+- one VersionSelection may be linked to one Review  
+- one VersionSelection shall be referenced by downstream StageExecutions  
+  
+5.5.7 Rerun  
+Definition:  
+A Rerun represents an intentional repeat of a stage, sequence of  
+stages, or full run due to review feedback, failure, or revised  
+inputs.  
+  
+Mandatory fields:  
+- rerun_id  
+- run_id  
+- source_stage  
+- rerun_scope  
+- rerun_reason  
+- initiated_by  
+- timestamp  
+  
+Relationships:  
+- one Rerun may create one or more new StageExecutions  
+- one Rerun may create new CandidateVersions  
+  
+5.5.8 RecoveryAction  
+Definition:  
+A RecoveryAction records a structured recovery step after failure,  
+blockage, or interrupted session.  
+  
+Mandatory fields:  
+- recovery_action_id  
+- run_id  
+- session_id  
+- recovery_type  
+- source_failure_reference  
+- selected_recovery_path  
+- initiated_by  
+- timestamp  
+  
+Relationships:  
+- one RecoveryAction may create one resumed Session  
+  
+5.6 Review and Decision Entities  
+--------------------------------------------------------------------  
+  
+5.6.1 Review  
+Definition:  
+A Review is a structured HITL checkpoint requiring human assessment,  
+approval, rejection, rerun, or explicit selection.  
+  
+Purpose:  
+Provides a universal mechanism for controlled human decision-making.  
+  
+Mandatory fields:  
+- review_id  
+- run_id  
+- stage_name  
+- review_type  
+- title  
+- decision_required  
+- recommendation  
+- allowed_actions  
+- review_status  
+- created_timestamp  
+  
+Optional fields:  
+- business_summary  
+- technical_summary  
+- alternatives  
+- risk_flags  
+- policy_findings_summary  
+- evidence_refs  
+- due_timestamp  
+  
+Relationships:  
+- one Review belongs to one Run  
+- one Review may compare one or more CandidateVersions  
+- one Review may produce one or more Decisions  
+  
+5.6.2 Approval  
+Definition:  
+An Approval is a formal accepted outcome for a Review or governed  
+action.  
+  
+Mandatory fields:  
+- approval_id  
+- review_id  
+- approval_type  
+- approver_id  
+- action  
+- timestamp  
+- approval_status  
+  
+Optional fields:  
+- comment  
+- conditions  
+- expiry_date  
+  
+5.6.3 Decision  
+Definition:  
+A Decision is the final chosen path taken after agent recommendation  
+and optional human review.  
+  
+Mandatory fields:  
+- decision_id  
+- run_id  
+- stage_name  
+- decision_type  
+- chosen_action  
+- actor_type  
+- actor_id  
+- timestamp  
+  
+Optional fields:  
+- recommendation_reference  
+- rationale  
+- override_flag  
+- downstream_action_reference  
+  
+5.6.4 Exception  
+Definition:  
+An Exception is a formal deviation, breach, or unresolved issue  
+requiring classification, waiver, remediation, or block.  
+  
+Mandatory fields:  
+- exception_id  
+- run_id  
+- stage_name  
+- exception_type  
+- severity  
+- description  
+- waivable_flag  
+- status  
+- created_timestamp  
+  
+Optional fields:  
+- evidence_refs  
+- required_approver_role  
+- remediation_plan  
+- expiry_date  
+  
+5.6.5 Override  
+Definition:  
+An Override is a deliberate deviation from the default recommendation,  
+policy preference, or expected path.  
+  
+Mandatory fields:  
+- override_id  
+- run_id  
+- stage_name  
+- override_type  
+- original_recommendation  
+- chosen_override_action  
+- approved_by  
+- timestamp  
+  
+5.7 Evidence and Output Entities  
+--------------------------------------------------------------------  
+  
+5.7.1 Artifact  
+Definition:  
+An Artifact is any persisted output, input snapshot, report, evidence  
+package, config, or review-support file generated or consumed.  
+  
+Mandatory fields:  
+- artifact_id  
+- run_id  
+- project_id  
+- artifact_type  
+- artifact_name  
+- producer_stage  
+- producer  
+- version  
+- uri_or_path  
+- created_timestamp  
+- schema_version  
+  
+Optional fields:  
+- checksum  
+- tags  
+- summary  
+- lineage_reference  
+- source_candidate_version_id  
+  
+5.7.2 Metric  
+Mandatory fields:  
+- metric_id  
+- run_id  
+- stage_name  
+- metric_name  
+- metric_value  
+- metric_type  
+- metric_scope  
+- timestamp  
+  
+5.7.3 TestResult  
+Mandatory fields:  
+- test_result_id  
+- run_id  
+- stage_name  
+- test_name  
+- test_category  
+- result_status  
+- timestamp  
+  
+Optional fields:  
+- test_statistic  
+- p_value  
+- threshold  
+- hypothesis  
+- interpretation  
+- evidence_refs  
+  
+5.7.4 Recommendation  
+Mandatory fields:  
+- recommendation_id  
+- run_id  
+- stage_name  
+- recommendation_type  
+- summary  
+- recommended_action  
+- created_timestamp  
+  
+Optional fields:  
+- confidence_score  
+- alternatives  
+- rationale  
+- risk_flags  
+- evidence_refs  
+  
+5.7.5 PolicyFinding  
+Mandatory fields:  
+- policy_finding_id  
+- run_id  
+- stage_name  
+- policy_pack_id  
+- finding_type  
+- severity  
+- summary  
+- status  
+  
+Optional fields:  
+- breached_rule_reference  
+- waivable_flag  
+- evidence_refs  
+- remediation_required  
+  
+5.8 Observability and Visualization Entities  
+--------------------------------------------------------------------  
+  
+5.8.1 Event  
+Definition:  
+An Event is the atomic append-only record of a workflow action,  
+transition, review, failure, override, approval, selection, or  
+recovery.  
+  
+Mandatory fields:  
+- event_id  
+- run_id  
+- session_id  
+- event_type  
+- stage_name  
+- actor_type  
+- actor_id  
+- timestamp  
+- summary  
+  
+Optional fields:  
+- skill_name  
+- skill_version  
+- review_id  
+- candidate_version_id  
+- selected_candidate_version_id  
+- artifact_refs  
+- error_summary  
+- payload_hash  
+- parent_event_id  
+  
+5.8.2 FlowNode  
+Mandatory fields:  
+- node_id  
+- run_id  
+- node_type  
+- title  
+- stage_name  
+- status  
+- actor_type  
+- timestamp  
+- summary  
+  
+Optional fields:  
+- linked_event_ids  
+- linked_artifact_ids  
+- review_id  
+- detail_reference  
+  
+5.8.3 FlowEdge  
+Mandatory fields:  
+- edge_id  
+- run_id  
+- from_node_id  
+- to_node_id  
+- edge_type  
+- status  
+  
+Optional fields:  
+- summary  
+- transition_reason  
+- linked_event_ids  
+  
+5.8.4 TimelineEntry  
+Mandatory fields:  
+- timeline_entry_id  
+- run_id  
+- timestamp  
+- entry_type  
+- title  
+- summary  
+  
+5.9 Identity and Access Entities  
+--------------------------------------------------------------------  
+  
+5.9.1 User  
+Mandatory fields:  
+- user_id  
+- display_name  
+- role_set  
+- status  
+  
+5.9.2 Role  
+Mandatory fields:  
+- role_id  
+- role_name  
+- permissions_reference  
+  
+5.9.3 ReviewerAssignment  
+Mandatory fields:  
+- reviewer_assignment_id  
+- review_id or exception_id  
+- assigned_role  
+- assigned_user_id or group_id  
+- assignment_status  
+  
+5.10 Common Relationships Across Projects  
+--------------------------------------------------------------------  
+The platform shall support these standard relationships:  
+  
+- one Program -> many Projects  
+- one Project -> many Runs  
+- one Run -> many Sessions  
+- one Run -> many StageExecutions  
+- one Run -> many CandidateVersions  
+- one Run -> many VersionSelections  
+- one Run -> many Reviews  
+- one Run -> many Decisions  
+- one Run -> many Events  
+- one Run -> many Artifacts  
+- one Run -> many FlowNodes  
+- one Run -> many FlowEdges  
+- one Review -> zero or many Approvals  
+- one Review -> one or many Decisions  
+- one Review -> one or many CandidateVersions under comparison  
+- one VersionSelection -> one chosen CandidateVersion or one composite  
+- one StageExecution -> may consume one selected CandidateVersion  
+- one PolicyFinding -> may trigger one Exception  
+- one Exception -> may trigger one Review  
+  
+5.11 Domain Extensibility Rules  
+--------------------------------------------------------------------  
+The shared entity model shall allow domain-specific extension through:  
+  
+- additional fields  
+- additional stage aliases  
+- additional artifact subtypes  
+- additional metric types  
+- additional test types  
+- domain-specific review templates  
+- domain-specific policy rules  
+  
+Examples:  
+- Scorecard: binning_summary_artifact, woe_metric  
+- Time Series: stationarity_test_result, forecast_review  
+- ECL: mev_transformation_artifact, overlay_review  
+- LGD: cure_model_artifact, severity_model_artifact  
+  
+5.12 Minimum Canonical Fields Required Across All Projects  
+--------------------------------------------------------------------  
+At minimum, all project types shall support these fields:  
+  
+Project-level:  
+- project_id  
+- project_name  
+- project_type  
+- model_family  
+- owner  
+  
+Run-level:  
+- run_id  
+- workflow_id  
+- status  
+- current_stage  
+- trace_id  
+  
+Session-level:  
+- session_id  
+- started_by  
+- status  
+  
+Review-level:  
+- review_id  
+- review_type  
+- review_status  
+- allowed_actions  
+  
+Candidate selection:  
+- candidate_version_id  
+- version_selection_id  
+- selected_candidate_version_id  
+- selection_status  
+  
+Decision-level:  
+- decision_id  
+- chosen_action  
+- actor_type  
+- timestamp  
+  
+Artifact-level:  
+- artifact_id  
+- artifact_type  
+- version  
+- uri_or_path  
+  
+Event-level:  
+- event_id  
+- event_type  
+- timestamp  
+- summary  
+  
+5.13 Meta-Model Governance Requirements  
+--------------------------------------------------------------------  
+Changes to shared entities shall require:  
+- schema versioning  
+- backward compatibility review  
+- impact assessment on domain packs  
+- documentation update  
+- test validation across supported project types  
+  
+5.14 Meta-Model Success Criteria  
+--------------------------------------------------------------------  
+The canonical meta-model shall be considered effective when:  
+  
+1. scorecard, time series, ECL, LGD, and other model families can all  
+   use the same top-level control entities  
+2. reviews, selections, decisions, artifacts, logs, and flow  
+   summaries are interoperable across project types  
+3. domain packs can extend the model without breaking the core  
+   platform  
+4. projects can be resumed, replayed, audited, and visualized using  
+   the same entity framework  
+5. downstream stages can always identify exactly which selected  
+   upstream version was used  
+  
+====================================================================  
+6. PLATFORM ARCHITECTURE  
+====================================================================  
+  
+6.1 Layered Architecture  
+--------------------------------------------------------------------  
+The platform shall follow these layers:  
+  
+1. Experience Layer  
+   - Jupyter widgets  
+   - notebook UI  
+   - CLI  
+   - API  
+   - dashboard  
+  
+2. Agent Orchestration Layer  
+   - master orchestrator  
+   - domain specialist agents  
+   - governance agent  
+   - recovery agent  
+   - observability agent  
+   - documentation agent  
+  
+3. Skill Framework Layer  
+   - stage skills  
+   - governance skills  
+   - recovery skills  
+   - documentation skills  
+  
+4. Workflow and State Control Layer  
+   - state store  
+   - routing engine  
+   - checkpoint manager  
+   - resume engine  
+   - candidate selection engine  
+  
+5. Policy and Control Layer  
+   - policy packs  
+   - approval matrix  
+   - exception handling  
+   - threshold controls  
+  
+6. Deterministic Execution Layer  
+   - DQ SDK  
+   - scorecard SDK  
+   - evaluation SDK  
+   - reporting SDK  
+   - artifact SDK  
+   - future domain SDKs  
+  
+7. Persistence and Knowledge Layer  
+   - project registry  
+   - workflow state store  
+   - event log store  
+   - audit store  
+   - artifact registry  
+   - knowledge base  
+  
+====================================================================  
+7. TARGET USERS AND PERSONAS  
+====================================================================  
+  
+7.1 Primary Users  
+--------------------------------------------------------------------  
+- model developers  
+- credit risk analysts  
+- scorecard developers  
+- portfolio analytics users  
+  
+7.2 Secondary Users  
+--------------------------------------------------------------------  
+- validators  
+- governance reviewers  
+- approvers  
+- auditors  
+- administrators  
+- platform engineers  
+  
+7.3 Personas  
+--------------------------------------------------------------------  
+A. Model Developer  
+Needs guided workflow execution and controlled flexibility.  
+  
+B. Reviewer / Approver  
+Needs concise evidence, recommendation, options, and comments capture.  
+  
+C. Validator  
+Needs traceable evidence, lineage, and review history.  
+  
+D. Platform Administrator  
+Needs logs, state, skill versioning, and recovery trace.  
+  
+====================================================================  
+8. DOMAIN STANDARDIZATION STRATEGY  
+====================================================================  
+  
+8.1 Standardization Principle  
+--------------------------------------------------------------------  
+The platform shall standardize the common workflow shell while domain  
+packs specialize the logic for each model family.  
+  
+8.2 Reusable Across Domains  
+--------------------------------------------------------------------  
+The following shall be shared:  
+- workflow state  
+- event logging  
+- audit logging  
+- HITL engine  
+- review schema  
+- artifact registry  
+- resume engine  
+- recovery engine  
+- flow visualization  
+- skill template  
+- widget shell  
+  
+8.3 Domain Pack Specialization  
+--------------------------------------------------------------------  
+Each domain pack shall define:  
+- stage registry  
+- routing rules  
+- metrics pack  
+- test pack  
+- policy pack  
+- artifact pack  
+- review templates  
+- stage skills  
+  
+====================================================================  
+9. SKILL FRAMEWORK REQUIREMENTS  
+====================================================================  
+  
+9.1 Skill Definition Standard  
+--------------------------------------------------------------------  
+Each skill shall define:  
+- name  
+- description  
+- purpose  
+- when to use  
+- required inputs  
+- required outputs  
+- routing logic  
+- escalation criteria  
+- observability requirements  
+- audit requirements  
+- guardrails  
+  
+9.2 Skill Classes  
+--------------------------------------------------------------------  
+The platform shall support:  
+- orchestrator skills  
+- stage execution skills  
+- governance review skills  
+- candidate comparison skills  
+- selection skills  
+- recovery skills  
+- documentation skills  
+  
+9.3 Versioning  
+--------------------------------------------------------------------  
+Each skill shall carry a skill version for replay and audit.  
+  
+====================================================================  
+10. WORKFLOW STATE AND ROUTING REQUIREMENTS  
+====================================================================  
+  
+10.1 Workflow Initialization  
+--------------------------------------------------------------------  
+The platform shall initialize a workflow for a new project.  
+  
+10.2 State Persistence  
+--------------------------------------------------------------------  
+The system shall persist state after each material action.  
+  
+10.3 State Structure  
+--------------------------------------------------------------------  
+Workflow state shall include:  
+- project_id  
+- run_id  
+- session_id  
+- current_stage  
+- stage_status  
+- completed_stages  
+- pending_stages  
+- pending_reviews  
+- blocking_reasons  
+- active_candidate_versions  
+- selected_versions  
+- artifact_registry_reference  
+- approval_state  
+- last_successful_transition  
+- observability references  
+- audit references  
+  
+10.4 Routing Rules  
+--------------------------------------------------------------------  
+The system shall support:  
+- normal progression  
+- rerun  
+- reject and loop back  
+- escalation  
+- selection before continuation  
+- resume after failure  
+- resume after pending review  
+  
+====================================================================  
+11. CREDIT SCORING STAGE COVERAGE  
+====================================================================  
+  
+The scorecard workflow shall support at minimum:  
+  
+- intake  
+- data_readiness  
+- dq_review  
+- dq_exception_review  
+- eda  
+- segmentation_review  
+- fine_classing  
+- coarse_classing  
+- coarse_classing_review  
+- binning_candidate_generation  
+- binning_version_selection_review  
+- selected_binning_finalization  
+- woe_iv_review  
+- feature_engineering  
+- feature_screening  
+- policy_variable_review  
+- model_fitting  
+- scaling_and_calibration  
+- champion_challenger_review  
+- model_review  
+- validation_pack  
+- committee_pack  
+- deployment_readiness  
+- deployment_approval  
+- monitoring_pack  
+- annual_review  
+- closed  
+  
+====================================================================  
+12. MULTIPLE RERUN, CANDIDATE VERSION, AND SELECTION REQUIREMENTS  
+====================================================================  
+  
+12.1 Principle  
+--------------------------------------------------------------------  
+When a stage produces multiple viable alternatives, the system shall  
+retain them as separate candidate versions rather than overwriting the  
+latest result.  
+  
+12.2 Candidate Version Handling  
+--------------------------------------------------------------------  
+Each rerun shall generate a distinct candidate version with:  
+- unique candidate_version_id  
+- source stage  
+- strategy / parameter reference  
+- summary metrics  
+- artifact references  
+- lineage to parent version if applicable  
+  
+12.3 Explicit Selection Requirement  
+--------------------------------------------------------------------  
+Downstream stages shall not proceed based on implicit latest version  
+selection when multiple candidates exist.  
+  
+12.4 Selected Version Recording  
+--------------------------------------------------------------------  
+The final chosen version shall be recorded through VersionSelection.  
+  
+12.5 Composite Selection  
+--------------------------------------------------------------------  
+The system should support creation of a composite final version when  
+the user chooses elements from multiple candidates.  
+  
+12.6 Blocking Rule  
+--------------------------------------------------------------------  
+If multiple viable candidate versions exist and no final selection is  
+recorded, the downstream stage shall be blocked.  
+  
+====================================================================  
+13. HITL DESIGN PRINCIPLES  
+====================================================================  
+  
+13.1 HITL Purpose  
+--------------------------------------------------------------------  
+HITL shall be used where judgement, accountability, policy  
+interpretation, or trade-off resolution is required.  
+  
+13.2 HITL Principles  
+--------------------------------------------------------------------  
+- the agent may recommend  
+- the human makes accountable decisions  
+- the system records the rationale  
+  
+13.3 Bounded Action Rule  
+--------------------------------------------------------------------  
+HITL reviews shall use bounded actions and shall not rely on free-form  
+approval inference.  
+  
+====================================================================  
+14. HITL REQUIREMENTS AND REVIEW TYPES  
+====================================================================  
+  
+14.1 Mandatory HITL Use Cases  
+--------------------------------------------------------------------  
+The system shall support HITL for:  
+- material DQ exception acceptance  
+- segmentation override  
+- coarse classing approval  
+- binning version final selection  
+- policy-sensitive variable acceptance  
+- final feature shortlist approval  
+- model selection  
+- score scaling exception approval  
+- deployment readiness approval  
+- monitoring breach disposition  
+- annual review adverse finding review  
+  
+14.2 Review Payload Structure  
+--------------------------------------------------------------------  
+Each review shall include:  
+- review_id  
+- review_type  
+- title  
+- decision_required  
+- business_summary  
+- technical_summary  
+- recommendation  
+- alternatives  
+- allowed_actions  
+- risk_flags  
+- policy_findings  
+- evidence_refs  
+- review_status  
+  
+14.3 Allowed Actions  
+--------------------------------------------------------------------  
+Supported actions shall include:  
+- approve  
+- approve_with_changes  
+- reject  
+- rerun_with_parameters  
+- request_more_analysis  
+- escalate  
+- drop_variable  
+- approve_version  
+- approve_version_with_overrides  
+- create_composite_version  
+  
+====================================================================  
+15. SCORECARD-SPECIFIC HITL FOR COARSE CLASSING AND BINNING SELECTION  
+====================================================================  
+  
+15.1 Coarse Classing HITL  
+--------------------------------------------------------------------  
+A dedicated HITL step shall be triggered when:  
+- multiple plausible merges exist  
+- monotonicity is imperfect  
+- IV reduction is material  
+- support thresholds are breached  
+- business interpretation is weak  
+- variable is high-importance  
+  
+15.2 Binning Version Selection HITL  
+--------------------------------------------------------------------  
+When multiple binning packages exist before model fitting, the system  
+shall support a final selection review.  
+  
+15.3 Binning Selection Review Content  
+--------------------------------------------------------------------  
+The review shall display available binning versions with:  
+- version ID  
+- creation timestamp  
+- strategy used  
+- variables retained  
+- monotonicity issues  
+- support breaches  
+- IV retention summary  
+- policy flags  
+- recommendation  
+- notes  
+  
+15.4 Finalization Rule  
+--------------------------------------------------------------------  
+Model fitting shall reference the selected binning version ID  
+explicitly.  
+  
+====================================================================  
+16. OBSERVABILITY REQUIREMENTS  
+====================================================================  
+  
+16.1 Structured Event Logging  
+--------------------------------------------------------------------  
+The platform shall create append-only structured logs.  
+  
+16.2 Event Types  
+--------------------------------------------------------------------  
+The platform shall support:  
+- skill_started  
+- skill_completed  
+- skill_failed  
+- stage_started  
+- stage_completed  
+- stage_failed  
+- stage_transition  
+- candidate_version_created  
+- candidate_version_compared  
+- version_selection_created  
+- version_selected  
+- hitl_review_created  
+- hitl_review_displayed  
+- hitl_user_responded  
+- hitl_review_completed  
+- policy_breach_detected  
+- artifact_registered  
+- workflow_blocked  
+- workflow_resumed  
+- override_logged  
+- rerun_requested  
+- recovery_action_started  
+- recovery_action_completed  
+  
+16.3 Event Fields  
+--------------------------------------------------------------------  
+Each event shall include:  
+- event_id  
+- event_type  
+- timestamp  
+- project_id  
+- run_id  
+- session_id  
+- skill_name  
+- skill_version  
+- current_stage  
+- trace_id  
+  
+Additional fields where relevant:  
+- review_id  
+- candidate_version_id  
+- selected_candidate_version_id  
+- reviewer_action  
+- evidence_refs  
+- artifact_refs  
+- override_flag  
+- error_summary  
+  
+====================================================================  
+17. AUDIT REQUIREMENTS  
+====================================================================  
+  
+17.1 Decision Audit Trail  
+--------------------------------------------------------------------  
+The platform shall store an audit trail for each material review,  
+approval, rejection, rerun, override, and version selection.  
+  
+17.2 Audit Fields  
+--------------------------------------------------------------------  
+Audit records shall include:  
+- decision_type  
+- stage  
+- recommendation  
+- rationale  
+- evidence references  
+- policy findings  
+- reviewer identity  
+- reviewer action  
+- reviewer comment  
+- selected version if applicable  
+- final downstream action  
+- timestamp  
+- skill version  
+  
+17.3 Replay Support  
+--------------------------------------------------------------------  
+Audit and observability records shall support replay of the run.  
+  
+====================================================================  
+18. ARTIFACT REGISTRY REQUIREMENTS  
+====================================================================  
+  
+18.1 Artifact Registration  
+--------------------------------------------------------------------  
+The system shall register material artifacts generated or consumed.  
+  
+18.2 Artifact Metadata  
+--------------------------------------------------------------------  
+Each artifact shall include:  
+- artifact_id  
+- artifact_type  
+- stage  
+- producer  
+- version  
+- uri_or_path  
+- created_timestamp  
+- schema_version  
+- project_id  
+- run_id  
+  
+18.3 Candidate Linkage  
+--------------------------------------------------------------------  
+Artifacts generated from candidate versions shall store  
+source_candidate_version_id where applicable.  
+  
+18.4 Review Linkage  
+--------------------------------------------------------------------  
+Reviews and decisions shall link to supporting artifacts.  
+  
+====================================================================  
+19. SESSION CONTINUITY, BOOTSTRAP, AND RESUME  
+====================================================================  
+  
+19.1 Project Bootstrap  
+--------------------------------------------------------------------  
+When no active project context exists, the assistant shall ask the  
+user to provide project_id or create a new project.  
+  
+19.2 Automatic Continuity Check  
+--------------------------------------------------------------------  
+At the start of interaction, the system shall check for:  
+- active unfinished project  
+- prior failed session  
+- prior blocked session  
+- pending review  
+- recent resumable project  
+  
+19.3 Resume Modes  
+--------------------------------------------------------------------  
+The system shall support:  
+- resume latest state  
+- resume last failed stage  
+- resume last successful stage  
+- resume pending review  
+- create new project  
+  
+19.4 Safe Resume Validation  
+--------------------------------------------------------------------  
+Before resume, the system shall validate:  
+- workflow state integrity  
+- artifact availability  
+- approval validity  
+- stage dependency satisfaction  
+  
+====================================================================  
+20. RECOVERY AND FAILURE HANDLING  
+====================================================================  
+  
+20.1 Recovery Paths  
+--------------------------------------------------------------------  
+The platform shall support:  
+- retry same stage  
+- revert to previous stable checkpoint  
+- resume pending review  
+- rerun from prior successful stage  
+- start new run with lineage preserved  
+  
+20.2 Failure Handling  
+--------------------------------------------------------------------  
+If a stage fails, the platform shall:  
+- capture error summary  
+- log stage failure  
+- preserve partial artifacts if safe  
+- mark workflow as failed or blocked  
+- propose safe next actions  
+  
+====================================================================  
+21. JUPYTER WIDGET AND UI REQUIREMENTS  
+====================================================================  
+  
+21.1 Widget Support  
+--------------------------------------------------------------------  
+The system shall support Jupyter widgets for HITL and workflow  
+interaction.  
+  
+21.2 Widget Responsibilities  
+--------------------------------------------------------------------  
+Widgets shall support:  
+- review title and summary  
+- recommendation and alternatives  
+- evidence links  
+- bounded user actions  
+- comments capture  
+- status refresh  
+- detail drill-down  
+  
+21.3 Candidate Selection UI  
+--------------------------------------------------------------------  
+The system shall support a widget to list available candidate versions  
+and allow final version selection.  
+  
+21.4 Controller Linkage  
+--------------------------------------------------------------------  
+Widgets shall talk to a Python controller layer, which then calls the  
+backend / agent / skill runtime.  
+  
+====================================================================  
+22. FLOW SUMMARIZATION AND VISUALIZATION REQUIREMENTS  
+====================================================================  
+  
+22.1 Flow Purpose  
+--------------------------------------------------------------------  
+The platform shall summarize event logs into a workflow flow showing:  
+- stages executed  
+- agent actions  
+- human decisions  
+- candidate generation  
+- candidate selection  
+- reruns  
+- escalations  
+- failures  
+- final path  
+  
+22.2 Flow Node Types  
+--------------------------------------------------------------------  
+Supported node types shall include:  
+- stage node  
+- agent action node  
+- candidate version node  
+- version selection node  
+- review node  
+- human decision node  
+- rerun node  
+- blocked node  
+- failed node  
+- completed node  
+  
+22.3 Detail Drill-Down  
+--------------------------------------------------------------------  
+Each node shall support linkage to:  
+- detailed events  
+- artifacts  
+- review payload  
+- comments  
+- error details  
+- selected versions  
+  
+====================================================================  
+23. DOMAIN PACK REQUIREMENTS FOR REUSE ACROSS OTHER PROJECTS  
+====================================================================  
+  
+23.1 Domain Pack Contract  
+--------------------------------------------------------------------  
+Each domain pack shall provide:  
+- stage_registry.yaml  
+- routing_rules.yaml  
+- metrics_pack.yaml  
+- test_pack.yaml  
+- artifact_pack.yaml  
+- policy_pack.yaml  
+- review_templates  
+- skill_pack  
+  
+23.2 Future Domain Support  
+--------------------------------------------------------------------  
+The platform shall support future packs for:  
+- scorecard  
+- time series  
+- ECL  
+- LGD  
+- PD  
+- EAD  
+- stress testing  
+  
+23.3 Shared Shell  
+--------------------------------------------------------------------  
+All domain packs shall reuse the same:  
+- state schema  
+- review schema  
+- event schema  
+- audit schema  
+- artifact schema  
+- flow schema  
+  
+====================================================================  
+24. UNIFIED SDK ARCHITECTURE FOR CURRENT AND FUTURE SCOPE  
+====================================================================  
+  
+24.1 Purpose  
+--------------------------------------------------------------------  
+The platform shall include a unified SDK architecture that provides a  
+modular but integrated foundation for workflow automation across  
+current and future model development scope.  
+  
+The SDK architecture shall:  
+- support current scorecard workflow needs  
+- support future domain expansion  
+- present a common operating model to skills and agents  
+- reduce duplication across packages  
+- enable capability reuse across model families  
+- preserve modular breakdown while maintaining unified design  
+  
+24.2 SDK Design Principles  
+--------------------------------------------------------------------  
+The proposed SDK ecosystem shall follow these principles:  
+  
+1. Unified control, modular execution  
+   A common SDK interface model shall be used while implementation is  
+   split into focused modules.  
+  
+2. Capability-first design  
+   SDKs shall be organized by reusable capability before domain-  
+   specific specialization where appropriate.  
+  
+3. Domain pack compatibility  
+   Domain-specific SDKs shall plug into the same workflow shell.  
+  
+4. Config-driven  
+   SDK behavior shall support configuration-driven execution.  
+  
+5. Audit-ready  
+   SDK outputs shall be traceable, versioned, and registrable.  
+  
+6. Agent-friendly  
+   SDK methods shall expose deterministic, bounded, and inspectable  
+   interfaces suitable for skill orchestration.  
+  
+7. Layered extensibility  
+   New domains shall be added by extension, not redesign.  
+  
+24.3 Unified SDK Operating Model  
+--------------------------------------------------------------------  
+The SDK ecosystem shall be divided into three logical groups:  
+  
+A. Core Workflow Automation SDKs  
+These provide common lifecycle control and governance capabilities.  
+  
+B. Shared Analytical Capability SDKs  
+These provide deterministic reusable engines that may be shared across  
+multiple model families.  
+  
+C. Domain-Specific Modeling SDKs  
+These provide mathematics and domain logic for scorecard, time series,  
+ECL, LGD, and other project types.  
+  
+24.4 Proposed SDK Inventory – Core Workflow Automation Layer  
+--------------------------------------------------------------------  
+The following SDKs are proposed as the common workflow automation  
+backbone:  
+  
+1. workflowsdk  
+Purpose:  
+- workflow initialization  
+- state transition management  
+- routing logic  
+- resume and recovery  
+- checkpoint control  
+- candidate version registration  
+- selection state enforcement  
+  
+Core modules:  
+- project_bootstrap  
+- workflow_state  
+- routing_engine  
+- stage_registry  
+- checkpoint_manager  
+- session_manager  
+- recovery_manager  
+- candidate_registry  
+- selection_registry  
+- dependency_manager  
+  
+2. hitlsdk  
+Purpose:  
+- review payload generation  
+- reviewer actions  
+- review state handling  
+- approval lifecycle  
+- override handling  
+- escalation flow  
+  
+Core modules:  
+- review_payloads  
+- review_registry  
+- approval_manager  
+- override_manager  
+- reviewer_assignment  
+- action_validation  
+- escalation_manager  
+  
+3. observabilitysdk  
+Purpose:  
+- structured event logging  
+- stage transition logging  
+- review logging  
+- replay support  
+- lineage reconstruction  
+  
+Core modules:  
+- event_writer  
+- event_schema  
+- replay_engine  
+- lineage_builder  
+- trace_manager  
+- event_query  
+- event_enrichment  
+  
+4. auditsdk  
+Purpose:  
+- formal decision audit trail  
+- policy evidence capture  
+- approval record persistence  
+- governance exports  
+  
+Core modules:  
+- audit_writer  
+- decision_registry  
+- approval_registry  
+- exception_registry  
+- audit_export  
+- audit_views  
+  
+5. artifactsdk  
+Purpose:  
+- artifact registration  
+- artifact metadata handling  
+- lineage linkage  
+- version references  
+- storage abstraction  
+  
+Core modules:  
+- artifact_registry  
+- artifact_metadata  
+- artifact_lineage  
+- artifact_locator  
+- artifact_validators  
+- artifact_manifest  
+  
+6. flowvizsdk  
+Purpose:  
+- summarization of logs into nodes and edges  
+- timeline creation  
+- flow export  
+- drill-down support  
+  
+Core modules:  
+- node_builder  
+- edge_builder  
+- flow_summary  
+- timeline_builder  
+- graph_export  
+- detail_linker  
+  
+7. policysdk  
+Purpose:  
+- policy pack loading  
+- threshold evaluation  
+- breach detection  
+- waiver rules  
+- control matrix support  
+  
+Core modules:  
+- policy_loader  
+- threshold_engine  
+- breach_detector  
+- waiver_rules  
+- control_matrix  
+- rule_evaluator  
+  
+8. widgetsdk  
+Purpose:  
+- reusable widget shell  
+- review card patterns  
+- candidate selection UI  
+- flow drill-down UI  
+- project bootstrap UI  
+  
+Core modules:  
+- review_shell  
+- selection_cards  
+- bootstrap_cards  
+- recovery_cards  
+- flow_panels  
+- detail_panels  
+  
+24.5 Proposed SDK Inventory – Shared Analytical Capability Layer  
+--------------------------------------------------------------------  
+The following SDKs are proposed as shared analytical engines reusable  
+across multiple domains:  
+  
+1. dq_sdk  
+Purpose:  
+- data profiling  
+- schema checks  
+- missingness checks  
+- consistency validation  
+- rule checks  
+- DQ exception summaries  
+  
+2. feature_sdk  
+Purpose:  
+- reusable feature construction  
+- feature transformation  
+- lagging  
+- differencing  
+- grouping  
+- standard feature metadata tracking  
+  
+3. evaluation_sdk  
+Purpose:  
+- metrics  
+- tests  
+- diagnostics  
+- stability checks  
+- comparison frameworks  
+- benchmark comparisons  
+  
+4. reporting_sdk  
+Purpose:  
+- technical report preparation  
+- governance pack support  
+- committee summary generation  
+- narrative blocks  
+- export-ready tables and figures  
+  
+5. monitoring_sdk  
+Purpose:  
+- monitoring metric calculation  
+- threshold application  
+- drift reporting  
+- periodic review support  
+- alert generation  
+  
+6. config_sdk  
+Purpose:  
+- unified config schema handling  
+- config versioning  
+- parameter pack loading  
+- environment-aware config resolution  
+  
+7. dataset_sdk  
+Purpose:  
+- dataset snapshot registration  
+- split handling  
+- sampling references  
+- input lineage  
+- data contract references  
+  
+8. registry_sdk  
+Purpose:  
+- registry abstraction across projects, runs, skills, and model  
+  objects  
+- common metadata and lookup APIs  
+  
+24.6 Proposed SDK Inventory – Domain-Specific Modeling Layer  
+--------------------------------------------------------------------  
+The following domain-specific SDKs are proposed.  
+  
+A. scorecardsdk  
+Current primary focus.  
+  
+Purpose:  
+- binning  
+- WoE  
+- IV  
+- feature shortlist support  
+- scorecard model fitting  
+- scaling  
+- score band support  
+- scorecard monitoring support  
+  
+Suggested modules:  
+- fine_classing  
+- coarse_classing  
+- binning_compare  
+- woe_iv  
+- feature_shortlist  
+- logistic_models  
+- score_scaling  
+- score_bands  
+- scorecard_pack_outputs  
+  
+B. timeseriessdk  
+Future scope.  
+  
+Purpose:  
+- stationarity tests  
+- lag generation  
+- transformations  
+- ARIMA / VAR / ECM / related model support  
+- forecast comparison  
+- residual diagnostics  
+  
+Suggested modules:  
+- stationarity  
+- transformations  
+- lag_engine  
+- model_fit  
+- forecast_compare  
+- residual_diagnostics  
+- scenario_projection  
+  
+C. eclsdk  
+Future scope.  
+  
+Purpose:  
+- ECL workflow support  
+- stage allocation support  
+- PD/LGD/EAD assembly  
+- MEV transformation  
+- scenario handling  
+- overlays  
+- ECL pack outputs  
+  
+Suggested modules:  
+- staging  
+- pd_inputs  
+- lgd_inputs  
+- ead_inputs  
+- mev_engine  
+- scenario_engine  
+- overlay_engine  
+- ecl_outputs  
+  
+D. lgdsdk  
+Future scope.  
+  
+Purpose:  
+- cure model  
+- severity model  
+- downturn / forward-looking adjustment  
+- recovery timeline support  
+- portfolio-level aggregation support  
+  
+Suggested modules:  
+- cure_model  
+- severity_model  
+- downturn_adjustment  
+- fl_adjustment  
+- recovery_aggregation  
+- lgd_outputs  
+  
+E. pdsdk  
+Future scope.  
+  
+Purpose:  
+- rating / score-based PD  
+- term structure  
+- transition logic  
+- calibration  
+- PD monitoring  
+  
+F. eadsdk  
+Future scope.  
+  
+Purpose:  
+- exposure estimation workflows  
+- conversion factor support  
+- utilization modeling  
+- EAD monitoring outputs  
+  
+G. sicr_sdk  
+Future scope.  
+  
+Purpose:  
+- SICR rule logic  
+- threshold comparison  
+- model-based and rule-based SICR support  
+- migration monitoring  
+  
+H. stresssdk  
+Future scope.  
+  
+Purpose:  
+- stress testing workflow support  
+- scenario application  
+- macro linkages  
+- stress output aggregation  
+- governance pack support  
+  
+24.7 Proposed Unified SDK Package Structure  
+--------------------------------------------------------------------  
+A suggested modular package structure is:  
+  
+modelworkflow/  
+  core/  
+    workflowsdk/  
+    hitlsdk/  
+    observabilitysdk/  
+    auditsdk/  
+    artifactsdk/  
+    flowvizsdk/  
+    policysdk/  
+    widgetsdk/  
+    config_sdk/  
+    registry_sdk/  
+    dataset_sdk/  
+  
+  shared/  
+    dq_sdk/  
+    feature_sdk/  
+    evaluation_sdk/  
+    reporting_sdk/  
+    monitoring_sdk/  
+  
+  domain/  
+    scorecardsdk/  
+    timeseriessdk/  
+    eclsdk/  
+    lgdsdk/  
+    pdsdk/  
+    eadsdk/  
+    sicr_sdk/  
+    stresssdk/  
+  
+  integration/  
+    agent_bridge/  
+    api_bridge/  
+    cli_bridge/  
+    jupyter_bridge/  
+    mcp_bridge/  
+  
+24.8 Unified SDK Design – Current Scope Mapping  
+--------------------------------------------------------------------  
+For the current scorecard-focused scope, the platform should primarily  
+use:  
+  
+- workflowsdk  
+- hitlsdk  
+- observabilitysdk  
+- auditsdk  
+- artifactsdk  
+- flowvizsdk  
+- policysdk  
+- widgetsdk  
+- dq_sdk  
+- feature_sdk  
+- evaluation_sdk  
+- reporting_sdk  
+- dataset_sdk  
+- scorecardsdk  
+  
+24.9 Unified SDK Design – Future Scope Mapping  
+--------------------------------------------------------------------  
+Future model families shall reuse the same core and shared SDK layers  
+while replacing or extending only the domain layer.  
+  
+Examples:  
+  
+A. Time Series Project  
+Uses:  
+- workflowsdk  
+- hitlsdk  
+- observabilitysdk  
+- auditsdk  
+- artifactsdk  
+- flowvizsdk  
+- policysdk  
+- dq_sdk  
+- feature_sdk  
+- evaluation_sdk  
+- reporting_sdk  
+- dataset_sdk  
+- timeseriessdk  
+  
+B. ECL Project  
+Uses:  
+- workflowsdk  
+- hitlsdk  
+- observabilitysdk  
+- auditsdk  
+- artifactsdk  
+- flowvizsdk  
+- policysdk  
+- dq_sdk  
+- feature_sdk  
+- evaluation_sdk  
+- reporting_sdk  
+- dataset_sdk  
+- eclsdk  
+- pdsdk  
+- lgdsdk  
+- eadsdk  
+- sicr_sdk if needed  
+  
+C. LGD Project  
+Uses:  
+- workflowsdk  
+- hitlsdk  
+- observabilitysdk  
+- auditsdk  
+- artifactsdk  
+- flowvizsdk  
+- policysdk  
+- dq_sdk  
+- feature_sdk  
+- evaluation_sdk  
+- reporting_sdk  
+- dataset_sdk  
+- lgdsdk  
+  
+24.10 SDK Responsibility Boundary  
+--------------------------------------------------------------------  
+To preserve clean architecture, the SDK responsibilities shall be:  
+  
+Core workflow SDKs:  
+- control  
+- state  
+- governance  
+- logging  
+- lineage  
+- UI shell support  
+  
+Shared capability SDKs:  
+- reusable analytics and helper engines  
+  
+Domain SDKs:  
+- mathematics and domain logic  
+  
+Skills and agents:  
+- orchestration, interpretation, routing, and controlled decision  
+  handling  
+  
+24.11 SDK and Skill Relationship  
+--------------------------------------------------------------------  
+The relationship between skills and SDKs shall be:  
+  
+- skills orchestrate  
+- SDKs execute deterministically  
+- agents reason and route  
+- widgets present and capture user choice  
+- workflow state binds everything together  
+  
+Skills shall not directly embed complex mathematical logic.  
+Skills shall call SDK capabilities through explicit bounded interfaces.  
+  
+24.12 SDK Requirements for Agentic Compatibility  
+--------------------------------------------------------------------  
+All SDKs intended for workflow automation shall support:  
+  
+- deterministic inputs and outputs  
+- explicit parameter contracts  
+- inspectable summaries  
+- structured error handling  
+- version reporting  
+- artifact registration hooks where relevant  
+- observability hook support  
+- agent-safe execution patterns  
+  
+24.13 SDK Requirements for Audit and Observability  
+--------------------------------------------------------------------  
+SDK outputs shall support:  
+- run_id linkage  
+- stage linkage  
+- artifact linkage  
+- candidate_version_id linkage where applicable  
+- selected_version linkage where applicable  
+- config version reference  
+- execution timestamp  
+- execution status  
+  
+24.14 SDK Standard Module Contract  
+--------------------------------------------------------------------  
+Each SDK module should expose a standard contract with fields such as:  
+- module_name  
+- module_version  
+- function_name  
+- input_schema_reference  
+- output_schema_reference  
+- artifact_types_produced  
+- metrics_produced  
+- errors_possible  
+- observability_hooks_supported  
+  
+24.15 Current and Future Scope Coverage Matrix  
+--------------------------------------------------------------------  
+The unified SDK design shall cover:  
+  
+Current detailed scope:  
+- scorecard workflow automation  
+- binning versioning and selection  
+- model review  
+- deployment readiness  
+- observability and flow summary  
+  
+Near-term future scope:  
+- time series workflow automation  
+- ECL workflow orchestration  
+- LGD workflow orchestration  
+- policy-driven governance reuse  
+  
+Longer-term future scope:  
+- portfolio-wide orchestration  
+- program-level governance  
+- cross-project dependency management  
+- benchmark and institutional memory layers  
+- enterprise dashboards  
+  
+24.16 Unified SDK Success Criteria  
+--------------------------------------------------------------------  
+The unified SDK design shall be considered successful when:  
+  
+1. current scorecard workflow can be implemented without fragmented  
+   one-off packages  
+2. future domains can reuse the same core workflow automation SDKs  
+3. shared analytical capability SDKs reduce duplication across model  
+   families  
+4. skills can call SDKs through consistent deterministic interfaces  
+5. governance, audit, observability, and lineage work consistently  
+   across all supported projects  
+  
+====================================================================  
+25. IMPLEMENTATION ROADMAP AND PRIORITY  
+====================================================================  
+  
+25.1 Phase 1  
+--------------------------------------------------------------------  
+Build:  
+- scorecard-orchestrator  
+- coarse classing review skill  
+- binning version selection review skill  
+- model review skill  
+- deployment readiness skill  
+- workflow state store  
+- candidate version registry  
+- version selection registry  
+- observability and audit logging  
+- Jupyter HITL widgets  
+- project bootstrap and resume flow  
+- initial workflowsdk  
+- initial hitlsdk  
+- initial observabilitysdk  
+- initial auditsdk  
+- initial artifactsdk  
+- initial scorecardsdk integration  
+  
+25.2 Phase 2  
+--------------------------------------------------------------------  
+Add:  
+- DQ exception review  
+- policy variable review  
+- monitoring review  
+- flow visualization  
+- recovery engine  
+- documentation and committee pack support  
+- flowvizsdk  
+- policysdk  
+- widgetsdk  
+- shared dq_sdk  
+- shared evaluation_sdk  
+- shared reporting_sdk  
+  
+25.3 Phase 3  
+--------------------------------------------------------------------  
+Extend:  
+- timeseriessdk and time series domain pack  
+- eclsdk and ECL domain pack  
+- lgdsdk and LGD domain pack  
+- cross-project dashboards  
+- advanced composite candidate selection  
+- portfolio-wide analytics  
+- registry_sdk  
+- benchmark / knowledge integration  
+  
+====================================================================  
+26. SUCCESS CRITERIA  
+====================================================================  
+  
+The platform shall be considered successful when:  
+  
+1. credit scoring workflow can be executed through governed skills  
+2. HITL reviews work for coarse classing, binning selection, model  
+   review, and deployment readiness  
+3. multiple reruns create distinct candidate versions rather than  
+   overwriting prior outputs  
+4. downstream stages always know which selected upstream version was  
+   used  
+5. workflow can resume from prior session, failure, or pending review  
+6. observability and audit logs reconstruct the full decision trail  
+7. flow visualization summarizes stage progression, agent action,  
+   user decision, reruns, failures, and selected path  
+8. the same workflow shell can be extended to other model families  
+   through domain packs  
+9. the proposed SDK architecture supports both current and future  
+   scope under one unified modular design  
+10. validation, audit, and governance users can inspect evidence,  
+    lineage, approvals, selected versions, and workflow outcomes  
+    without ambiguity  
+  
+====================================================================  
+END OF URD  
+====================================================================  
+  
+====================================================================  
+REQUIREMENT MATRIX  
+ENTERPRISE AGENTIC AI WORKFLOW PLATFORM  
+WITH UNIFIED SDK ARCHITECTURE  
+====================================================================  
+  
+Document Reference : URD v2.1 Requirement Matrix  
+Date               : 2026-03-15  
+Purpose            : Provide a structured requirement ID framework for  
+                     delivery tracking, JIRA decomposition, testing,  
+                     audit traceability, and phased implementation.  
+  
+====================================================================  
+1. REQUIREMENT ID FRAMEWORK  
+====================================================================  
+  
+The requirement IDs shall follow this convention:  
+  
+[DOMAIN]-[TYPE]-[NNN]  
+  
+Where:  
+- DOMAIN = functional area  
+- TYPE   = requirement type  
+- NNN    = running number  
+  
+Requirement Types:  
+- FR  = Functional Requirement  
+- NFR = Non-Functional Requirement  
+- DR  = Data Requirement  
+- IR  = Integration Requirement  
+- UR  = User Interaction Requirement  
+- AR  = Audit Requirement  
+- OR  = Observability Requirement  
+  
+Domain Prefixes:  
+- CORE   = platform core  
+- META   = canonical meta-model  
+- WF     = workflow orchestration  
+- HITL   = human-in-the-loop  
+- VER    = candidate versioning and selection  
+- OBS    = observability  
+- AUD    = audit  
+- ART    = artifact registry  
+- RES    = resume and recovery  
+- UI     = Jupyter UI / widget  
+- FLOW   = flow visualization  
+- DPACK  = domain pack framework  
+- SDK    = unified SDK architecture  
+- SEC    = security and access  
+- PERF   = performance and reliability  
+  
+====================================================================  
+2. CORE PLATFORM REQUIREMENTS  
+====================================================================  
+  
+CORE-FR-001  
+--------------------------------------------------------------------  
+The platform shall provide a governed workflow automation framework for  
+model lifecycle execution.  
+  
+CORE-FR-002  
+--------------------------------------------------------------------  
+The platform shall support agentic orchestration layered on top of  
+deterministic SDK execution.  
+  
+CORE-FR-003  
+--------------------------------------------------------------------  
+The platform shall support use in notebook, API, CLI, and future  
+service-based execution modes.  
+  
+CORE-FR-004  
+--------------------------------------------------------------------  
+The platform shall separate orchestration, execution, review,  
+observability, and persistence concerns into modular layers.  
+  
+CORE-FR-005  
+--------------------------------------------------------------------  
+The platform shall support current scorecard workflow requirements and  
+future extension to additional model families.  
+  
+CORE-NFR-001  
+--------------------------------------------------------------------  
+The platform architecture shall be modular and extensible.  
+  
+CORE-NFR-002  
+--------------------------------------------------------------------  
+The platform shall support versioned schemas, skills, and SDK modules.  
+  
+====================================================================  
+3. META-MODEL REQUIREMENTS  
+====================================================================  
+  
+META-FR-001  
+--------------------------------------------------------------------  
+The platform shall define a canonical enterprise meta-model shared  
+across project types.  
+  
+META-FR-002  
+--------------------------------------------------------------------  
+The canonical meta-model shall include Program, Project, UseCase,  
+DomainPack, and PolicyPack as portfolio-level entities.  
+  
+META-FR-003  
+--------------------------------------------------------------------  
+The canonical meta-model shall include Workflow, Run, Session,  
+StageExecution, CandidateVersion, VersionSelection, Rerun, and  
+RecoveryAction as execution entities.  
+  
+META-FR-004  
+--------------------------------------------------------------------  
+The canonical meta-model shall include Review, Approval, Decision,  
+Exception, and Override as review and decision entities.  
+  
+META-FR-005  
+--------------------------------------------------------------------  
+The canonical meta-model shall include Artifact, Metric, TestResult,  
+Recommendation, and PolicyFinding as evidence entities.  
+  
+META-FR-006  
+--------------------------------------------------------------------  
+The canonical meta-model shall include Event, FlowNode, FlowEdge, and  
+TimelineEntry as observability and visualization entities.  
+  
+META-FR-007  
+--------------------------------------------------------------------  
+The canonical meta-model shall include User, Role, and  
+ReviewerAssignment as identity and access entities.  
+  
+META-FR-008  
+--------------------------------------------------------------------  
+The meta-model shall support explicit lineage between Project, Run,  
+Session, StageExecution, CandidateVersion, Review, Decision, Artifact,  
+and Event.  
+  
+META-FR-009  
+--------------------------------------------------------------------  
+The meta-model shall support domain-specific extension without  
+breaking the core shared contract.  
+  
+META-DR-001  
+--------------------------------------------------------------------  
+All projects shall store project_id, project_name, project_type,  
+model_family, and owner.  
+  
+META-DR-002  
+--------------------------------------------------------------------  
+All runs shall store run_id, workflow_id, status, current_stage, and  
+trace_id.  
+  
+META-DR-003  
+--------------------------------------------------------------------  
+All candidate selection workflows shall store candidate_version_id,  
+version_selection_id, selected_candidate_version_id, and  
+selection_status.  
+  
+META-NFR-001  
+--------------------------------------------------------------------  
+Changes to the meta-model shall be version controlled and backward  
+compatibility shall be reviewed before adoption.  
+  
+====================================================================  
+4. WORKFLOW ORCHESTRATION REQUIREMENTS  
+====================================================================  
+  
+WF-FR-001  
+--------------------------------------------------------------------  
+The platform shall initialize workflow state for a new project.  
+  
+WF-FR-002  
+--------------------------------------------------------------------  
+The platform shall persist workflow state after every material action.  
+  
+WF-FR-003  
+--------------------------------------------------------------------  
+The workflow state shall include current_stage, stage_status,  
+completed_stages, pending_stages, pending_reviews, blocking_reasons,  
+active_candidate_versions, selected_versions, and approval_state.  
+  
+WF-FR-004  
+--------------------------------------------------------------------  
+The platform shall support configurable routing rules for normal  
+progression, rerun, rejection, escalation, and resume.  
+  
+WF-FR-005  
+--------------------------------------------------------------------  
+The platform shall support stage prerequisite validation before  
+running a stage.  
+  
+WF-FR-006  
+--------------------------------------------------------------------  
+The platform shall support stage-level execution tracking using  
+StageExecution records.  
+  
+WF-FR-007  
+--------------------------------------------------------------------  
+The platform shall support blocking downstream stages when mandatory  
+prerequisites are not met.  
+  
+WF-FR-008  
+--------------------------------------------------------------------  
+The platform shall support explicit routing to review stages where  
+HITL is required.  
+  
+WF-FR-009  
+--------------------------------------------------------------------  
+The platform shall support stage rerun and branch lineage retention.  
+  
+WF-FR-010  
+--------------------------------------------------------------------  
+The platform shall support credit scoring stages including intake,  
+data readiness, DQ review, EDA, segmentation, fine classing, coarse  
+classing, coarse classing review, binning candidate generation,  
+binning version selection review, selected binning finalization, WoE /  
+IV review, feature engineering, feature screening, policy variable  
+review, model fitting, scaling and calibration, champion challenger  
+review, model review, validation pack, committee pack, deployment  
+readiness, deployment approval, monitoring pack, annual review, and  
+closed.  
+  
+WF-UR-001  
+--------------------------------------------------------------------  
+When workflow continuation is requested, the platform shall either  
+route to the next valid stage or explain why the workflow is blocked.  
+  
+WF-NFR-001  
+--------------------------------------------------------------------  
+Workflow state transitions shall be replayable from persisted data.  
+  
+====================================================================  
+5. HITL REQUIREMENTS  
+====================================================================  
+  
+HITL-FR-001  
+--------------------------------------------------------------------  
+The platform shall support a structured human-in-the-loop review  
+mechanism.  
+  
+HITL-FR-002  
+--------------------------------------------------------------------  
+The platform shall support review creation for material DQ exceptions,  
+segmentation override, coarse classing approval, binning version  
+selection, policy-sensitive variable acceptance, final feature  
+shortlist approval, model selection, score scaling exception,  
+deployment readiness approval, monitoring breach disposition, and  
+annual review adverse findings.  
+  
+HITL-FR-003  
+--------------------------------------------------------------------  
+Each review shall contain review_id, review_type, title,  
+decision_required, business_summary, technical_summary,  
+recommendation, alternatives, allowed_actions, risk_flags,  
+policy_findings, evidence_refs, and review_status.  
+  
+HITL-FR-004  
+--------------------------------------------------------------------  
+The platform shall support bounded user actions including approve,  
+approve_with_changes, reject, rerun_with_parameters,  
+request_more_analysis, escalate, drop_variable, approve_version,  
+approve_version_with_overrides, and create_composite_version.  
+  
+HITL-FR-005  
+--------------------------------------------------------------------  
+The platform shall not interpret free-text comments alone as approval.  
+  
+HITL-FR-006  
+--------------------------------------------------------------------  
+The platform shall record review status transitions such as  
+pending_review, approved, approved_with_changes, rejected,  
+rerun_requested, and escalated.  
+  
+HITL-FR-007  
+--------------------------------------------------------------------  
+The platform shall support review-to-decision linkage.  
+  
+HITL-FR-008  
+--------------------------------------------------------------------  
+The platform shall support reviewer identity capture.  
+  
+HITL-FR-009  
+--------------------------------------------------------------------  
+The platform shall support explicit approval records where required by  
+policy.  
+  
+HITL-UR-001  
+--------------------------------------------------------------------  
+The reviewer shall be presented with a concise recommendation and  
+clear alternative actions.  
+  
+HITL-UR-002  
+--------------------------------------------------------------------  
+The reviewer shall be able to provide comments with the selected  
+action.  
+  
+====================================================================  
+6. CANDIDATE VERSIONING AND SELECTION REQUIREMENTS  
+====================================================================  
+  
+VER-FR-001  
+--------------------------------------------------------------------  
+When a stage produces multiple viable alternatives, the platform shall  
+retain them as separate CandidateVersion records.  
+  
+VER-FR-002  
+--------------------------------------------------------------------  
+The platform shall not overwrite prior candidate outputs silently.  
+  
+VER-FR-003  
+--------------------------------------------------------------------  
+Each candidate version shall store source_stage, candidate_type,  
+version_label, status, created_timestamp, and summary metadata.  
+  
+VER-FR-004  
+--------------------------------------------------------------------  
+The platform shall support lineage between derived candidate versions.  
+  
+VER-FR-005  
+--------------------------------------------------------------------  
+The platform shall support comparison of multiple candidate versions  
+within one review.  
+  
+VER-FR-006  
+--------------------------------------------------------------------  
+The platform shall support explicit final selection through a  
+VersionSelection record.  
+  
+VER-FR-007  
+--------------------------------------------------------------------  
+The platform shall support direct selection, composite selection, and  
+manual selection.  
+  
+VER-FR-008  
+--------------------------------------------------------------------  
+The platform shall block downstream stages when multiple candidate  
+versions exist and no valid final selection is recorded.  
+  
+VER-FR-009  
+--------------------------------------------------------------------  
+The platform shall record which selected version is consumed by  
+downstream stages.  
+  
+VER-FR-010  
+--------------------------------------------------------------------  
+The platform shall support multiple reruns of binning and preserve  
+each binning version separately.  
+  
+VER-FR-011  
+--------------------------------------------------------------------  
+The platform shall support HITL review for binning version selection  
+when multiple plausible candidates exist.  
+  
+VER-DR-001  
+--------------------------------------------------------------------  
+Each candidate version shall include candidate_version_id, run_id,  
+project_id, source_stage, candidate_type, candidate_name,  
+version_label, created_timestamp, and status.  
+  
+VER-DR-002  
+--------------------------------------------------------------------  
+Each version selection shall include version_selection_id, run_id,  
+selection_scope, selected_candidate_version_id, selection_type,  
+selection_status, selected_by, and selection_timestamp.  
+  
+====================================================================  
+7. OBSERVABILITY REQUIREMENTS  
+====================================================================  
+  
+OBS-FR-001  
+--------------------------------------------------------------------  
+The platform shall produce append-only structured observability logs.  
+  
+OBS-FR-002  
+--------------------------------------------------------------------  
+The platform shall support event types including skill_started,  
+skill_completed, skill_failed, stage_started, stage_completed,  
+stage_failed, stage_transition, candidate_version_created,  
+candidate_version_compared, version_selection_created,  
+version_selected, hitl_review_created, hitl_review_displayed,  
+hitl_user_responded, hitl_review_completed, policy_breach_detected,  
+artifact_registered, workflow_blocked, workflow_resumed,  
+override_logged, rerun_requested, recovery_action_started, and  
+recovery_action_completed.  
+  
+OBS-FR-003  
+--------------------------------------------------------------------  
+Each event shall include event_id, event_type, timestamp, project_id,  
+run_id, session_id, stage_name, actor_type, actor_id, and summary.  
+  
+OBS-FR-004  
+--------------------------------------------------------------------  
+Relevant events shall include skill_name, skill_version, review_id,  
+candidate_version_id, selected_candidate_version_id, artifact_refs,  
+and error_summary.  
+  
+OBS-FR-005  
+--------------------------------------------------------------------  
+The platform shall support event replay by run.  
+  
+OBS-FR-006  
+--------------------------------------------------------------------  
+The platform shall support lineage reconstruction from event records.  
+  
+OBS-OR-001  
+--------------------------------------------------------------------  
+Restricted actions shall not proceed if mandatory observability event  
+writes fail.  
+  
+OBS-NFR-001  
+--------------------------------------------------------------------  
+Observability logs shall be append-only and immutable at the record  
+level after write.  
+  
+====================================================================  
+8. AUDIT REQUIREMENTS  
+====================================================================  
+  
+AUD-FR-001  
+--------------------------------------------------------------------  
+The platform shall store an audit trail for all material approvals,  
+rejections, reruns, overrides, and selections.  
+  
+AUD-FR-002  
+--------------------------------------------------------------------  
+Audit records shall include decision_type, stage, recommendation,  
+rationale, evidence references, policy findings, reviewer identity,  
+reviewer action, reviewer comment, selected version if applicable,  
+final downstream action, timestamp, and skill version.  
+  
+AUD-FR-003  
+--------------------------------------------------------------------  
+The platform shall support explicit approval registry management.  
+  
+AUD-FR-004  
+--------------------------------------------------------------------  
+The platform shall support exception audit records.  
+  
+AUD-FR-005  
+--------------------------------------------------------------------  
+The platform shall support export of audit-ready views.  
+  
+AUD-AR-001  
+--------------------------------------------------------------------  
+Audit records shall be sufficient to reconstruct why a final decision  
+was taken and which evidence supported it.  
+  
+====================================================================  
+9. ARTIFACT REGISTRY REQUIREMENTS  
+====================================================================  
+  
+ART-FR-001  
+--------------------------------------------------------------------  
+The platform shall register material artifacts produced or consumed by  
+workflow stages.  
+  
+ART-FR-002  
+--------------------------------------------------------------------  
+Each artifact shall include artifact_id, artifact_type,  
+artifact_name, producer_stage, producer, version, uri_or_path,  
+created_timestamp, schema_version, project_id, and run_id.  
+  
+ART-FR-003  
+--------------------------------------------------------------------  
+Artifacts generated from candidate versions shall preserve  
+source_candidate_version_id where applicable.  
+  
+ART-FR-004  
+--------------------------------------------------------------------  
+The platform shall support artifact lineage and locator functions.  
+  
+ART-FR-005  
+--------------------------------------------------------------------  
+Reviews, decisions, and events shall be able to reference artifacts.  
+  
+ART-NFR-001  
+--------------------------------------------------------------------  
+Artifact metadata shall be consistent across domain packs.  
+  
+====================================================================  
+10. RESUME AND RECOVERY REQUIREMENTS  
+====================================================================  
+  
+RES-FR-001  
+--------------------------------------------------------------------  
+When no active project context exists, the platform shall ask the user  
+to provide a project_id or create a new project.  
+  
+RES-FR-002  
+--------------------------------------------------------------------  
+At the beginning of a session, the platform shall check for recent  
+unfinished projects, prior failed sessions, blocked sessions, and  
+pending reviews.  
+  
+RES-FR-003  
+--------------------------------------------------------------------  
+The platform shall support resume modes including resume latest state,  
+resume last failed stage, resume last successful stage, resume pending  
+review, and create new project.  
+  
+RES-FR-004  
+--------------------------------------------------------------------  
+The platform shall validate workflow state, artifact availability,  
+approval validity, and stage dependencies before resuming.  
+  
+RES-FR-005  
+--------------------------------------------------------------------  
+The platform shall support structured recovery actions.  
+  
+RES-FR-006  
+--------------------------------------------------------------------  
+The platform shall support session lineage through parent_session_id  
+and resume_source_session_id.  
+  
+RES-FR-007  
+--------------------------------------------------------------------  
+The platform shall support workflow blocking when safe resume  
+validation fails.  
+  
+RES-UR-001  
+--------------------------------------------------------------------  
+If a resumable project exists, the user shall be offered clear resume  
+or new project choices.  
+  
+RES-UR-002  
+--------------------------------------------------------------------  
+If a prior failed session exists, the user shall be shown the failed  
+stage and available recovery options.  
+  
+====================================================================  
+11. JUPYTER UI AND WIDGET REQUIREMENTS  
+====================================================================  
+  
+UI-FR-001  
+--------------------------------------------------------------------  
+The platform shall support Jupyter widgets as the primary notebook UI  
+mechanism.  
+  
+UI-FR-002  
+--------------------------------------------------------------------  
+The platform shall provide reusable review card widgets.  
+  
+UI-FR-003  
+--------------------------------------------------------------------  
+The platform shall provide candidate selection widgets for final  
+version choice.  
+  
+UI-FR-004  
+--------------------------------------------------------------------  
+The platform shall provide project bootstrap and resume widgets.  
+  
+UI-FR-005  
+--------------------------------------------------------------------  
+The platform shall provide flow drill-down widgets or panels.  
+  
+UI-FR-006  
+--------------------------------------------------------------------  
+Widgets shall interact with a Python controller layer instead of  
+directly invoking skill files.  
+  
+UI-UR-001  
+--------------------------------------------------------------------  
+Widgets shall display recommendation, alternatives, evidence links,  
+bounded actions, and comment input.  
+  
+UI-UR-002  
+--------------------------------------------------------------------  
+The UI shall support detail expansion and status refresh after action.  
+  
+====================================================================  
+12. FLOW VISUALIZATION REQUIREMENTS  
+====================================================================  
+  
+FLOW-FR-001  
+--------------------------------------------------------------------  
+The platform shall summarize event logs into flow representations.  
+  
+FLOW-FR-002  
+--------------------------------------------------------------------  
+The flow shall include stage nodes, agent action nodes, candidate  
+version nodes, version selection nodes, review nodes, human decision  
+nodes, rerun nodes, blocked nodes, failed nodes, and completed nodes.  
+  
+FLOW-FR-003  
+--------------------------------------------------------------------  
+The flow shall support edge types for progression, rerun, rejection,  
+selection, escalation, recovery, and resume.  
+  
+FLOW-FR-004  
+--------------------------------------------------------------------  
+Each flow node shall support drill-down to detailed events, artifacts,  
+review payloads, comments, error details, and selected versions.  
+  
+FLOW-FR-005  
+--------------------------------------------------------------------  
+The platform shall support timeline and graph views.  
+  
+FLOW-FR-006  
+--------------------------------------------------------------------  
+The platform shall support export of summarized flow structures.  
+  
+FLOW-NFR-001  
+--------------------------------------------------------------------  
+Flow summaries shall remain traceable to underlying raw logs.  
+  
+====================================================================  
+13. DOMAIN PACK REQUIREMENTS  
+====================================================================  
+  
+DPACK-FR-001  
+--------------------------------------------------------------------  
+Each domain pack shall provide stage registry, routing rules, metrics  
+pack, test pack, artifact pack, policy pack, review templates, and  
+skill pack.  
+  
+DPACK-FR-002  
+--------------------------------------------------------------------  
+All domain packs shall reuse the platform shared schemas for state,  
+review, event, audit, artifact, and flow models.  
+  
+DPACK-FR-003  
+--------------------------------------------------------------------  
+The platform shall support future domain packs for scorecard, time  
+series, ECL, LGD, PD, EAD, SICR, and stress testing.  
+  
+DPACK-NFR-001  
+--------------------------------------------------------------------  
+A new domain pack shall be introducible without redesigning the core  
+platform.  
+  
+====================================================================  
+14. UNIFIED SDK ARCHITECTURE REQUIREMENTS  
+====================================================================  
+  
+SDK-FR-001  
+--------------------------------------------------------------------  
+The platform shall provide a unified SDK architecture covering current  
+and future workflow automation scope.  
+  
+SDK-FR-002  
+--------------------------------------------------------------------  
+The unified SDK architecture shall separate core workflow automation  
+SDKs, shared analytical capability SDKs, and domain-specific modeling  
+SDKs.  
+  
+SDK-FR-003  
+--------------------------------------------------------------------  
+Core workflow automation SDKs shall include workflowsdk, hitlsdk,  
+observabilitysdk, auditsdk, artifactsdk, flowvizsdk, policysdk, and  
+widgetsdk.  
+  
+SDK-FR-004  
+--------------------------------------------------------------------  
+Shared analytical capability SDKs shall include dq_sdk, feature_sdk,  
+evaluation_sdk, reporting_sdk, monitoring_sdk, config_sdk,  
+dataset_sdk, and registry_sdk.  
+  
+SDK-FR-005  
+--------------------------------------------------------------------  
+Domain-specific modeling SDKs shall support at minimum scorecardsdk,  
+timeseriessdk, eclsdk, lgdsdk, pdsdk, eadsdk, sicr_sdk, and  
+stresssdk as future scope.  
+  
+SDK-FR-006  
+--------------------------------------------------------------------  
+The SDK architecture shall support current scorecard workflow through  
+integration of workflowsdk, hitlsdk, observabilitysdk, auditsdk,  
+artifactsdk, dq_sdk, evaluation_sdk, reporting_sdk, dataset_sdk, and  
+scorecardsdk.  
+  
+SDK-FR-007  
+--------------------------------------------------------------------  
+The SDK architecture shall support future reuse of the same core  
+workflow SDKs across time series, ECL, LGD, and other domains.  
+  
+SDK-FR-008  
+--------------------------------------------------------------------  
+Each SDK module shall expose explicit deterministic interfaces suitable  
+for skill orchestration.  
+  
+SDK-FR-009  
+--------------------------------------------------------------------  
+Each SDK module shall support version reporting.  
+  
+SDK-FR-010  
+--------------------------------------------------------------------  
+Each SDK module shall support structured input and output contracts.  
+  
+SDK-FR-011  
+--------------------------------------------------------------------  
+Relevant SDK modules shall support artifact registration hooks.  
+  
+SDK-FR-012  
+--------------------------------------------------------------------  
+Relevant SDK modules shall support observability hook integration.  
+  
+SDK-FR-013  
+--------------------------------------------------------------------  
+Skills shall call SDK capabilities through bounded interfaces and  
+shall not embed complex mathematical logic directly.  
+  
+SDK-DR-001  
+--------------------------------------------------------------------  
+Each SDK module should declare module_name, module_version,  
+function_name, input_schema_reference, output_schema_reference,  
+artifact_types_produced, metrics_produced, errors_possible, and  
+observability_hooks_supported.  
+  
+SDK-NFR-001  
+--------------------------------------------------------------------  
+The unified SDK ecosystem shall reduce duplication across current and  
+future project types.  
+  
+SDK-NFR-002  
+--------------------------------------------------------------------  
+The SDK architecture shall remain modular, independently testable, and  
+extensible.  
+  
+====================================================================  
+15. SECURITY AND ACCESS REQUIREMENTS  
+====================================================================  
+  
+SEC-FR-001  
+--------------------------------------------------------------------  
+The platform shall support role-based access control.  
+  
+SEC-FR-002  
+--------------------------------------------------------------------  
+Only authorized users shall be allowed to approve governed reviews.  
+  
+SEC-FR-003  
+--------------------------------------------------------------------  
+The platform shall support reviewer assignment and role validation.  
+  
+SEC-FR-004  
+--------------------------------------------------------------------  
+The platform shall preserve user identity on decisions and approvals.  
+  
+SEC-NFR-001  
+--------------------------------------------------------------------  
+Security controls shall apply consistently across state, audit,  
+artifacts, and review actions.  
+  
+====================================================================  
+16. PERFORMANCE AND RELIABILITY REQUIREMENTS  
+====================================================================  
+  
+PERF-NFR-001  
+--------------------------------------------------------------------  
+The orchestration overhead shall remain reasonable relative to the  
+deterministic computations being managed.  
+  
+PERF-NFR-002  
+--------------------------------------------------------------------  
+The platform shall support safe persistence of state and logs even if  
+a stage fails.  
+  
+PERF-NFR-003  
+--------------------------------------------------------------------  
+The platform shall support reliable replay and resume after  
+interruption.  
+  
+PERF-NFR-004  
+--------------------------------------------------------------------  
+The platform shall support modular testing at entity, SDK, workflow,  
+and review levels.  
+  
+====================================================================  
+17. REQUIREMENT TO JIRA / DELIVERY DECOMPOSITION GUIDANCE  
+====================================================================  
+  
+The requirement matrix may be decomposed into delivery epics such as:  
+  
+Epic 1 : Canonical Meta-Model  
+- META-FR-001 to META-NFR-001  
+  
+Epic 2 : Workflow Core  
+- WF-FR-001 to WF-NFR-001  
+  
+Epic 3 : HITL Engine  
+- HITL-FR-001 to HITL-UR-002  
+  
+Epic 4 : Candidate Versioning and Selection  
+- VER-FR-001 to VER-DR-002  
+  
+Epic 5 : Observability and Audit  
+- OBS-FR-001 to OBS-NFR-001  
+- AUD-FR-001 to AUD-AR-001  
+  
+Epic 6 : Artifact and Lineage  
+- ART-FR-001 to ART-NFR-001  
+  
+Epic 7 : Resume and Recovery  
+- RES-FR-001 to RES-UR-002  
+  
+Epic 8 : Jupyter UI  
+- UI-FR-001 to UI-UR-002  
+  
+Epic 9 : Flow Visualization  
+- FLOW-FR-001 to FLOW-NFR-001  
+  
+Epic 10 : Domain Pack Framework  
+- DPACK-FR-001 to DPACK-NFR-001  
+  
+Epic 11 : Unified SDK Architecture  
+- SDK-FR-001 to SDK-NFR-002  
+  
+Epic 12 : Security, Performance, Reliability  
+- SEC-FR-001 to SEC-NFR-001  
+- PERF-NFR-001 to PERF-NFR-004  
+  
+====================================================================  
+18. ACCEPTANCE TEST COVERAGE GUIDANCE  
+====================================================================  
+  
+Examples of acceptance test mapping:  
+  
+AT-001 -> META-FR-003  
+Validate that CandidateVersion and VersionSelection are stored and  
+linked correctly.  
+  
+AT-002 -> VER-FR-008  
+Validate that model fitting is blocked when no selected binning  
+version exists.  
+  
+AT-003 -> HITL-FR-004  
+Validate that allowed actions are enforced in review UI and backend.  
+  
+AT-004 -> OBS-FR-002  
+Validate that candidate_version_created and version_selected events  
+are written.  
+  
+AT-005 -> RES-FR-003  
+Validate resume modes from last failed stage and pending review.  
+  
+AT-006 -> SDK-FR-006  
+Validate scorecard workflow integration through core SDK stack.  
+  
+====================================================================  
+END OF REQUIREMENT MATRIX  
+====================================================================  
+  
+| Requirement ID | Domain | Type | Description | Priority | Phase | Suggested Owner | Test Reference |  
+|---|---|---|---|---|---|---|---|  
+| CORE-FR-001 | Core Platform | FR | Provide a governed workflow automation framework for model lifecycle execution. | Critical | Phase 1 | Platform Architecture / Workflow Lead | AT-CORE-001 |  
+| CORE-FR-002 | Core Platform | FR | Support agentic orchestration layered on top of deterministic SDK execution. | Critical | Phase 1 | Platform Architecture / AI Orchestration Lead | AT-CORE-002 |  
+| CORE-FR-003 | Core Platform | FR | Support notebook, API, CLI, and future service-based execution modes. | High | Phase 2 | Platform Architecture / Integration Lead | AT-CORE-003 |  
+| CORE-FR-004 | Core Platform | FR | Separate orchestration, execution, review, observability, and persistence concerns into modular layers. | Critical | Phase 1 | Platform Architecture | AT-CORE-004 |  
+| CORE-FR-005 | Core Platform | FR | Support current scorecard workflow and future extension to other model families. | Critical | Phase 1 | Platform Architecture / Domain Leads | AT-CORE-005 |  
+| CORE-NFR-001 | Core Platform | NFR | Ensure the platform architecture is modular and extensible. | Critical | Phase 1 | Platform Architecture | AT-CORE-006 |  
+| CORE-NFR-002 | Core Platform | NFR | Support versioned schemas, skills, and SDK modules. | High | Phase 1 | Platform Architecture / DevOps | AT-CORE-007 |  
+| META-FR-001 | Meta-Model | FR | Define a canonical enterprise meta-model shared across project types. | Critical | Phase 1 | Data Architecture / Platform Architecture | AT-META-001 |  
+| META-FR-002 | Meta-Model | FR | Include Program, Project, UseCase, DomainPack, and PolicyPack as portfolio-level entities. | High | Phase 1 | Data Architecture | AT-META-002 |  
+| META-FR-003 | Meta-Model | FR | Include Workflow, Run, Session, StageExecution, CandidateVersion, VersionSelection, Rerun, and RecoveryAction as execution entities. | Critical | Phase 1 | Data Architecture / Workflow Lead | AT-META-003 |  
+| META-FR-004 | Meta-Model | FR | Include Review, Approval, Decision, Exception, and Override as review and decision entities. | Critical | Phase 1 | Data Architecture / Governance Lead | AT-META-004 |  
+| META-FR-005 | Meta-Model | FR | Include Artifact, Metric, TestResult, Recommendation, and PolicyFinding as evidence entities. | Critical | Phase 1 | Data Architecture / Analytics Lead | AT-META-005 |  
+| META-FR-006 | Meta-Model | FR | Include Event, FlowNode, FlowEdge, and TimelineEntry as observability and visualization entities. | High | Phase 1 | Data Architecture / Observability Lead | AT-META-006 |  
+| META-FR-007 | Meta-Model | FR | Include User, Role, and ReviewerAssignment as identity and access entities. | High | Phase 1 | Security / Platform Architecture | AT-META-007 |  
+| META-FR-008 | Meta-Model | FR | Support explicit lineage between Project, Run, Session, StageExecution, CandidateVersion, Review, Decision, Artifact, and Event. | Critical | Phase 1 | Data Architecture | AT-META-008 |  
+| META-FR-009 | Meta-Model | FR | Support domain-specific extension without breaking the core shared contract. | Critical | Phase 1 | Platform Architecture / Domain Leads | AT-META-009 |  
+| META-DR-001 | Meta-Model | DR | Store project_id, project_name, project_type, model_family, and owner for all projects. | Critical | Phase 1 | Data Architecture | AT-META-010 |  
+| META-DR-002 | Meta-Model | DR | Store run_id, workflow_id, status, current_stage, and trace_id for all runs. | Critical | Phase 1 | Data Architecture | AT-META-011 |  
+| META-DR-003 | Meta-Model | DR | Store candidate_version_id, version_selection_id, selected_candidate_version_id, and selection_status for candidate selection workflows. | Critical | Phase 1 | Data Architecture / Workflow Lead | AT-META-012 |  
+| META-NFR-001 | Meta-Model | NFR | Version control the meta-model and review backward compatibility before adoption. | High | Phase 1 | Data Architecture / Governance | AT-META-013 |  
+| WF-FR-001 | Workflow | FR | Initialize workflow state for a new project. | Critical | Phase 1 | Workflow Lead | AT-WF-001 |  
+| WF-FR-002 | Workflow | FR | Persist workflow state after each material action. | Critical | Phase 1 | Workflow Lead / Platform Engineering | AT-WF-002 |  
+| WF-FR-003 | Workflow | FR | Include current_stage, stage_status, completed_stages, pending_stages, pending_reviews, blocking_reasons, active_candidate_versions, selected_versions, and approval_state in workflow state. | Critical | Phase 1 | Workflow Lead / Data Architecture | AT-WF-003 |  
+| WF-FR-004 | Workflow | FR | Support configurable routing rules for progression, rerun, rejection, escalation, and resume. | Critical | Phase 1 | Workflow Lead | AT-WF-004 |  
+| WF-FR-005 | Workflow | FR | Validate stage prerequisites before running a stage. | Critical | Phase 1 | Workflow Lead | AT-WF-005 |  
+| WF-FR-006 | Workflow | FR | Track stage-level execution using StageExecution records. | Critical | Phase 1 | Workflow Lead / Data Architecture | AT-WF-006 |  
+| WF-FR-007 | Workflow | FR | Block downstream stages when mandatory prerequisites are not met. | Critical | Phase 1 | Workflow Lead / Governance Lead | AT-WF-007 |  
+| WF-FR-008 | Workflow | FR | Route explicitly to review stages where HITL is required. | Critical | Phase 1 | Workflow Lead / HITL Lead | AT-WF-008 |  
+| WF-FR-009 | Workflow | FR | Support stage rerun and branch lineage retention. | High | Phase 1 | Workflow Lead | AT-WF-009 |  
+| WF-FR-010 | Workflow | FR | Support defined credit scoring stages from intake through closure. | Critical | Phase 1 | Scorecard Domain Lead / Workflow Lead | AT-WF-010 |  
+| WF-UR-001 | Workflow | UR | When continuation is requested, either route to the next valid stage or explain the block. | High | Phase 1 | UX Lead / Workflow Lead | AT-WF-011 |  
+| WF-NFR-001 | Workflow | NFR | Ensure workflow state transitions are replayable from persisted data. | High | Phase 1 | Workflow Lead / Observability Lead | AT-WF-012 |  
+| HITL-FR-001 | HITL | FR | Support a structured human-in-the-loop review mechanism. | Critical | Phase 1 | HITL Lead / Governance Lead | AT-HITL-001 |  
+| HITL-FR-002 | HITL | FR | Support review creation for defined governed scenarios. | Critical | Phase 1 | HITL Lead / Domain Leads | AT-HITL-002 |  
+| HITL-FR-003 | HITL | FR | Include required review fields in every review payload. | Critical | Phase 1 | HITL Lead / Data Architecture | AT-HITL-003 |  
+| HITL-FR-004 | HITL | FR | Support bounded reviewer actions including approval, rerun, escalation, and version selection actions. | Critical | Phase 1 | HITL Lead | AT-HITL-004 |  
+| HITL-FR-005 | HITL | FR | Do not interpret free-text comments alone as approval. | Critical | Phase 1 | HITL Lead / Governance Lead | AT-HITL-005 |  
+| HITL-FR-006 | HITL | FR | Record review status transitions such as pending, approved, rejected, rerun requested, and escalated. | High | Phase 1 | HITL Lead | AT-HITL-006 |  
+| HITL-FR-007 | HITL | FR | Support review-to-decision linkage. | High | Phase 1 | HITL Lead / Audit Lead | AT-HITL-007 |  
+| HITL-FR-008 | HITL | FR | Capture reviewer identity. | Critical | Phase 1 | Security / HITL Lead | AT-HITL-008 |  
+| HITL-FR-009 | HITL | FR | Support explicit approval records where required by policy. | High | Phase 1 | Governance Lead / Audit Lead | AT-HITL-009 |  
+| HITL-UR-001 | HITL | UR | Present concise recommendation and clear alternatives to the reviewer. | High | Phase 1 | UX Lead / HITL Lead | AT-HITL-010 |  
+| HITL-UR-002 | HITL | UR | Allow reviewer comments together with action selection. | High | Phase 1 | UX Lead / HITL Lead | AT-HITL-011 |  
+| VER-FR-001 | Versioning | FR | Retain multiple viable alternatives as separate CandidateVersion records. | Critical | Phase 1 | Workflow Lead / Domain Lead | AT-VER-001 |  
+| VER-FR-002 | Versioning | FR | Do not silently overwrite prior candidate outputs. | Critical | Phase 1 | Workflow Lead / Platform Engineering | AT-VER-002 |  
+| VER-FR-003 | Versioning | FR | Store source_stage, candidate_type, version_label, status, and summary metadata for each candidate version. | Critical | Phase 1 | Data Architecture / Workflow Lead | AT-VER-003 |  
+| VER-FR-004 | Versioning | FR | Support lineage between derived candidate versions. | High | Phase 1 | Data Architecture | AT-VER-004 |  
+| VER-FR-005 | Versioning | FR | Support comparison of multiple candidate versions within one review. | High | Phase 1 | HITL Lead / Domain Lead | AT-VER-005 |  
+| VER-FR-006 | Versioning | FR | Support explicit final selection through a VersionSelection record. | Critical | Phase 1 | Workflow Lead | AT-VER-006 |  
+| VER-FR-007 | Versioning | FR | Support direct, composite, and manual selection. | High | Phase 2 | Workflow Lead / Domain Lead | AT-VER-007 |  
+| VER-FR-008 | Versioning | FR | Block downstream stages when multiple candidate versions exist and no valid final selection is recorded. | Critical | Phase 1 | Workflow Lead / Governance Lead | AT-VER-008 |  
+| VER-FR-009 | Versioning | FR | Record which selected version is consumed by downstream stages. | Critical | Phase 1 | Workflow Lead / Artifact Lead | AT-VER-009 |  
+| VER-FR-010 | Versioning | FR | Support multiple reruns of binning and preserve each binning version separately. | Critical | Phase 1 | Scorecard Domain Lead | AT-VER-010 |  
+| VER-FR-011 | Versioning | FR | Support HITL review for binning version selection when multiple plausible candidates exist. | Critical | Phase 1 | HITL Lead / Scorecard Domain Lead | AT-VER-011 |  
+| VER-DR-001 | Versioning | DR | Store required candidate version fields. | Critical | Phase 1 | Data Architecture | AT-VER-012 |  
+| VER-DR-002 | Versioning | DR | Store required version selection fields. | Critical | Phase 1 | Data Architecture | AT-VER-013 |  
+| OBS-FR-001 | Observability | FR | Produce append-only structured observability logs. | Critical | Phase 1 | Observability Lead | AT-OBS-001 |  
+| OBS-FR-002 | Observability | FR | Support defined event types including candidate and selection events. | Critical | Phase 1 | Observability Lead | AT-OBS-002 |  
+| OBS-FR-003 | Observability | FR | Include core event fields such as event_id, event_type, timestamp, project_id, run_id, session_id, stage_name, actor_type, actor_id, and summary. | Critical | Phase 1 | Observability Lead / Data Architecture | AT-OBS-003 |  
+| OBS-FR-004 | Observability | FR | Include optional review, candidate, selected version, artifact, and error fields where relevant. | High | Phase 1 | Observability Lead | AT-OBS-004 |  
+| OBS-FR-005 | Observability | FR | Support event replay by run. | High | Phase 2 | Observability Lead | AT-OBS-005 |  
+| OBS-FR-006 | Observability | FR | Support lineage reconstruction from event records. | High | Phase 2 | Observability Lead / Data Architecture | AT-OBS-006 |  
+| OBS-OR-001 | Observability | OR | Prevent restricted actions from proceeding if mandatory event writes fail. | Critical | Phase 1 | Observability Lead / Governance Lead | AT-OBS-007 |  
+| OBS-NFR-001 | Observability | NFR | Keep observability logs append-only and immutable at record level after write. | High | Phase 1 | Observability Lead / Platform Engineering | AT-OBS-008 |  
+| AUD-FR-001 | Audit | FR | Store an audit trail for all material approvals, rejections, reruns, overrides, and selections. | Critical | Phase 1 | Audit Lead | AT-AUD-001 |  
+| AUD-FR-002 | Audit | FR | Include required audit fields including selected version where applicable. | Critical | Phase 1 | Audit Lead / Data Architecture | AT-AUD-002 |  
+| AUD-FR-003 | Audit | FR | Support explicit approval registry management. | High | Phase 1 | Audit Lead / Governance Lead | AT-AUD-003 |  
+| AUD-FR-004 | Audit | FR | Support exception audit records. | High | Phase 2 | Audit Lead | AT-AUD-004 |  
+| AUD-FR-005 | Audit | FR | Support export of audit-ready views. | High | Phase 2 | Audit Lead / Reporting Lead | AT-AUD-005 |  
+| AUD-AR-001 | Audit | AR | Keep audit records sufficient to reconstruct why a final decision was taken and which evidence supported it. | Critical | Phase 1 | Audit Lead / Governance Lead | AT-AUD-006 |  
+| ART-FR-001 | Artifact | FR | Register material artifacts produced or consumed by workflow stages. | Critical | Phase 1 | Artifact Lead | AT-ART-001 |  
+| ART-FR-002 | Artifact | FR | Store required artifact metadata fields. | Critical | Phase 1 | Artifact Lead / Data Architecture | AT-ART-002 |  
+| ART-FR-003 | Artifact | FR | Preserve source_candidate_version_id for artifacts generated from candidate versions where applicable. | High | Phase 1 | Artifact Lead | AT-ART-003 |  
+| ART-FR-004 | Artifact | FR | Support artifact lineage and locator functions. | High | Phase 2 | Artifact Lead | AT-ART-004 |  
+| ART-FR-005 | Artifact | FR | Allow reviews, decisions, and events to reference artifacts. | High | Phase 1 | Artifact Lead / Data Architecture | AT-ART-005 |  
+| ART-NFR-001 | Artifact | NFR | Keep artifact metadata consistent across domain packs. | High | Phase 2 | Artifact Lead / Domain Leads | AT-ART-006 |  
+| RES-FR-001 | Resume & Recovery | FR | Ask the user to provide a project_id or create a new project when no active project context exists. | Critical | Phase 1 | Workflow Lead / UX Lead | AT-RES-001 |  
+| RES-FR-002 | Resume & Recovery | FR | Check for unfinished projects, prior failed sessions, blocked sessions, and pending reviews at session start. | Critical | Phase 1 | Workflow Lead / Recovery Lead | AT-RES-002 |  
+| RES-FR-003 | Resume & Recovery | FR | Support resume latest state, resume last failed stage, resume last successful stage, resume pending review, and create new project. | Critical | Phase 1 | Recovery Lead / Workflow Lead | AT-RES-003 |  
+| RES-FR-004 | Resume & Recovery | FR | Validate workflow state, artifact availability, approval validity, and stage dependencies before resume. | Critical | Phase 1 | Recovery Lead / Governance Lead | AT-RES-004 |  
+| RES-FR-005 | Resume & Recovery | FR | Support structured recovery actions. | High | Phase 2 | Recovery Lead | AT-RES-005 |  
+| RES-FR-006 | Resume & Recovery | FR | Support session lineage through parent and source session references. | High | Phase 1 | Data Architecture / Recovery Lead | AT-RES-006 |  
+| RES-FR-007 | Resume & Recovery | FR | Block workflow when safe resume validation fails. | Critical | Phase 1 | Recovery Lead / Governance Lead | AT-RES-007 |  
+| RES-UR-001 | Resume & Recovery | UR | Offer clear resume or new project choices when a resumable project exists. | High | Phase 1 | UX Lead | AT-RES-008 |  
+| RES-UR-002 | Resume & Recovery | UR | Show failed stage and available recovery options when prior failed session exists. | High | Phase 1 | UX Lead / Recovery Lead | AT-RES-009 |  
+| UI-FR-001 | Jupyter UI | FR | Support Jupyter widgets as the primary notebook UI mechanism. | Critical | Phase 1 | UI Lead / Notebook Engineering | AT-UI-001 |  
+| UI-FR-002 | Jupyter UI | FR | Provide reusable review card widgets. | Critical | Phase 1 | UI Lead / HITL Lead | AT-UI-002 |  
+| UI-FR-003 | Jupyter UI | FR | Provide candidate selection widgets for final version choice. | Critical | Phase 1 | UI Lead / Scorecard Domain Lead | AT-UI-003 |  
+| UI-FR-004 | Jupyter UI | FR | Provide project bootstrap and resume widgets. | High | Phase 1 | UI Lead / Recovery Lead | AT-UI-004 |  
+| UI-FR-005 | Jupyter UI | FR | Provide flow drill-down widgets or panels. | High | Phase 2 | UI Lead / Flow Visualization Lead | AT-UI-005 |  
+| UI-FR-006 | Jupyter UI | FR | Use a Python controller layer rather than direct skill file invocation from widgets. | Critical | Phase 1 | UI Lead / Platform Engineering | AT-UI-006 |  
+| UI-UR-001 | Jupyter UI | UR | Display recommendation, alternatives, evidence links, bounded actions, and comment input. | High | Phase 1 | UX Lead | AT-UI-007 |  
+| UI-UR-002 | Jupyter UI | UR | Support detail expansion and status refresh after action. | High | Phase 1 | UX Lead / UI Lead | AT-UI-008 |  
+| FLOW-FR-001 | Flow Visualization | FR | Summarize event logs into flow representations. | High | Phase 2 | Flow Visualization Lead / Observability Lead | AT-FLOW-001 |  
+| FLOW-FR-002 | Flow Visualization | FR | Include stage, agent action, candidate version, version selection, review, human decision, rerun, blocked, failed, and completed nodes. | High | Phase 2 | Flow Visualization Lead | AT-FLOW-002 |  
+| FLOW-FR-003 | Flow Visualization | FR | Support edge types for progression, rerun, rejection, selection, escalation, recovery, and resume. | High | Phase 2 | Flow Visualization Lead | AT-FLOW-003 |  
+| FLOW-FR-004 | Flow Visualization | FR | Support drill-down from flow nodes to events, artifacts, reviews, comments, errors, and selections. | High | Phase 2 | Flow Visualization Lead / UI Lead | AT-FLOW-004 |  
+| FLOW-FR-005 | Flow Visualization | FR | Support timeline and graph views. | Medium | Phase 2 | Flow Visualization Lead | AT-FLOW-005 |  
+| FLOW-FR-006 | Flow Visualization | FR | Support export of summarized flow structures. | Medium | Phase 3 | Flow Visualization Lead / Reporting Lead | AT-FLOW-006 |  
+| FLOW-NFR-001 | Flow Visualization | NFR | Keep flow summaries traceable to underlying raw logs. | High | Phase 2 | Flow Visualization Lead / Audit Lead | AT-FLOW-007 |  
+| DPACK-FR-001 | Domain Packs | FR | Require each domain pack to provide stage registry, routing rules, metrics pack, test pack, artifact pack, policy pack, review templates, and skill pack. | Critical | Phase 2 | Domain Framework Lead | AT-DPACK-001 |  
+| DPACK-FR-002 | Domain Packs | FR | Reuse shared schemas for state, review, event, audit, artifact, and flow across all domain packs. | Critical | Phase 2 | Domain Framework Lead / Data Architecture | AT-DPACK-002 |  
+| DPACK-FR-003 | Domain Packs | FR | Support future domain packs for scorecard, time series, ECL, LGD, PD, EAD, SICR, and stress testing. | High | Phase 3 | Platform Architecture / Domain Leads | AT-DPACK-003 |  
+| DPACK-NFR-001 | Domain Packs | NFR | Allow introduction of a new domain pack without redesigning the core platform. | Critical | Phase 2 | Platform Architecture | AT-DPACK-004 |  
+| SDK-FR-001 | Unified SDK | FR | Provide a unified SDK architecture covering current and future workflow automation scope. | Critical | Phase 1 | SDK Architecture Lead | AT-SDK-001 |  
+| SDK-FR-002 | Unified SDK | FR | Separate core workflow automation SDKs, shared analytical capability SDKs, and domain-specific modeling SDKs. | Critical | Phase 1 | SDK Architecture Lead | AT-SDK-002 |  
+| SDK-FR-003 | Unified SDK | FR | Include workflowsdk, hitlsdk, observabilitysdk, auditsdk, artifactsdk, flowvizsdk, policysdk, and widgetsdk in the core workflow automation layer. | Critical | Phase 1 | SDK Architecture Lead | AT-SDK-003 |  
+| SDK-FR-004 | Unified SDK | FR | Include dq_sdk, feature_sdk, evaluation_sdk, reporting_sdk, monitoring_sdk, config_sdk, dataset_sdk, and registry_sdk in the shared analytical capability layer. | High | Phase 2 | SDK Architecture Lead / Analytics Leads | AT-SDK-004 |  
+| SDK-FR-005 | Unified SDK | FR | Support scorecardsdk, timeseriessdk, eclsdk, lgdsdk, pdsdk, eadsdk, sicr_sdk, and stresssdk as domain-specific modeling SDKs. | High | Phase 3 | SDK Architecture Lead / Domain Leads | AT-SDK-005 |  
+| SDK-FR-006 | Unified SDK | FR | Support current scorecard workflow through integration of core and shared SDKs with scorecardsdk. | Critical | Phase 1 | Scorecard Domain Lead / SDK Architecture Lead | AT-SDK-006 |  
+| SDK-FR-007 | Unified SDK | FR | Support future reuse of the same core workflow SDKs across time series, ECL, LGD, and other domains. | High | Phase 2 | SDK Architecture Lead | AT-SDK-007 |  
+| SDK-FR-008 | Unified SDK | FR | Expose explicit deterministic interfaces from each SDK module suitable for skill orchestration. | Critical | Phase 1 | SDK Architecture Lead | AT-SDK-008 |  
+| SDK-FR-009 | Unified SDK | FR | Support version reporting for each SDK module. | High | Phase 1 | SDK Architecture Lead / DevOps | AT-SDK-009 |  
+| SDK-FR-010 | Unified SDK | FR | Support structured input and output contracts for each SDK module. | Critical | Phase 1 | SDK Architecture Lead / Data Architecture | AT-SDK-010 |  
+| SDK-FR-011 | Unified SDK | FR | Support artifact registration hooks in relevant SDK modules. | High | Phase 1 | SDK Architecture Lead / Artifact Lead | AT-SDK-011 |  
+| SDK-FR-012 | Unified SDK | FR | Support observability hook integration in relevant SDK modules. | High | Phase 1 | SDK Architecture Lead / Observability Lead | AT-SDK-012 |  
+| SDK-FR-013 | Unified SDK | FR | Keep complex mathematical logic in SDKs rather than skills. | Critical | Phase 1 | SDK Architecture Lead / AI Orchestration Lead | AT-SDK-013 |  
+| SDK-DR-001 | Unified SDK | DR | Declare module_name, module_version, function_name, input_schema_reference, output_schema_reference, artifact_types_produced, metrics_produced, errors_possible, and observability_hooks_supported for SDK modules. | High | Phase 2 | SDK Architecture Lead / Data Architecture | AT-SDK-014 |  
+| SDK-NFR-001 | Unified SDK | NFR | Reduce duplication across current and future project types through the unified SDK ecosystem. | High | Phase 2 | SDK Architecture Lead | AT-SDK-015 |  
+| SDK-NFR-002 | Unified SDK | NFR | Keep the SDK architecture modular, independently testable, and extensible. | Critical | Phase 1 | SDK Architecture Lead | AT-SDK-016 |  
+| SEC-FR-001 | Security | FR | Support role-based access control. | Critical | Phase 1 | Security Lead | AT-SEC-001 |  
+| SEC-FR-002 | Security | FR | Allow only authorized users to approve governed reviews. | Critical | Phase 1 | Security Lead / Governance Lead | AT-SEC-002 |  
+| SEC-FR-003 | Security | FR | Support reviewer assignment and role validation. | High | Phase 1 | Security Lead / HITL Lead | AT-SEC-003 |  
+| SEC-FR-004 | Security | FR | Preserve user identity on decisions and approvals. | Critical | Phase 1 | Security Lead / Audit Lead | AT-SEC-004 |  
+| SEC-NFR-001 | Security | NFR | Apply security controls consistently across state, audit, artifacts, and review actions. | High | Phase 1 | Security Lead | AT-SEC-005 |  
+| PERF-NFR-001 | Performance & Reliability | NFR | Keep orchestration overhead reasonable relative to deterministic computations. | Medium | Phase 1 | Performance Lead / Platform Engineering | AT-PERF-001 |  
+| PERF-NFR-002 | Performance & Reliability | NFR | Support safe persistence of state and logs even if a stage fails. | Critical | Phase 1 | Platform Engineering / Reliability Lead | AT-PERF-002 |  
+| PERF-NFR-003 | Performance & Reliability | NFR | Support reliable replay and resume after interruption. | High | Phase 1 | Reliability Lead / Recovery Lead | AT-PERF-003 |  
+| PERF-NFR-004 | Performance & Reliability | NFR | Support modular testing at entity, SDK, workflow, and review levels. | High | Phase 1 | QA Lead / Platform Engineering | AT-PERF-004 |  
+  
+  
+Epic,Feature,Story,Requirement ID,Description,Priority,Phase,Suggested Owner,Test Reference  
+Core Platform,Governed Workflow Shell,Establish governed workflow automation framework,CORE-FR-001,Provide a governed workflow automation framework for model lifecycle execution,Critical,Phase 1,Platform Architecture / Workflow Lead,AT-CORE-001  
+Core Platform,Agentic Orchestration,Support agentic orchestration over deterministic SDKs,CORE-FR-002,Support agentic orchestration layered on top of deterministic SDK execution,Critical,Phase 1,Platform Architecture / AI Orchestration Lead,AT-CORE-002  
+Core Platform,Execution Modes,Support notebook API CLI and service execution,CORE-FR-003,Support notebook API CLI and future service-based execution modes,High,Phase 2,Platform Architecture / Integration Lead,AT-CORE-003  
+Core Platform,Layered Architecture,Separate platform concerns into modular layers,CORE-FR-004,Separate orchestration execution review observability and persistence concerns into modular layers,Critical,Phase 1,Platform Architecture,AT-CORE-004  
+Core Platform,Multi-Domain Support,Enable current and future domain support,CORE-FR-005,Support current scorecard workflow and future extension to other model families,Critical,Phase 1,Platform Architecture / Domain Leads,AT-CORE-005  
+Core Platform,Modularity,Keep platform modular and extensible,CORE-NFR-001,Ensure the platform architecture is modular and extensible,Critical,Phase 1,Platform Architecture,AT-CORE-006  
+Core Platform,Versioning,Version schemas skills and SDK modules,CORE-NFR-002,Support versioned schemas skills and SDK modules,High,Phase 1,Platform Architecture / DevOps,AT-CORE-007  
+  
+Canonical Meta-Model,Enterprise Meta-Model,Define canonical shared meta-model,META-FR-001,Define a canonical enterprise meta-model shared across project types,Critical,Phase 1,Data Architecture / Platform Architecture,AT-META-001  
+Canonical Meta-Model,Portfolio Entities,Define program and project-level entities,META-FR-002,Include Program Project UseCase DomainPack and PolicyPack as portfolio-level entities,High,Phase 1,Data Architecture,AT-META-002  
+Canonical Meta-Model,Execution Entities,Define run and execution entities,META-FR-003,Include Workflow Run Session StageExecution CandidateVersion VersionSelection Rerun and RecoveryAction as execution entities,Critical,Phase 1,Data Architecture / Workflow Lead,AT-META-003  
+Canonical Meta-Model,Review Entities,Define review and decision entities,META-FR-004,Include Review Approval Decision Exception and Override as review and decision entities,Critical,Phase 1,Data Architecture / Governance Lead,AT-META-004  
+Canonical Meta-Model,Evidence Entities,Define evidence and output entities,META-FR-005,Include Artifact Metric TestResult Recommendation and PolicyFinding as evidence entities,Critical,Phase 1,Data Architecture / Analytics Lead,AT-META-005  
+Canonical Meta-Model,Observability Entities,Define event and visualization entities,META-FR-006,Include Event FlowNode FlowEdge and TimelineEntry as observability and visualization entities,High,Phase 1,Data Architecture / Observability Lead,AT-META-006  
+Canonical Meta-Model,Identity Entities,Define user and role entities,META-FR-007,Include User Role and ReviewerAssignment as identity and access entities,High,Phase 1,Security / Platform Architecture,AT-META-007  
+Canonical Meta-Model,Entity Lineage,Link entities explicitly,META-FR-008,Support explicit lineage between Project Run Session StageExecution CandidateVersion Review Decision Artifact and Event,Critical,Phase 1,Data Architecture,AT-META-008  
+Canonical Meta-Model,Domain Extensibility,Allow domain-specific extensions,META-FR-009,Support domain-specific extension without breaking the core shared contract,Critical,Phase 1,Platform Architecture / Domain Leads,AT-META-009  
+Canonical Meta-Model,Project Minimum Data,Store mandatory project fields,META-DR-001,Store project_id project_name project_type model_family and owner for all projects,Critical,Phase 1,Data Architecture,AT-META-010  
+Canonical Meta-Model,Run Minimum Data,Store mandatory run fields,META-DR-002,Store run_id workflow_id status current_stage and trace_id for all runs,Critical,Phase 1,Data Architecture,AT-META-011  
+Canonical Meta-Model,Selection Minimum Data,Store mandatory candidate selection fields,META-DR-003,Store candidate_version_id version_selection_id selected_candidate_version_id and selection_status for candidate selection workflows,Critical,Phase 1,Data Architecture,AT-META-012  
+Canonical Meta-Model,Schema Governance,Govern meta-model changes,META-NFR-001,Version control the meta-model and review backward compatibility before adoption,High,Phase 1,Data Architecture / Governance,AT-META-013  
+  
+Workflow Core,Workflow Bootstrap,Initialize workflow state,WF-FR-001,Initialize workflow state for a new project,Critical,Phase 1,Workflow Lead,AT-WF-001  
+Workflow Core,State Persistence,Persist workflow state after actions,WF-FR-002,Persist workflow state after each material action,Critical,Phase 1,Workflow Lead / Platform Engineering,AT-WF-002  
+Workflow Core,Workflow State Schema,Include required workflow fields,WF-FR-003,Include current_stage stage_status completed_stages pending_stages pending_reviews blocking_reasons active_candidate_versions selected_versions and approval_state in workflow state,Critical,Phase 1,Workflow Lead / Data Architecture,AT-WF-003  
+Workflow Core,Routing Engine,Support configurable routing rules,WF-FR-004,Support configurable routing rules for progression rerun rejection escalation and resume,Critical,Phase 1,Workflow Lead,AT-WF-004  
+Workflow Core,Prerequisite Validation,Validate prerequisites before stages,WF-FR-005,Validate stage prerequisites before running a stage,Critical,Phase 1,Workflow Lead,AT-WF-005  
+Workflow Core,Stage Tracking,Track stage execution records,WF-FR-006,Track stage-level execution using StageExecution records,Critical,Phase 1,Workflow Lead / Data Architecture,AT-WF-006  
+Workflow Core,Blocking Controls,Block downstream stages when required,WF-FR-007,Block downstream stages when mandatory prerequisites are not met,Critical,Phase 1,Workflow Lead / Governance Lead,AT-WF-007  
+Workflow Core,Review Routing,Route to HITL review stages,WF-FR-008,Route explicitly to review stages where HITL is required,Critical,Phase 1,Workflow Lead / HITL Lead,AT-WF-008  
+Workflow Core,Rerun Lineage,Preserve rerun branch lineage,WF-FR-009,Support stage rerun and branch lineage retention,High,Phase 1,Workflow Lead,AT-WF-009  
+Workflow Core,Scorecard Stage Registry,Support full scorecard stage sequence,WF-FR-010,Support defined credit scoring stages from intake through closure,Critical,Phase 1,Scorecard Domain Lead / Workflow Lead,AT-WF-010  
+Workflow Core,Blocked Explanation,Explain route or block to user,WF-UR-001,When continuation is requested either route to the next valid stage or explain the block,High,Phase 1,UX Lead / Workflow Lead,AT-WF-011  
+Workflow Core,Replayable Transitions,Make workflow transitions replayable,WF-NFR-001,Ensure workflow state transitions are replayable from persisted data,High,Phase 1,Workflow Lead / Observability Lead,AT-WF-012  
+  
+HITL Engine,Structured HITL,Provide structured review mechanism,HITL-FR-001,Support a structured human-in-the-loop review mechanism,Critical,Phase 1,HITL Lead / Governance Lead,AT-HITL-001  
+HITL Engine,Governed Scenarios,Create reviews for governed scenarios,HITL-FR-002,Support review creation for defined governed scenarios,Critical,Phase 1,HITL Lead / Domain Leads,AT-HITL-002  
+HITL Engine,Review Schema,Require full review payload schema,HITL-FR-003,Include required review fields in every review payload,Critical,Phase 1,HITL Lead / Data Architecture,AT-HITL-003  
+HITL Engine,Bounded Actions,Support bounded reviewer actions,HITL-FR-004,Support bounded reviewer actions including approval rerun escalation and version selection actions,Critical,Phase 1,HITL Lead,AT-HITL-004  
+HITL Engine,No Implicit Approval,Prevent comment-only approval,HITL-FR-005,Do not interpret free-text comments alone as approval,Critical,Phase 1,HITL Lead / Governance Lead,AT-HITL-005  
+HITL Engine,Review State Machine,Track review status transitions,HITL-FR-006,Record review status transitions such as pending approved rejected rerun requested and escalated,High,Phase 1,HITL Lead,AT-HITL-006  
+HITL Engine,Review Decision Linkage,Link reviews to decisions,HITL-FR-007,Support review-to-decision linkage,High,Phase 1,HITL Lead / Audit Lead,AT-HITL-007  
+HITL Engine,Reviewer Identity,Capture reviewer identity,HITL-FR-008,Capture reviewer identity,Critical,Phase 1,Security / HITL Lead,AT-HITL-008  
+HITL Engine,Approval Records,Support explicit approval records,HITL-FR-009,Support explicit approval records where required by policy,High,Phase 1,Governance Lead / Audit Lead,AT-HITL-009  
+HITL Engine,Reviewer UX,Show concise recommendation and alternatives,HITL-UR-001,Present concise recommendation and clear alternatives to the reviewer,High,Phase 1,UX Lead / HITL Lead,AT-HITL-010  
+HITL Engine,Reviewer Comments,Allow reviewer comments with action,HITL-UR-002,Allow reviewer comments together with action selection,High,Phase 1,UX Lead / HITL Lead,AT-HITL-011  
+  
+Candidate Versioning,Candidate Preservation,Retain alternatives as candidate versions,VER-FR-001,Retain multiple viable alternatives as separate CandidateVersion records,Critical,Phase 1,Workflow Lead / Domain Lead,AT-VER-001  
+Candidate Versioning,No Silent Overwrite,Protect prior candidate outputs,VER-FR-002,Do not silently overwrite prior candidate outputs,Critical,Phase 1,Workflow Lead / Platform Engineering,AT-VER-002  
+Candidate Versioning,Candidate Metadata,Store required candidate metadata,VER-FR-003,Store source_stage candidate_type version_label status and summary metadata for each candidate version,Critical,Phase 1,Data Architecture / Workflow Lead,AT-VER-003  
+Candidate Versioning,Candidate Lineage,Track derived candidate lineage,VER-FR-004,Support lineage between derived candidate versions,High,Phase 1,Data Architecture,AT-VER-004  
+Candidate Versioning,Version Comparison,Compare multiple candidate versions in review,VER-FR-005,Support comparison of multiple candidate versions within one review,High,Phase 1,HITL Lead / Domain Lead,AT-VER-005  
+Candidate Versioning,Explicit Selection,Record final selection explicitly,VER-FR-006,Support explicit final selection through a VersionSelection record,Critical,Phase 1,Workflow Lead,AT-VER-006  
+Candidate Versioning,Composite Selection,Support composite and manual selection,VER-FR-007,Support direct composite and manual selection,High,Phase 2,Workflow Lead / Domain Lead,AT-VER-007  
+Candidate Versioning,Selection Blocking,Block downstream without valid selection,VER-FR-008,Block downstream stages when multiple candidate versions exist and no valid final selection is recorded,Critical,Phase 1,Workflow Lead / Governance Lead,AT-VER-008  
+Candidate Versioning,Downstream Input Reference,Record selected version consumed downstream,VER-FR-009,Record which selected version is consumed by downstream stages,Critical,Phase 1,Workflow Lead / Artifact Lead,AT-VER-009  
+Candidate Versioning,Binning Reruns,Support multiple binning reruns separately,VER-FR-010,Support multiple reruns of binning and preserve each binning version separately,Critical,Phase 1,Scorecard Domain Lead,AT-VER-010  
+Candidate Versioning,Binning Selection HITL,Support HITL for final binning selection,VER-FR-011,Support HITL review for binning version selection when multiple plausible candidates exist,Critical,Phase 1,HITL Lead / Scorecard Domain Lead,AT-VER-011  
+Candidate Versioning,Candidate Schema,Store candidate version required fields,VER-DR-001,Store required candidate version fields,Critical,Phase 1,Data Architecture,AT-VER-012  
+Candidate Versioning,Selection Schema,Store selection required fields,VER-DR-002,Store required version selection fields,Critical,Phase 1,Data Architecture,AT-VER-013  
+  
+Observability,Append-Only Logging,Produce append-only observability logs,OBS-FR-001,Produce append-only structured observability logs,Critical,Phase 1,Observability Lead,AT-OBS-001  
+Observability,Event Taxonomy,Support required workflow events,OBS-FR-002,Support defined event types including candidate and selection events,Critical,Phase 1,Observability Lead,AT-OBS-002  
+Observability,Core Event Fields,Store required event fields,OBS-FR-003,Include core event fields such as event_id event_type timestamp project_id run_id session_id stage_name actor_type actor_id and summary,Critical,Phase 1,Observability Lead / Data Architecture,AT-OBS-003  
+Observability,Extended Event Fields,Store optional event fields when relevant,OBS-FR-004,Include optional review candidate selected version artifact and error fields where relevant,High,Phase 1,Observability Lead,AT-OBS-004  
+Observability,Replay Support,Replay events by run,OBS-FR-005,Support event replay by run,High,Phase 2,Observability Lead,AT-OBS-005  
+Observability,Lineage Reconstruction,Build lineage from events,OBS-FR-006,Support lineage reconstruction from event records,High,Phase 2,Observability Lead / Data Architecture,AT-OBS-006  
+Observability,Write Failure Blocking,Block restricted actions on log failure,OBS-OR-001,Prevent restricted actions from proceeding if mandatory event writes fail,Critical,Phase 1,Observability Lead / Governance Lead,AT-OBS-007  
+Observability,Immutable Records,Keep event logs append-only and immutable,OBS-NFR-001,Keep observability logs append-only and immutable at record level after write,High,Phase 1,Observability Lead / Platform Engineering,AT-OBS-008  
+  
+Audit,Decision Audit Trail,Store full audit trail,AUD-FR-001,Store an audit trail for all material approvals rejections reruns overrides and selections,Critical,Phase 1,Audit Lead,AT-AUD-001  
+Audit,Audit Fields,Store all required audit fields,AUD-FR-002,Include required audit fields including selected version where applicable,Critical,Phase 1,Audit Lead / Data Architecture,AT-AUD-002  
+Audit,Approval Registry,Manage approval registry,AUD-FR-003,Support explicit approval registry management,High,Phase 1,Audit Lead / Governance Lead,AT-AUD-003  
+Audit,Exception Audit,Store exception audit records,AUD-FR-004,Support exception audit records,High,Phase 2,Audit Lead,AT-AUD-004  
+Audit,Audit Views,Export audit-ready views,AUD-FR-005,Support export of audit-ready views,High,Phase 2,Audit Lead / Reporting Lead,AT-AUD-005  
+Audit,Decision Reconstruction,Make audit sufficient for decision reconstruction,AUD-AR-001,Keep audit records sufficient to reconstruct why a final decision was taken and which evidence supported it,Critical,Phase 1,Audit Lead / Governance Lead,AT-AUD-006  
+  
+Artifact Registry,Artifact Registration,Register material artifacts,ART-FR-001,Register material artifacts produced or consumed by workflow stages,Critical,Phase 1,Artifact Lead,AT-ART-001  
+Artifact Registry,Artifact Metadata,Store required artifact metadata,ART-FR-002,Store required artifact metadata fields,Critical,Phase 1,Artifact Lead / Data Architecture,AT-ART-002  
+Artifact Registry,Candidate Artifact Linkage,Link artifacts to source candidate versions,ART-FR-003,Preserve source_candidate_version_id for artifacts generated from candidate versions where applicable,High,Phase 1,Artifact Lead,AT-ART-003  
+Artifact Registry,Artifact Lineage,Support artifact lineage and locator,ART-FR-004,Support artifact lineage and locator functions,High,Phase 2,Artifact Lead,AT-ART-004  
+Artifact Registry,Artifact Referencing,Reference artifacts from reviews decisions and events,ART-FR-005,Allow reviews decisions and events to reference artifacts,High,Phase 1,Artifact Lead / Data Architecture,AT-ART-005  
+Artifact Registry,Cross-Domain Consistency,Standardize artifact metadata across domain packs,ART-NFR-001,Keep artifact metadata consistent across domain packs,High,Phase 2,Artifact Lead / Domain Leads,AT-ART-006  
+  
+Resume & Recovery,Project Bootstrap,Ask for project_id or new project,RES-FR-001,Ask the user to provide a project_id or create a new project when no active project context exists,Critical,Phase 1,Workflow Lead / UX Lead,AT-RES-001  
+Resume & Recovery,Continuity Check,Check for resumable work at session start,RES-FR-002,Check for unfinished projects prior failed sessions blocked sessions and pending reviews at session start,Critical,Phase 1,Workflow Lead / Recovery Lead,AT-RES-002  
+Resume & Recovery,Resume Modes,Support defined resume modes,RES-FR-003,Support resume latest state resume last failed stage resume last successful stage resume pending review and create new project,Critical,Phase 1,Recovery Lead / Workflow Lead,AT-RES-003  
+Resume & Recovery,Safe Resume Validation,Validate state and dependencies before resume,RES-FR-004,Validate workflow state artifact availability approval validity and stage dependencies before resume,Critical,Phase 1,Recovery Lead / Governance Lead,AT-RES-004  
+Resume & Recovery,Recovery Actions,Support structured recovery actions,RES-FR-005,Support structured recovery actions,High,Phase 2,Recovery Lead,AT-RES-005  
+Resume & Recovery,Session Lineage,Track session lineage across resumes,RES-FR-006,Support session lineage through parent and source session references,High,Phase 1,Data Architecture / Recovery Lead,AT-RES-006  
+Resume & Recovery,Resume Blocking,Block workflow when resume validation fails,RES-FR-007,Block workflow when safe resume validation fails,Critical,Phase 1,Recovery Lead / Governance Lead,AT-RES-007  
+Resume & Recovery,Resume UX,Offer clear resume or new project choices,RES-UR-001,Offer clear resume or new project choices when a resumable project exists,High,Phase 1,UX Lead,AT-RES-008  
+Resume & Recovery,Recovery UX,Show failed stage and recovery options,RES-UR-002,Show failed stage and available recovery options when prior failed session exists,High,Phase 1,UX Lead / Recovery Lead,AT-RES-009  
+  
+Jupyter UI,Notebook Widgets,Use Jupyter widgets as primary notebook UI,UI-FR-001,Support Jupyter widgets as the primary notebook UI mechanism,Critical,Phase 1,UI Lead / Notebook Engineering,AT-UI-001  
+Jupyter UI,Review Cards,Provide reusable review card widgets,UI-FR-002,Provide reusable review card widgets,Critical,Phase 1,UI Lead / HITL Lead,AT-UI-002  
+Jupyter UI,Candidate Selection UI,Provide candidate version selection widgets,UI-FR-003,Provide candidate selection widgets for final version choice,Critical,Phase 1,UI Lead / Scorecard Domain Lead,AT-UI-003  
+Jupyter UI,Bootstrap & Resume UI,Provide project bootstrap and resume widgets,UI-FR-004,Provide project bootstrap and resume widgets,High,Phase 1,UI Lead / Recovery Lead,AT-UI-004  
+Jupyter UI,Flow Drill-Down UI,Provide flow drill-down widgets or panels,UI-FR-005,Provide flow drill-down widgets or panels,High,Phase 2,UI Lead / Flow Visualization Lead,AT-UI-005  
+Jupyter UI,Controller Pattern,Use Python controller between widget and backend,UI-FR-006,Use a Python controller layer rather than direct skill file invocation from widgets,Critical,Phase 1,UI Lead / Platform Engineering,AT-UI-006  
+Jupyter UI,Review UX,Show recommendation alternatives evidence and actions,UI-UR-001,Display recommendation alternatives evidence links bounded actions and comment input,High,Phase 1,UX Lead,AT-UI-007  
+Jupyter UI,Interactive Refresh,Refresh details and status after action,UI-UR-002,Support detail expansion and status refresh after action,High,Phase 1,UX Lead / UI Lead,AT-UI-008  
+  
+Flow Visualization,Flow Summary,Summarize events into workflow flows,FLOW-FR-001,Summarize event logs into flow representations,High,Phase 2,Flow Visualization Lead / Observability Lead,AT-FLOW-001  
+Flow Visualization,Node Taxonomy,Support required node types,FLOW-FR-002,Include stage agent action candidate version version selection review human decision rerun blocked failed and completed nodes,High,Phase 2,Flow Visualization Lead,AT-FLOW-002  
+Flow Visualization,Edge Taxonomy,Support required edge types,FLOW-FR-003,Support edge types for progression rerun rejection selection escalation recovery and resume,High,Phase 2,Flow Visualization Lead,AT-FLOW-003  
+Flow Visualization,Drill-Down,Support detailed drill-down from nodes,FLOW-FR-004,Support drill-down from flow nodes to events artifacts reviews comments errors and selections,High,Phase 2,Flow Visualization Lead / UI Lead,AT-FLOW-004  
+Flow Visualization,Multiple Views,Support timeline and graph views,FLOW-FR-005,Support timeline and graph views,Medium,Phase 2,Flow Visualization Lead,AT-FLOW-005  
+Flow Visualization,Flow Export,Support export of summarized flow structures,FLOW-FR-006,Support export of summarized flow structures,Medium,Phase 3,Flow Visualization Lead / Reporting Lead,AT-FLOW-006  
+Flow Visualization,Traceability,Keep flow summaries traceable to raw logs,FLOW-NFR-001,Keep flow summaries traceable to underlying raw logs,High,Phase 2,Flow Visualization Lead / Audit Lead,AT-FLOW-007  
+  
+Domain Pack Framework,Domain Pack Contract,Require full domain pack contract,DPACK-FR-001,Require each domain pack to provide stage registry routing rules metrics pack test pack artifact pack policy pack review templates and skill pack,Critical,Phase 2,Domain Framework Lead,AT-DPACK-001  
+Domain Pack Framework,Shared Schemas,Reuse shared schemas across packs,DPACK-FR-002,Reuse shared schemas for state review event audit artifact and flow across all domain packs,Critical,Phase 2,Domain Framework Lead / Data Architecture,AT-DPACK-002  
+Domain Pack Framework,Future Domain Support,Support future domain packs,DPACK-FR-003,Support future domain packs for scorecard time series ECL LGD PD EAD SICR and stress testing,High,Phase 3,Platform Architecture / Domain Leads,AT-DPACK-003  
+Domain Pack Framework,Core Stability,Allow new domain packs without core redesign,DPACK-NFR-001,Allow introduction of a new domain pack without redesigning the core platform,Critical,Phase 2,Platform Architecture,AT-DPACK-004  
+  
+Unified SDK Architecture,Unified SDK Model,Provide unified SDK architecture,SDK-FR-001,Provide a unified SDK architecture covering current and future workflow automation scope,Critical,Phase 1,SDK Architecture Lead,AT-SDK-001  
+Unified SDK Architecture,SDK Layering,Separate SDK groups logically,SDK-FR-002,Separate core workflow automation SDKs shared analytical capability SDKs and domain-specific modeling SDKs,Critical,Phase 1,SDK Architecture Lead,AT-SDK-002  
+Unified SDK Architecture,Core SDK Stack,Define core workflow automation SDKs,SDK-FR-003,Include workflowsdk hitlsdk observabilitysdk auditsdk artifactsdk flowvizsdk policysdk and widgetsdk in the core workflow automation layer,Critical,Phase 1,SDK Architecture Lead,AT-SDK-003  
+Unified SDK Architecture,Shared Capability SDKs,Define shared analytical capability SDKs,SDK-FR-004,Include dq_sdk feature_sdk evaluation_sdk reporting_sdk monitoring_sdk config_sdk dataset_sdk and registry_sdk in the shared analytical capability layer,High,Phase 2,SDK Architecture Lead / Analytics Leads,AT-SDK-004  
+Unified SDK Architecture,Domain SDKs,Define domain-specific modeling SDK scope,SDK-FR-005,Support scorecardsdk timeseriessdk eclsdk lgdsdk pdsdk eadsdk sicr_sdk and stresssdk as domain-specific modeling SDKs,High,Phase 3,SDK Architecture Lead / Domain Leads,AT-SDK-005  
+Unified SDK Architecture,Current Scope Integration,Integrate scorecard workflow through unified SDK stack,SDK-FR-006,Support current scorecard workflow through integration of core and shared SDKs with scorecardsdk,Critical,Phase 1,Scorecard Domain Lead / SDK Architecture Lead,AT-SDK-006  
+Unified SDK Architecture,Future Reuse,Reuse core SDKs across domains,SDK-FR-007,Support future reuse of the same core workflow SDKs across time series ECL LGD and other domains,High,Phase 2,SDK Architecture Lead,AT-SDK-007  
+Unified SDK Architecture,Deterministic Interfaces,Expose explicit deterministic interfaces,SDK-FR-008,Expose explicit deterministic interfaces from each SDK module suitable for skill orchestration,Critical,Phase 1,SDK Architecture Lead,AT-SDK-008  
+Unified SDK Architecture,SDK Versioning,Version each SDK module,SDK-FR-009,Support version reporting for each SDK module,High,Phase 1,SDK Architecture Lead / DevOps,AT-SDK-009  
+Unified SDK Architecture,IO Contracts,Support structured inputs and outputs,SDK-FR-010,Support structured input and output contracts for each SDK module,Critical,Phase 1,SDK Architecture Lead / Data Architecture,AT-SDK-010  
+Unified SDK Architecture,Artifact Hooks,Support artifact registration hooks,SDK-FR-011,Support artifact registration hooks in relevant SDK modules,High,Phase 1,SDK Architecture Lead / Artifact Lead,AT-SDK-011  
+Unified SDK Architecture,Observability Hooks,Support observability hook integration,SDK-FR-012,Support observability hook integration in relevant SDK modules,High,Phase 1,SDK Architecture Lead / Observability Lead,AT-SDK-012  
+Unified SDK Architecture,Math in SDK not Skills,Keep mathematical logic in SDKs,SDK-FR-013,Keep complex mathematical logic in SDKs rather than skills,Critical,Phase 1,SDK Architecture Lead / AI Orchestration Lead,AT-SDK-013  
+Unified SDK Architecture,SDK Module Contract,Declare standard SDK module metadata,SDK-DR-001,Declare module_name module_version function_name input_schema_reference output_schema_reference artifact_types_produced metrics_produced errors_possible and observability_hooks_supported for SDK modules,High,Phase 2,SDK Architecture Lead / Data Architecture,AT-SDK-014  
+Unified SDK Architecture,Duplication Reduction,Reduce duplication via unified SDKs,SDK-NFR-001,Reduce duplication across current and future project types through the unified SDK ecosystem,High,Phase 2,SDK Architecture Lead,AT-SDK-015  
+Unified SDK Architecture,Modular SDK Design,Keep SDKs modular and testable,SDK-NFR-002,Keep the SDK architecture modular independently testable and extensible,Critical,Phase 1,SDK Architecture Lead,AT-SDK-016  
+  
+Security & Access,Role-Based Access,Support RBAC,SEC-FR-001,Support role-based access control,Critical,Phase 1,Security Lead,AT-SEC-001  
+Security & Access,Approval Authorization,Restrict approvals to authorized users,SEC-FR-002,Allow only authorized users to approve governed reviews,Critical,Phase 1,Security Lead / Governance Lead,AT-SEC-002  
+Security & Access,Reviewer Validation,Validate reviewer assignment and role,SEC-FR-003,Support reviewer assignment and role validation,High,Phase 1,Security Lead / HITL Lead,AT-SEC-003  
+Security & Access,Identity Preservation,Preserve user identity on decisions,SEC-FR-004,Preserve user identity on decisions and approvals,Critical,Phase 1,Security Lead / Audit Lead,AT-SEC-004  
+Security & Access,Consistent Security Controls,Apply security consistently,SEC-NFR-001,Apply security controls consistently across state audit artifacts and review actions,High,Phase 1,Security Lead,AT-SEC-005  
+  
+Performance & Reliability,Reasonable Overhead,Keep orchestration overhead reasonable,PERF-NFR-001,Keep orchestration overhead reasonable relative to deterministic computations,Medium,Phase 1,Performance Lead / Platform Engineering,AT-PERF-001  
+Performance & Reliability,Safe Persistence,Persist state and logs safely on failure,PERF-NFR-002,Support safe persistence of state and logs even if a stage fails,Critical,Phase 1,Platform Engineering / Reliability Lead,AT-PERF-002  
+Performance & Reliability,Reliable Resume & Replay,Support reliable replay and resume,PERF-NFR-003,Support reliable replay and resume after interruption,High,Phase 1,Reliability Lead / Recovery Lead,AT-PERF-003  
+Performance & Reliability,Modular Testing,Support modular testing layers,PERF-NFR-004,Support modular testing at entity SDK workflow and review levels,High,Phase 1,QA Lead / Platform Engineering,AT-PERF-004  

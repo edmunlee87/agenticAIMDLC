@@ -1,0 +1,100 @@
+# Governance Overlays
+# Platform-wide default rules, stage-specific rules, role overrides, and conditional rules.
+
+governance:
+  default_rules:
+    require_audit_for_all_approvals: true
+    require_review_before_finalization: true
+    block_auto_continue_on_breach: true
+    require_policy_acknowledgment_on_findings: true
+    min_evidence_count_for_review: 1
+
+  stage_rules:
+    - stage_name: committee_pack
+      requires_review: true
+      requires_approval: true
+      min_approval_authority: governance
+      audit_required: true
+      auto_continue_allowed: false
+
+    - stage_name: deployment_approval
+      requires_review: true
+      requires_approval: true
+      min_approval_authority: approver
+      audit_required: true
+      auto_continue_allowed: false
+
+    - stage_name: deployment_readiness
+      requires_review: true
+      requires_approval: true
+      min_approval_authority: approver
+      audit_required: true
+      auto_continue_allowed: false
+
+    - stage_name: selected_binning_finalization
+      requires_review: false
+      requires_approval: false
+      audit_required: true
+      auto_continue_allowed: true
+
+    - stage_name: model_review
+      requires_review: true
+      requires_approval: false
+      audit_required: true
+      auto_continue_allowed: false
+      escalation_trigger: "critical_policy_breach"
+
+    - stage_name: validation_pack
+      requires_review: true
+      requires_approval: false
+      min_approval_authority: validator
+      audit_required: true
+      auto_continue_allowed: false
+
+  role_overrides:
+    - role: validator
+      stage_name: validation_pack
+      can_approve: false
+      can_waive: false
+      additional_blocked_actions: []
+
+    - role: developer
+      stage_name: committee_pack
+      can_approve: false
+      can_waive: false
+      additional_blocked_actions: [approve, approve_with_conditions]
+
+    - role: developer
+      stage_name: deployment_approval
+      can_approve: false
+      can_waive: false
+      additional_blocked_actions: [approve, approve_with_conditions]
+
+  conditional_rules:
+    - rule_id: block_finalization_on_active_review
+      description: "Block finalization tools when an active review exists."
+      when:
+        active_review_exists: true
+        stage_access_mode_in: [FINALIZATION_GATED]
+      then:
+        force_block_tools: [group_d_audit]
+        block_auto_continue: true
+      applies_to_stages: []
+
+    - rule_id: force_audit_on_breach
+      description: "Force audit requirement when unresolved severe breach exists."
+      when:
+        has_unresolved_severe_breach: true
+      then:
+        require_audit: true
+        block_auto_continue: true
+      applies_to_stages: []
+
+    - rule_id: prod_strict_mode
+      description: "Production environment enforces all governance gates."
+      when:
+        environment_is: prod
+      then:
+        require_audit: true
+        block_auto_continue: true
+      applies_to_stages: []

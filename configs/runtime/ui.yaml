@@ -1,0 +1,104 @@
+# UI mode and token budget configuration.
+# Loaded and validated against UIConfig (Pydantic).
+
+version: "1.0.0"
+
+default_ui_mode: stage_progress
+default_interaction_mode: none
+default_token_mode: standard
+
+token_budgets:
+  micro:
+    context_tokens: 500
+    completion_tokens: 300
+    total_tokens: 1000
+  standard:
+    context_tokens: 2000
+    completion_tokens: 1000
+    total_tokens: 4000
+  deep_review:
+    context_tokens: 6000
+    completion_tokens: 3000
+    total_tokens: 10000
+
+stage_ui_modes:
+  - stage_name: project_bootstrap
+    ui_mode: bootstrap
+    interaction_mode: review_required
+    token_mode: standard
+    display_sections:
+      - project_summary
+      - governance_context
+      - scope_definition
+
+  - stage_name: data_preparation
+    ui_mode: stage_progress
+    interaction_mode: review_required
+    token_mode: standard
+    display_sections:
+      - data_summary
+      - quality_metrics
+      - lineage_view
+
+  - stage_name: feature_engineering
+    ui_mode: selection_cards
+    interaction_mode: selection_required
+    token_mode: standard
+    display_sections:
+      - feature_importance
+      - candidate_comparison
+      - selection_rationale
+
+  - stage_name: model_training
+    ui_mode: selection_cards
+    interaction_mode: selection_required
+    token_mode: deep_review
+    display_sections:
+      - training_metrics
+      - candidate_comparison
+      - model_card
+      - selection_rationale
+
+  - stage_name: model_evaluation
+    ui_mode: stage_progress
+    interaction_mode: none
+    token_mode: standard
+    display_sections:
+      - evaluation_metrics
+      - diagnostic_plots
+      - benchmark_comparison
+
+  - stage_name: model_validation
+    ui_mode: review_3panel
+    interaction_mode: review_required
+    token_mode: deep_review
+    requires_human_action: true
+    display_sections:
+      - panel_a_summary
+      - panel_b_evidence
+      - panel_c_action
+
+  - stage_name: final_approval
+    ui_mode: review_3panel
+    interaction_mode: approval_required
+    token_mode: deep_review
+    requires_human_action: true
+    display_sections:
+      - panel_a_summary
+      - panel_b_evidence
+      - panel_c_action
+
+  - stage_name: production_deployment
+    ui_mode: stage_progress
+    interaction_mode: none
+    token_mode: micro
+    display_sections:
+      - deployment_checklist
+
+  - stage_name: monitoring
+    ui_mode: stage_progress
+    interaction_mode: review_required
+    token_mode: micro
+    display_sections:
+      - drift_metrics
+      - alert_log

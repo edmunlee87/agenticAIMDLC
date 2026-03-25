@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "version_selection.schema.json",
+  "title": "VersionSelection",
+  "description": "Human selection record binding a chosen CandidateVersion to a stage. Always backed by an AuditEvent. Immutable once written.",
+  "type": "object",
+  "required": ["selection_id", "project_id", "run_id", "session_id", "stage_name", "selected_candidate_version_id", "actor", "timestamp", "schema_version", "audit_ref"],
+  "additionalProperties": false,
+  "properties": {
+    "selection_id": { "type": "string" },
+    "project_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "correlation_id": { "type": "string" },
+    "actor": { "$ref": "#/definitions/ActorRecord" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "stage_name": { "type": "string" },
+    "policy_context": { "$ref": "#/definitions/PolicyContextRef" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "selected_candidate_version_id": { "type": "string" },
+    "rejected_candidate_version_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "rationale": { "type": "string" },
+    "conditions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "review_id": { "type": "string" },
+    "audit_ref": {
+      "type": "string",
+      "description": "audit_id of the AuditEvent that records this selection. Mandatory."
+    },
+    "policy_findings_acknowledged": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs of policy findings the actor acknowledged before selecting."
+    },
+    "immutable": { "type": "boolean", "default": true }
+  },
+  "definitions": {
+    "ActorRecord": {
+      "type": "object",
+      "required": ["actor_id", "role"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" },
+        "display_name": { "type": "string" },
+        "delegation_chain": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "PolicyContextRef": {
+      "type": "object",
+      "properties": {
+        "policy_mode": { "type": "string" },
+        "environment": { "type": "string" },
+        "domain": { "type": "string" },
+        "active_policy_pack_id": { "type": "string" }
+      }
+    }
+  }
+}
